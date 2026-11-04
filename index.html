@@ -779,6 +779,8 @@ function mergeLog(base,add){add=normLog(add);Object.entries(add.entries).forEach
 function getLog(){return normLog(LOG)}
 function putLog(l){l=normLog(l);
  if(!FS_OK){try{localStorage.setItem(LOGKEY,JSON.stringify(l));LOG=l;return true}catch(e){alert('تعذر حفظ السجل.');return false}}
+ if(cloudOn()){LOG=l;CL.pending=true;clSave();clStatus();cloudPush();
+  clBackup();return true}
  if(logState!=='ok'){alert('السجل غير مربوط بمجلد البرنامج.\nاضغط زر «ربط السجل» في قسم رقم المستند أولاً.');return false}
  LOG=l;let data=JSON.stringify(l,null,1);
  writeQ=writeQ.then(async()=>{let fh=await logDir.getFileHandle(LOGFILE,{create:true}),w=await fh.createWritable();await w.write(data);await w.close()}).catch(e=>{console.error(e);alert('تعذر حفظ السجل في الملف '+LOGFILE+'.\nتأكد أن الفلاش/الهارد متصل ثم اضغط «ربط السجل».');setLogState('need')});
@@ -788,18 +790,23 @@ function idb(){return new Promise((res,rej)=>{let r=indexedDB.open('adnanGenerat
 async function idbGet(k){let db=await idb();return new Promise(res=>{let r=db.transaction('kv').objectStore('kv').get(k);r.onsuccess=()=>res(r.result);r.onerror=()=>res(null)})}
 async function idbSet(k,v){let db=await idb();return new Promise(res=>{let t=db.transaction('kv','readwrite');t.objectStore('kv').put(v,k);t.oncomplete=()=>res(true);t.onerror=()=>res(false)})}
 function setLogState(st){logState=st;try{refreshCompanyList()}catch(e){}let el=$('#logStatus'),name=logDir?esc(logDir.name):'';
- let m={ok:['ok',`✓ السجل محفوظ في ${LOGFILE} داخل مجلد «${name}»`,'<button type="button" onclick="connectLog(true)">تغيير المجلد</button>'],
+ let m=cloudOn()&&st!=='loading'&&st!=='na'?{ok:['ok',`✓ مجلد البرنامج «${name}» مربوط — فيه ملفات التعديل والتقارير ونسخة احتياطية من السجل`,'<button type="button" onclick="connectLog(true)">تغيير المجلد</button>'],
+  need:['warn','مجلد البرنامج يحتاج إذن الوصول (لحفظ التقارير ونسخة احتياطية)','<button type="button" onclick="connectLog(false)">تفعيل</button>'],
+  none:['warn','مجلد البرنامج غير مربوط على هذا الجهاز — الأرقام تعمل من Google Drive، واربطه لحفظ التقارير','<button type="button" onclick="connectLog(true)">ربط المجلد</button>'],
+  bad:['bad',`ملف ${LOGFILE} في مجلد البرنامج لا يمكن قراءته`,'<button type="button" onclick="connectLog(true)">اختيار مجلد آخر</button>']}[st]:{ok:['ok',`✓ السجل محفوظ في ${LOGFILE} داخل مجلد «${name}»`,'<button type="button" onclick="connectLog(true)">تغيير المجلد</button>'],
   need:['warn','السجل يحتاج إذن للوصول إلى مجلد البرنامج','<button type="button" onclick="connectLog(false)">تفعيل السجل</button>'],
   none:['bad','السجل غير مربوط — اختر مجلد البرنامج مرة واحدة على هذا الجهاز','<button type="button" onclick="connectLog(true)">ربط السجل</button>'],
   bad:['bad',`ملف ${LOGFILE} لا يمكن قراءته`,'<button type="button" onclick="connectLog(true)">اختيار مجلد آخر</button>'],
   loading:['na','جارٍ تحميل السجل…',''],
   na:['na','هذا المتصفح لا يستطيع حفظ السجل داخل المجلد، لذلك يُحفظ داخل المتصفح فقط. استخدم Chrome أو Edge ليُحفظ مع المجلد.','']}[st];
+ try{clStatus()}catch(e){}
  el.className='logstatus '+m[0];el.innerHTML=`<span>${m[1]}</span>${m[2]}`;
- let w=$('#logWhere');if(w)w.textContent=st==='ok'?`السجل محفوظ في ${LOGFILE} داخل مجلد «${logDir.name}». لنقله لجهاز آخر انقل المجلد كاملاً.`:FS_OK?'السجل غير مربوط بالمجلد حالياً.':'السجل محفوظ داخل هذا المتصفح.'}
+ let w=$('#logWhere');if(w)w.textContent=cloudOn()?'سجل الأرقام محفوظ في Google Drive ومشترك بين الجهازين، مع نسخة احتياطية في مجلد البرنامج.':st==='ok'?`السجل محفوظ في ${LOGFILE} داخل مجلد «${logDir.name}». لنقله لجهاز آخر انقل المجلد كاملاً.`:FS_OK?'السجل غير مربوط بالمجلد حالياً.':'السجل محفوظ داخل هذا المتصفح.'}
 async function readLogFile(){let fh=await logDir.getFileHandle(LOGFILE,{create:true}),txt=await (await fh.getFile()).text();return txt.trim()?JSON.parse(txt):{counters:{},entries:{}}}
 async function loadLogFile(){let l;try{l=normLog(await readLogFile())}catch(e){console.error(e);setLogState('bad');return}
  // one-time move of a log that older versions kept inside the browser
  let old=null;try{old=JSON.parse(localStorage.getItem(LOGKEY)||'null')}catch(e){}
+ if(cloudOn()){setLogState('ok');cloudAbsorb(old&&old.entries?mergeLog(l,old):l);return}
  LOG=l;setLogState('ok');
  if(old&&old.entries){LOG=mergeLog(l,old);if(putLog(LOG)){try{localStorage.setItem(LOGKEY+'_moved_to_file',JSON.stringify(old));localStorage.removeItem(LOGKEY)}catch(e){}}}
  syncNumber(true);render()}
@@ -816,7 +823,7 @@ async function initLog(){if(!FS_OK){try{LOG=normLog(JSON.parse(localStorage.getI
  let p='prompt';try{p=await logDir.queryPermission({mode:'readwrite'})}catch(e){}
  if(p==='granted')await loadLogFile();else setLogState('need')}
 /* pick up changes if the file was edited elsewhere while this window was in the background */
-window.addEventListener('focus',async()=>{if(logState!=='ok')return;try{let l=normLog(await readLogFile());await writeQ;if(JSON.stringify(l)!==JSON.stringify(LOG)){LOG=l;render()}}catch(e){setLogState('need')}});
+window.addEventListener('focus',async()=>{if(cloudOn())return cloudPull(false);if(logState!=='ok')return;try{let l=normLog(await readLogFile());await writeQ;if(JSON.stringify(l)!==JSON.stringify(LOG)){LOG=l;render()}}catch(e){setLogState('need')}});
 function nextNo(g){let l=getLog(),c=l.counters[g];if(c)return c;let nums=(l.entries[g]||[]).map(e=>parseInt(e.no)).filter(x=>!isNaN(x));return nums.length?Math.max(...nums)+1:1}
 function defLetter(g){return getLog().letters[g]||GROUPS[g].letter}
 const fmtNo=e=>`${e.letter?e.letter+' - ':''}${e.no}`;
@@ -897,19 +904,19 @@ let sub=GROUPS[g].letter,fname=clean(`${L?L+' - ':''}${no}`)+'.json',state=JSON.
 let entry={no,letter:L,doc:docName(),date:dateFmt(val('date')),ref:lastSum.ref||'',name:lastSum.name||'',client:lastSum.client||lastSum.name||'',count:lastSum.count||'',amount:lastSum.amount||0,paid:$('#showPaid').checked,saved:new Date().toLocaleString('en-GB'),file:`${sub}/${fname}`};
 {let prev=i>=0?list[i]:null;if(prev&&prev.paid&&!entry.paid){entry.paid=true;entry.paidDate=prev.paidDate||''}else if(entry.paid)entry.paidDate=(prev&&prev.paidDate)||todayStr()}
 if(i>=0){if(!reopened&&!confirm(`الرقم ${no} مسجل مسبقاً في سجل ${GROUPS[g].name}. تحديث بياناته؟`))return;list[i]=entry}else list.push(entry);
-if(!FS_OK)download(fname,state,'application/json');
+if(!FS_OK&&!cloudOn())download(fname,state,'application/json');
 let num=parseInt(no);if(!isNaN(num)&&String(num)===no)l.counters[g]=Math.max(l.counters[g]||1,num+1);
 if(T()==='invoiceAr'||T()==='quoteAr')l.companies=upsertCompany(l.companies);
-if(putLog(l)){refreshCompanyList();if(FS_OK)writeQ=writeQ.then(()=>writeEditFile(sub,fname,state)).catch(e=>{console.error(e);alert('تم تسجيل الرقم، لكن تعذر حفظ ملف التعديل '+fname)});
+if(putLog(l)){refreshCompanyList();if(cloudOn())cloudPutEdit(`${sub}/${fname}`,state);if(FS_OK&&logState==='ok')writeQ=writeQ.then(()=>writeEditFile(sub,fname,state)).catch(e=>{console.error(e);alert('تم تسجيل الرقم، لكن تعذر حفظ ملف التعديل '+fname)});
  openedKey=null;$('#docNo').value=nextNo(g);$('#docLetter').value=defLetter(g);
  let cur=$('#records').value,nextCar=!window.__batchLog&&!reopened&&T()!=='invoiceBulk'&&rows.length&&cur!==''&&rows[+cur+1]?+cur+1:null;
  if(nextCar!==null){$('#records').value=nextCar;$('#records').onchange({target:$('#records')})}else render();
  if(nextCar!==null&&!manual)setTimeout(()=>alert(`تم الحفظ. انتقلنا للمركبة التالية في القائمة: ${nextCar+1}. ${val('reg')}`),50);
  else if(!reopened&&!manual&&T()!=='invoiceBulk'&&rows.length&&cur!==''&&+cur===rows.length-1)setTimeout(()=>alert('تم الحفظ. هذه كانت آخر مركبة في قائمة Excel.'),50);
  if(manual||reopened)alert(`${reopened?'تم تحديث':'تم تسجيل'} ${L?L+' - ':''}${no} وحفظ ملف التعديل.\nالرقم التالي: ${nextNo(g)}`)}}
-async function openEdit(g,i){let e=(getLog().entries[g]||[])[i];if(!e||!e.file)return;if(FS_OK&&logState!=='ok')return alert('اربط السجل أولاً.');
+async function openEdit(g,i){let e=(getLog().entries[g]||[])[i];if(!e||!e.file)return;if(!cloudOn()&&FS_OK&&logState!=='ok')return alert('اربط السجل أولاً.');
  if(!confirm(`فتح ${fmtNo(e)} للتعديل؟\nسيتم استبدال البيانات الموجودة حالياً في النموذج.`))return;
- try{let[sub,name]=e.file.split('/'),f=await (await (await editFolder(sub,false)).getFileHandle(name)).getFile();applyState(JSON.parse(await f.text()));openedKey=g+'|'+e.no;closeLog();
+ try{let st;try{if(logState!=='ok')throw 0;let[sub,name]=e.file.split('/'),f=await (await (await editFolder(sub,false)).getFileHandle(name)).getFile();st=JSON.parse(await f.text())}catch(x){if(!cloudOn())throw x;st=await cloudGetEdit(e.file)}applyState(st);openedKey=g+'|'+e.no;closeLog();
   alert(`تم فتح ${fmtNo(e)}. عدّل ما تريد ثم صدّر PDF واحفظه مرة أخرى — سيبقى نفس الرقم.`)}
  catch(err){console.error(err);alert(`لم يتم العثور على ملف التعديل:\n${EDIT_DIR}/${e.file}`)}}
 function openEditFile(ev){let f=ev.target.files[0];ev.target.value='';if(!f)return;if(!confirm('سيتم استبدال البيانات الموجودة حالياً في النموذج. متابعة؟'))return;
@@ -917,7 +924,7 @@ function openEditFile(ev){let f=ev.target.files[0];ev.target.value='';if(!f)retu
 function openLog(){$('#logType').innerHTML=Object.entries(GROUPS).map(([k,v])=>`<option value="${k}">${v.name}</option>`).join('');$('#logType').value=G();drawLog();$('#logModal').classList.add('open')}
 function closeLog(){$('#logModal').classList.remove('open')}
 function drawLog(){let g=$('#logType').value,le=lastEntry(g),list=(getLog().entries[g]||[]).map((e,i)=>[e,i]).reverse();
-$('#logBody').innerHTML=`<div class="hint" style="margin:0 0 8px">الحرف الافتراضي: <b style="color:#d00000">${esc(defLetter(g))}</b> · عدد المسجل: ${list.length} · آخر رقم: <b style="color:#d00000">${le?`<bdi dir="ltr">${esc(fmtNo(le))}</bdi>`:'—'}</b> · الرقم التالي: <b>${nextNo(g)}</b></div>`+(list.length?`<table class="logt"><tr><th>الرقم</th><th>المستند</th><th>التاريخ</th><th>المركبة / المرجع</th><th>الاسم</th><th>المبلغ</th><th>مدفوع</th><th>وقت التسجيل</th><th></th></tr>${list.map(([e,i])=>`<tr><td class="num"><bdi dir="ltr">${esc(fmtNo(e))}</bdi></td><td>${esc(e.doc||'')}</td><td>${esc(e.date)}</td><td dir="auto">${esc(e.ref)}</td><td dir="auto">${esc(e.name)}</td><td>${money(e.amount)}</td><td><input type="checkbox" style="width:auto" ${e.paid?'checked':''} onchange="togglePaid('${g}',${i},this.checked)"></td><td>${esc(e.saved||'')}</td><td style="white-space:nowrap">${e.file?`<button class="mini btn-blue" onclick="openEdit('${g}',${i})">فتح للتعديل</button> `:''}<button class="mini" onclick="delEntry('${g}',${i})">حذف</button></td></tr>`).join('')}</table>`:'<div class="hint">لا توجد أرقام مسجلة لهذا النوع بعد.</div>')}
+$('#logBody').innerHTML=`<div class="hint" style="margin:0 0 8px">الحرف الافتراضي: <b style="color:#d00000">${esc(defLetter(g))}</b> · عدد المسجل: ${list.length} · آخر رقم: <b style="color:#d00000">${le?`<bdi dir="ltr">${esc(fmtNo(le))}</bdi>`:'—'}</b> · الرقم التالي: <b>${nextNo(g)}</b></div>`+(list.length?`<table class="logt"><tr><th>الرقم</th><th>المستند</th><th>التاريخ</th><th>المركبة / المرجع</th><th>الاسم</th><th>المبلغ</th><th>مدفوع</th><th>وقت التسجيل</th><th></th></tr>${list.map(([e,i])=>`<tr><td class="num">${e.dup?'⚠️ ':''}<bdi dir="ltr">${esc(fmtNo(e))}</bdi></td><td>${esc(e.doc||'')}</td><td>${esc(e.date)}</td><td dir="auto">${esc(e.ref)}</td><td dir="auto">${esc(e.name)}</td><td>${money(e.amount)}</td><td><input type="checkbox" style="width:auto" ${e.paid?'checked':''} onchange="togglePaid('${g}',${i},this.checked)"></td><td>${esc(e.saved||'')}</td><td style="white-space:nowrap">${e.file?`<button class="mini btn-blue" onclick="openEdit('${g}',${i})">فتح للتعديل</button> `:''}<button class="mini" onclick="delEntry('${g}',${i})">حذف</button></td></tr>`).join('')}</table>`:'<div class="hint">لا توجد أرقام مسجلة لهذا النوع بعد.</div>')}
 function togglePaid(g,i,v){let l=getLog();l.entries[g][i].paid=v;l.entries[g][i].paidDate=v?todayStr():'';putLog(l);updOverdueBadge()}
 function delEntry(g,i){let l=getLog(),e=l.entries[g][i];if(!confirm(`حذف الرقم ${fmtNo(e)} من السجل؟`))return;l.entries[g].splice(i,1);putLog(l);drawLog();updLogInfo()}
 function setNext(){let g=$('#logType').value,v=prompt(`الرقم التالي لسجل ${GROUPS[g].name}:`,nextNo(g));if(v===null)return;v=parseInt(v);if(isNaN(v)||v<1)return alert('رقم غير صحيح.');let l=getLog();l.counters[g]=v;putLog(l);if(g===G())$('#docNo').value=v;drawLog();render()}
@@ -925,7 +932,7 @@ function setLetter(){let g=$('#logType').value,v=prompt(`الحرف الافتر
 function download(name,data,type){let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([data],{type}));a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500)}
 function exportLog(){let l=getLog(),q=x=>'"'+String(x??'').replace(/"/g,'""')+'"',lines=[['Log','No','Document','Date','Vehicle / Ref','Name','Amount BD','Paid','Logged at'].map(q).join(',')];Object.keys(GROUPS).forEach(g=>(l.entries[g]||[]).forEach(e=>lines.push([GROUPS[g].name,fmtNo(e),e.doc||'',e.date,e.ref,e.name,e.amount,e.paid?'Yes':'No',e.saved].map(q).join(','))));download(`Numbers log ${new Date().toISOString().slice(0,10)}.csv`,'﻿'+lines.join('\r\n'),'text/csv;charset=utf-8')}
 
-function printReport(){if(FS_OK&&logState!=='ok'&&!confirm('تنبيه: السجل غير مربوط بمجلد البرنامج، لذلك لن يُسجل رقم هذا المستند.\nاضغط «ربط السجل» أولاً، أو OK للمتابعة بدون تسجيل.'))return;render();alert('عند ظهور نافذة الطباعة، اختر Save as PDF ثم ألغِ “Headers and footers / رؤوس وتذييلات الصفحة”. هذا يمنع ظهور الوقت ومسار الكمبيوتر.');window.print();setTimeout(()=>{let no=val('docNo').trim();if(no&&(!FS_OK||logState==='ok')&&confirm(`هل تم حفظ المستند؟\nاضغط OK لتسجيل الرقم ${docLabel()} في سجل «${GROUPS[G()].name}» والانتقال للرقم التالي.`))logDoc(false)},300)}
+async function printReport(){if(cloudOn())await cloudPull(false);if(!cloudOn()&&FS_OK&&logState!=='ok'&&!confirm('تنبيه: السجل غير مربوط بمجلد البرنامج، لذلك لن يُسجل رقم هذا المستند.\nاضغط «ربط السجل» أولاً، أو OK للمتابعة بدون تسجيل.'))return;render();alert('عند ظهور نافذة الطباعة، اختر Save as PDF ثم ألغِ “Headers and footers / رؤوس وتذييلات الصفحة”. هذا يمنع ظهور الوقت ومسار الكمبيوتر.');window.print();setTimeout(()=>{let no=val('docNo').trim();if(no&&(cloudOn()||!FS_OK||logState==='ok')&&confirm(`هل تم حفظ المستند؟\nاضغط OK لتسجيل الرقم ${docLabel()} في سجل «${GROUPS[G()].name}» والانتقال للرقم التالي.`))logDoc(false)},300)}
 /* ---------- full document state (used by drafts and by edit files) ---------- */
 const CHECKS=['showStamp','showSignature','showPaid','arMulti','withPhotos','tasNaming','showClientInfo'];
 function collectState(withPics){return{v:1,labels,rec:$('#records').value,fields:Object.fromEntries(ids.map(i=>[i,val(i)])),checks:Object.fromEntries(CHECKS.map(c=>[c,$('#'+c).checked])),invLang:lang(),ratings,conditionNotes,feeOverride,cellEdit,arExtra,rows,sel:[...sel],...(withPics?{pics:pics.filter(Boolean)}:{})}}
@@ -1045,16 +1052,16 @@ function fdDraw(){let c=FD.cur,f=c.fields,q=FD.q.trim().toLowerCase(),doneKeys=n
   :on?`<div class="fd-empty">لا توجد قائمة بعد — أرسلها من الكمبيوتر بزر «إرسال القائمة للهاتف»، أو <button class="fd-link" data-act="xls" style="font-size:14px">استورد Excel من الهاتف</button>.</div>`:`<button class="fd-btn" style="width:100%" data-act="xls">استيراد ملف Excel من الشركة</button><div class="fd-sub">أو اترك الملف وأدخل بيانات السيارة يدوياً بالأسفل.</div>`);
  $('#fdBody').innerHTML=`
  <div class="fd-h">١. اختر السيارة</div><div class="fd-card">${carCard}${c.row!=null||f.reg?`<div class="fd-sel">🚗 <div>${esc(fdCarName(c))}<small>${f.case?'اتفاقية / معاملة: '+esc(f.case):''}</small></div></div>`:''}</div>
- <div class="fd-h">٢. نوع التقرير</div><div class="fd-seg" data-seg="type">${FD_TYPES.map(([v,l])=>`<button class="${c.type===v?'on':''}" data-act="type" data-v="${v}">${l}</button>`).join('')}</div>
- <div class="fd-h">٣. بيانات المركبة</div><div class="fd-card"><div class="fd-grid">${FD_FIELDS.map(([k,l,o])=>`<div class="${o==='full'?'full':''}"><label class="fd-l">${l}</label><input data-f="${k}" value="${esc(f[k]||'')}"${o==='num'?' inputmode="numeric"':''}${o==='ltr'?' dir="ltr" autocapitalize="characters"':''}${k==='plateType'?' list="plateTypes"':''}></div>`).join('')}</div></div>
- <div class="fd-h">٤. المواصفات</div><div class="fd-card">${FD_SPECS.map(([k,l,a])=>`<div class="fd-spec"><label class="fd-l">${l}</label><div class="fd-chips">${a.map(v=>`<button class="fd-chip${f[k]===v?' on':''}" data-act="spec" data-k="${k}" data-v="${esc(v)}">${esc(v)}</button>`).join('')}</div></div>`).join('')}</div>
- <div class="fd-h">٥. حالة المركبة <button class="fd-small" data-act="allE">الكل ممتاز</button></div>
+ <div class="fd-h">٢. الصور <span id="fdPicN">${c.pics.length}/${FD_MAXPICS}</span></div><div class="fd-card"><div class="fd-row-tools"><button class="fd-small blue" data-act="cam">📷 التقاط صورة</button><button class="fd-small" data-act="lib">🖼 من الألبوم</button></div><div class="fd-pics" id="fdPics"></div></div>
+ <div class="fd-h">٣. نوع التقرير</div><div class="fd-seg" data-seg="type">${FD_TYPES.map(([v,l])=>`<button class="${c.type===v?'on':''}" data-act="type" data-v="${v}">${l}</button>`).join('')}</div>
+ <div class="fd-h">٤. بيانات المركبة</div><div class="fd-card"><div class="fd-grid">${FD_FIELDS.map(([k,l,o])=>`<div class="${o==='full'?'full':''}"><label class="fd-l">${l}</label><input data-f="${k}" value="${esc(f[k]||'')}"${o==='num'?' inputmode="numeric"':''}${o==='ltr'?' dir="ltr" autocapitalize="characters"':''}${k==='plateType'?' list="plateTypes"':''}></div>`).join('')}</div></div>
+ <div class="fd-h">٥. المواصفات</div><div class="fd-card">${FD_SPECS.map(([k,l,a])=>`<div class="fd-spec"><label class="fd-l">${l}</label><div class="fd-chips">${a.map(v=>`<button class="fd-chip${f[k]===v?' on':''}" data-act="spec" data-k="${k}" data-v="${esc(v)}">${esc(v)}</button>`).join('')}</div></div>`).join('')}</div>
+ <div class="fd-h">٦. حالة المركبة <button class="fd-small" data-act="allE">الكل ممتاز</button></div>
  <div class="fd-legend">م ممتاز · ج جيد · و وسط · ت تحتاج عناية · ض ضعيف — اضغط مرة ثانية لإزالة العلامة.</div>
  <div class="fd-card">${fdGroups().map(([t,ar,en])=>ar.map((x,i)=>{if(x[0]==='#')return`<div class="fd-group">${esc(x.slice(1))}</div>`;let k=t+'-'+i,s=k in c.rate?c.rate[k]:fdDef(x),note=c.note[k]||'',show=note||s==='R'||s==='P';
    return`<div class="fd-cond" data-k="${k}"><div class="fd-cond-top"><div class="fd-cond-name">${esc(x.replace(/^!/,''))}<small>${esc(en[i].replace(/^!/,''))}</small></div><div class="fd-rates">${FD_RATE.map(([r,a,lb])=>`<button class="fd-rate ${r}${s===r?' on':''}" data-act="rate" data-k="${k}" data-r="${r}" data-def="${fdDef(x)}" aria-label="${lb}">${a}<small>${r}</small></button>`).join('')}</div></div>${show?`<input class="fd-note" data-note="${k}" placeholder="ملاحظة (تظهر في عمود الملاحظات)" value="${esc(note)}">`:`<button class="fd-addnote" data-act="addnote" data-k="${k}">+ ملاحظة</button>`}</div>`}).join('')).join('')}</div>
- <div class="fd-h">٦. الملاحظات</div><div class="fd-card"><textarea data-f="__notes" placeholder="اكتب كل ملاحظة في سطر. ابدأ السطر بعلامة ! ليظهر باللون الأحمر.">${esc(c.notes)}</textarea></div>
+ <div class="fd-h">٧. الملاحظات</div><div class="fd-card"><textarea data-f="__notes" placeholder="اكتب كل ملاحظة في سطر. ابدأ السطر بعلامة ! ليظهر باللون الأحمر.">${esc(c.notes)}</textarea></div>
  <div class="fd-h">📝 ملاحظات لي <span style="font-weight:400;font-size:12px">لا تظهر في التقرير</span></div><div class="fd-card fd-priv"><textarea data-f="__priv" placeholder="ملاحظات للتذكير عند كتابة التقرير في المكتب">${esc(c.priv||'')}</textarea></div>
- <div class="fd-h">٧. الصور <span id="fdPicN">${c.pics.length}/${FD_MAXPICS}</span></div><div class="fd-card"><div class="fd-row-tools"><button class="fd-small blue" data-act="cam">📷 التقاط صورة</button><button class="fd-small" data-act="lib">🖼 من الألبوم</button></div><div class="fd-pics" id="fdPics"></div></div>
  <div class="fd-h">السيارات المحفوظة (${FD.saved.length})${FD.saved.some(s=>s.sent)?'<button class="fd-small" data-act="clearSent">مسح المرسلة</button>':''}</div>
  <div class="fd-card fd-saved">${FD.saved.length?FD.saved.map((s,i)=>`<div class="fd-row"><span class="t">${esc(fdCarName(s))}<small>${s.pics.length} صور · ${esc(FD_TYPES.find(t=>t[0]===s.type)?.[1]||'')}${s.sent?' · أُرسلت':''}</small></span><button class="fd-small" data-act="edit" data-i="${i}">تعديل</button><button class="fd-small" data-act="del" data-i="${i}">حذف</button></div>`).join(''):'<div class="fd-empty">لم تُحفظ أي سيارة بعد.</div>'}</div>
  <div class="fd-row-tools" style="justify-content:center;margin-top:18px"><button class="fd-small" data-act="openHere">فتح هذه السيارة في التقرير على هذا الجهاز</button></div>`;
@@ -1144,7 +1151,93 @@ async function syncGet(a,extra={}){let s=syncParts();if(!s)throw new Error('noli
 async function syncPost(body){let s=syncParts();if(!s)throw new Error('nolink');let r=await fetch(s.base,{method:'POST',body:JSON.stringify({...body,k:s.k}),headers:{'Content-Type':'text/plain;charset=utf-8'}});let j=await r.json();if(!j.ok)throw new Error(j.error||'fail');return j}
 async function syncConnect(onDone){let v=prompt('الصق رابط المزامنة (يبدأ بـ https://script.google.com/…).\nاتركه فارغاً لإلغاء الربط.',syncUrl);if(v===null)return;v=v.trim();let old=syncUrl;syncUrl=v;
  if(v&&!syncParts()){syncUrl=old;return alert('الرابط غير صحيح — يجب أن ينتهي بـ ?k= ثم المفتاح.')}
- try{if(v)await syncGet('ping');localStorage.setItem(SYNC_KEY,v);onDone&&onDone(true)}catch(e){syncUrl=old;alert('تعذر الاتصال بهذا الرابط. تأكد من نسخه كاملاً ومن وجود إنترنت.')}}
+ try{if(v)await syncGet('ping');localStorage.setItem(SYNC_KEY,v);onDone&&onDone(true);try{cloudInit();setLogState(logState)}catch(e){}}catch(e){syncUrl=old;alert('تعذر الاتصال بهذا الرابط. تأكد من نسخه كاملاً ومن وجود إنترنت.')}}
+
+/* ===== shared numbers log in Google Drive =====
+   With the sync link on a laptop, the numbers log (R-1, E-1, TI-1 …) lives in Google Drive, so both laptops
+   always continue the same sequence. The program folder on the hard drive keeps a backup copy, the edit files,
+   the batch folders and the stamp/letterhead. Edit files are also copied to Drive so either laptop can reopen them.
+   Every change is sent with the version it was made on; if the other laptop changed the log meanwhile,
+   the two are merged here and sent again. Without internet, changes wait and go up automatically. */
+const CL_KEY='adnanCloudLog';
+let CL={v:0,base:null,state:'off',pending:false,busy:null,at:'',fileLog:null,pulled:false,timer:null};
+function cloudOn(){try{return !!syncParts()&&!matchMedia('(max-width:900px) and (pointer:coarse)').matches}catch(e){return false}}
+const clClone=o=>JSON.parse(JSON.stringify(o));
+function clSave(){try{localStorage.setItem(CL_KEY,JSON.stringify({data:LOG,v:CL.v,base:CL.base,pending:CL.pending,at:CL.at}))}catch(e){}}
+function clStatus(){let el=$('#cloudStatus');if(!el){let ls=$('#logStatus');if(!ls)return;el=document.createElement('div');el.id='cloudStatus';ls.before(el)}
+ if(!cloudOn()){el.className='logstatus na';el.innerHTML='<span>السجل على هذا الجهاز فقط — اربط Google Drive (قسم الهاتف) ليصبح مشتركاً بين الجهازين</span>';return}
+ let m={ok:['ok',`☁️ سجل الأرقام مشترك عبر Google Drive${CL.at?' · آخر تحديث '+CL.at:''}`],
+  wait:['warn','⏳ تغييرات لم تُرفع بعد (لا يوجد إنترنت؟) — ستُرفع تلقائياً'],
+  load:['na','☁️ جارٍ تحميل سجل الأرقام من Google Drive…'],
+  bad:['bad','تعذر الاتصال بـ Google Drive — الأرقام قد لا تكون آخر نسخة'],
+  seed:['warn','☁️ فعّل مجلد البرنامج مرة واحدة لنقل سجل الأرقام الحالي إلى Google Drive']}[CL.pending?'wait':CL.state]||['na',''];
+ el.className='logstatus '+m[0];el.innerHTML=`<span>${m[1]}</span>`+(CL.state!=='load'?'<button type="button" onclick="cloudPull(true)">تحديث</button>':'')}
+const clTime=()=>new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+function clKeyEq(a,b){return JSON.stringify(a)===JSON.stringify(b)}
+/* three-way merge: what changed here since the last sync wins, everything else comes from Drive */
+function clMerge(base,local,server){base=normLog(base||{});local=normLog(local);server=normLog(server||{});let clash=[];
+ let out=clClone(server),groups=new Set([...Object.keys(local.entries),...Object.keys(server.entries),...Object.keys(base.entries)]);
+ groups.forEach(g=>{let B=base.entries[g]||[],Lo=local.entries[g]||[],S=server.entries[g]||[],find=(a,no)=>a.find(e=>e.no==no),res=[];
+  S.forEach(s=>{let b=find(B,s.no),l=find(Lo,s.no);
+   if(!l){if(b&&clKeyEq(s,b))return;res.push(s);return}           // deleted here (and untouched there) → drop
+   if(b&&clKeyEq(l,b)){res.push(s);return}                          // unchanged here → take Drive's
+   if((b&&clKeyEq(s,b))||(s.ref||'')===(l.ref||'')){res.push(l);return} // changed only here (or same document) → take ours
+   res.push(s);res.push({...l,dup:true});clash.push(`${GROUPS[g]?GROUPS[g].name:g}: ${fmtNo(l)}`)});
+  Lo.forEach(l=>{if(find(S,l.no))return;let b=find(B,l.no);if(b&&clKeyEq(l,b))return;res.push(l)});  // new here → add
+  if(res.length)out.entries[g]=res;else delete out.entries[g]});
+ let keys=new Set([...Object.keys(local.counters),...Object.keys(server.counters)]);out.counters={};
+ keys.forEach(g=>{let l=local.counters[g],b=base.counters[g],s=server.counters[g],v=l===b?s:s===b?l:Math.max(l||0,s||0);if(v)out.counters[g]=v});
+ ['letters','settings'].forEach(k=>{let L=local[k]||{},Bb=base[k]||{},Sv=server[k]||{},o={...Sv};
+  new Set([...Object.keys(L),...Object.keys(Bb)]).forEach(x=>{if(!clKeyEq(L[x],Bb[x])){if(L[x]===undefined)delete o[x];else o[x]=L[x]}});if(Object.keys(o).length||out[k])out[k]=o});
+ out.companies=mergeCompanies(server.companies||[],clKeyEq(local.companies,base.companies)?[]:local.companies||[]);
+ return{log:normLog(out),clash}}
+async function clFetch(body){let s=syncParts();let r=await fetch(s.base,{method:'POST',body:JSON.stringify({...body,k:s.k}),headers:{'Content-Type':'text/plain;charset=utf-8'}});return r.json()}
+function clBackup(){if(logState!=='ok'||!logDir)return;let data=JSON.stringify(getLog(),null,1);writeQ=writeQ.then(async()=>{let fh=await logDir.getFileHandle(LOGFILE,{create:true}),w=await fh.createWritable();await w.write(data);await w.close()}).catch(e=>console.error(e))}
+function clApply(l,before){let g=G(),typed=val('docNo').trim();if(before===undefined)before=nextNo(g);LOG=normLog(l);clBackup();
+ if(!openedKey&&(!typed||typed===String(before))){$('#docNo').value=nextNo(g)}
+ try{updLogInfo()}catch(e){}try{refreshCompanyList()}catch(e){}try{if($('#logModal').classList.contains('open'))drawLog()}catch(e){}render()}
+async function cloudPush(){if(!cloudOn())return;if(CL.busy)return CL.busy;
+ CL.busy=(async()=>{for(let tries=0;tries<4;tries++){let r;
+   try{r=await clFetch({a:'putLog',base:CL.v,data:LOG})}catch(e){CL.pending=true;clSave();clStatus();return false}
+   if(r.ok){CL.v=r.v;CL.base=clClone(LOG);CL.pending=false;CL.state='ok';CL.at=clTime();clSave();clStatus();clFlushEdits();return true}
+   if(r.error==='conflict'){let prev=nextNo(G()),m=clMerge(CL.base,LOG,r.data);CL.v=r.v;CL.base=normLog(r.data||{});clApply(m.log,prev);clSave();
+    if(m.clash.length)setTimeout(()=>alert('تنبيه: نفس الرقم استُخدم على الجهازين لمستندين مختلفين:\n'+m.clash.join('\n')+'\n\nتم الاحتفاظ بالاثنين في السجل (المكرر عليه علامة ⚠️). غيّر رقم أحدهما ثم سجّله من جديد.'),50);continue}
+   CL.pending=true;CL.state='bad';clSave();clStatus();return false}
+  return false})().finally(()=>{CL.busy=null});return CL.busy}
+async function cloudPull(loud){if(!cloudOn())return;if(CL.busy)await CL.busy;let prev=nextNo(G());
+ if(CL.pending){await cloudPush();if(CL.pending){if(loud)alert('لا يوجد اتصال بالإنترنت — ستُرفع التغييرات عند عودة الاتصال.');return}}
+ try{let ctl=new AbortController(),t=setTimeout(()=>ctl.abort(),8000),s=syncParts();
+  let r=await fetch(s.base+'?'+new URLSearchParams({k:s.k,a:'log'}),{cache:'no-store',signal:ctl.signal});clearTimeout(t);let j=await r.json();if(!j.ok)throw new Error(j.error);
+  if(!j.data&&!CL.fileLog&&FS_OK&&logState!=='ok'&&logState!=='none'&&!Object.values(getLog().entries).some(a=>a.length)){
+   CL.state='seed';clStatus();return}  // wait for the program folder so the current log moves to Drive first
+  CL.pulled=true;CL.state='ok';CL.at=clTime();
+  if(!j.data){// first time: Drive has no log yet → upload the one we have (hard-drive file + this browser's copy)
+   let seed=getLog();if(CL.fileLog)seed=mergeLog(seed,CL.fileLog);CL.fileLog=null;LOG=normLog(seed);CL.v=j.v;CL.base=normLog({});CL.pending=true;clSave();await cloudPush();clApply(LOG,prev);return}
+  if(j.v!==CL.v||!clKeyEq(normLog(j.data),getLog())){CL.v=j.v;CL.base=normLog(j.data);clApply(j.data,prev)}
+  clSave();clStatus();
+  if(CL.fileLog){let f=CL.fileLog;CL.fileLog=null;cloudAbsorb(f)}}
+ catch(e){CL.state='bad';clStatus();if(loud)alert('تعذر تحميل سجل الأرقام من Google Drive. تأكد من الإنترنت.')}}
+/* entries that exist only in the hard-drive copy (e.g. logged before switching) are added to the shared log */
+function cloudAbsorb(fileLog){if(!CL.pulled){CL.fileLog=fileLog;
+  // Drive not reached yet (e.g. no internet): use the hard-drive copy meanwhile so numbering never restarts
+  let cur=getLog(),m=mergeLog(normLog(cur),fileLog);if(!clKeyEq(m,cur)){let prev=nextNo(G());LOG=m;clApply(m,prev)}
+  if(CL.state==='seed'||CL.state==='bad')cloudPull(false);return}let cur=getLog(),prev=nextNo(G()),m=mergeLog(normLog(cur),fileLog);if(!clKeyEq(m,cur)){putLog(m);clApply(m,prev)}}
+async function cloudInit(){if(!cloudOn()){clStatus();return}
+ try{let c=JSON.parse(localStorage.getItem(CL_KEY)||'null');if(c&&c.data){LOG=normLog(c.data);CL.v=c.v||0;CL.base=c.base?normLog(c.base):null;CL.pending=!!c.pending;CL.at=c.at||'';syncNumber(true);render()}}catch(e){}
+ CL.state='load';clStatus();await cloudPull(false);
+ clearInterval(CL.timer);CL.timer=setInterval(()=>{if(!document.hidden)cloudPull(false)},60000)}
+window.addEventListener('online',()=>{if(cloudOn()&&CL.pending)cloudPush()});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&cloudOn())cloudPull(false)});
+/* edit files → Drive (queued in this browser if offline) */
+async function clEditQ(){return (await idbGet('editQ'))||[]}
+async function cloudPutEdit(path,data){if(!cloudOn())return;
+ try{let r=await clFetch({a:'putEdit',path,data});if(!r.ok)throw 0}
+ catch(e){let q=(await clEditQ()).filter(x=>x.path!==path);q.push({path,data});await idbSet('editQ',q)}}
+let clFlushing=false;
+async function clFlushEdits(){if(clFlushing)return;clFlushing=true;try{let q=await clEditQ();
+ while(q.length){let it=q[0];try{let r=await clFetch({a:'putEdit',path:it.path,data:it.data});if(!r.ok)break}catch(e){break}q.shift();await idbSet('editQ',q)}}finally{clFlushing=false}}
+async function cloudGetEdit(path){let q=(await clEditQ()).find(x=>x.path===path);if(q)return JSON.parse(q.data);let j=await syncGet('edit',{path});return j.data}
+setTimeout(cloudInit,0);
 
 /* ---------------- laptop ---------------- */
 let syncPhoneLists=[],syncLoadedLists=new Set(),lastExcelName='',syncInboxItems=[],syncOpened=new Set(),syncTimer=null;
@@ -1317,6 +1410,7 @@ function batchProgress(t){let p=$('#bprog');p.hidden=!t;p.textContent=t||''}
 async function batchSaveAll(){if(!BATCH||batchBusy)return;
  if(!FS_OK||logState!=='ok'||!logDir)return alert('اربط السجل (مجلد البرنامج) أولاً من «ربط السجل» — التقارير تُحفظ داخل مجلد البرنامج.');
  let n=BATCH.cars.length,notReady=BATCH.cars.filter(c=>!['ready','saved'].includes(carSt(c))).length;
+ if(cloudOn())await cloudPull(false);
  if(!confirm(`حفظ ${n} تقارير في المجلد:\n${logDir.name} / ${BATCH_ROOT} / ${BATCH.name}\n\nكل سيارة في مجلد باسم ملفها، وفيه: PDF + ملف التعديل + كل الصور.${notReady?`\n\nتنبيه: ${notReady} لم تُحدد كجاهزة بعد.`:''}\nالسيارات بدون رقم تأخذ الرقم التالي في السجل وتُسجل تلقائياً.`))return;
  batchBusy=true;batchKeep();let back=batchIdx,ok=0,fail=[];
  try{batchProgress('جارٍ تجهيز أداة PDF…');await pdfLibs();await loadAssets();
