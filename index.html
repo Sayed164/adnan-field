@@ -1,0 +1,1178 @@
+<!doctype html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>مولد تقارير عدنان العلوي</title>
+<style>
+:root{--navy:#071f53;--gold:#d69711;--blue:#126ca8;--beige:#efe4c8;
+/* Page margins fitted to the new letterhead (header ends ~23.5mm, footer starts ~285mm) */
+--pad-top:27mm;--pad-side:15mm;--pad-bottom:15mm}
+*{box-sizing:border-box}
+body{margin:0;background:#edf1f5;font-family:Tahoma,Arial,sans-serif;color:#17212d}
+.bar{height:65px;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 25px;position:sticky;top:0;z-index:5}
+.bar b{font-size:17px}.bar small{opacity:.7;margin-right:8px}.bar .buttons{display:flex;gap:8px;direction:ltr}
+button,.upload{border:0;border-radius:7px;padding:10px 13px;background:#fff;color:#0c2951;font:inherit;font-size:13px;cursor:pointer}
+.mini{padding:5px 9px;font-size:11px;border:1px solid #cbd5df}
+.main{max-width:1560px;margin:20px auto;display:grid;grid-template-columns:470px minmax(630px,1fr);gap:20px;padding:0 18px;direction:ltr}
+.panel{direction:rtl;background:#fff;border-radius:12px;box-shadow:0 3px 16px #00000012;overflow:hidden;align-self:start;position:sticky;top:85px}
+.panel h1{font-size:17px;padding:16px 19px;margin:0;border-bottom:1px solid #e7ebef}
+.form{padding:18px;max-height:calc(100vh - 150px);overflow:auto}
+.sec{margin-bottom:18px}.sec h2{font-size:13px;margin:0 0 10px;color:var(--navy);padding-bottom:7px;border-bottom:1px solid #e4eaf0}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.full{grid-column:1/-1}
+label{display:block;font-size:11px;font-weight:bold;color:#455666;margin-bottom:4px}
+.check{display:flex;align-items:center;gap:6px;font-weight:normal;font-size:13px;margin-bottom:8px}.check input{width:auto}
+input,select,textarea{width:100%;font:inherit;font-size:13px;border:1px solid #cbd5df;border-radius:6px;padding:8px;background:#fff}
+textarea{min-height:66px;resize:vertical}
+.upload{display:inline-block;border:1px solid #cbd5df}.upload input{display:none}
+.hint{font-size:11px;color:#637180;margin-top:7px}
+.vlist{max-height:210px;overflow:auto;border:1px solid #dbe2e9;border-radius:6px;padding:4px 6px;margin-top:8px;font-size:11.5px}
+.vlist label{display:flex;gap:6px;align-items:center;font-weight:normal;font-size:11.5px;color:#17212d;margin:2px 0;direction:ltr;justify-content:flex-end}
+.vlist input{width:auto}
+.preview-wrap{direction:rtl;overflow:auto}.pages{display:grid;gap:16px}
+
+/* ===== Page ===== */
+.page{position:relative;direction:rtl;background:#fff;width:210mm;height:297mm;margin:auto;box-shadow:0 2px 12px #0003;overflow:hidden;padding:var(--pad-top) var(--pad-side) var(--pad-bottom);font-size:12px;line-height:1.5}
+.letter{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:fill;z-index:0;pointer-events:none}
+.content{position:relative;z-index:1;height:100%;display:flex;flex-direction:column}
+.title{text-align:center;font-size:23px;font-weight:bold;margin:0 0 8px}
+h3{margin:8px 0 4px;font-size:14px}
+.table{width:100%;border-collapse:collapse;table-layout:fixed}
+.table td,.table th{border:1px solid #25384a;padding:3px 5px;vertical-align:top;overflow-wrap:anywhere;word-break:break-word}
+.blue{color:#182fa5;font-weight:bold}
+.detail{margin-top:6px}
+.spec{font-size:9.5px;line-height:1.55}
+.chkopt{display:inline-flex;align-items:center;gap:2px;direction:ltr;white-space:nowrap;margin:0 4px 2px 0;vertical-align:middle;cursor:pointer}
+.chkopt:hover{background:#e3f1fb}
+.tick{color:#125aa7;font-weight:bold;font-size:14px;line-height:1}.box{color:#6b7782;line-height:1}
+.spec-divider{border-top:1px solid #9da8b3;margin:4px 0 3px}
+.findings{border:1px solid #263c50;margin-top:12px;padding:9px;font-size:12px;line-height:1.9;flex:1 1 auto;min-height:120px}
+.signrow{display:flex;align-items:flex-end;justify-content:space-between;margin-top:6px;min-height:55px;font-weight:bold;flex:none}
+.stamp{width:28mm;height:26mm;object-fit:contain;opacity:.9}
+.signature{height:20mm;width:auto;max-width:42mm;object-fit:contain}
+.sigwrap{display:inline-flex;align-items:flex-end;gap:3mm}
+.fee{font-size:13px;text-decoration:underline;direction:ltr;unicode-bidi:isolate}
+
+/* English assessment */
+.en{direction:ltr;text-align:left;font-family:Arial,sans-serif}
+.assess-title{font-size:20px;font-weight:bold;text-align:center;margin:0 0 8px}
+.condition-wrap{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.condition-title{font-size:8.5px;font-weight:bold;letter-spacing:.3px;margin-bottom:3px}
+.grade-legend{font-weight:bold;font-size:11px;margin:8px 0 2px}
+.cond{font-size:7.8px;line-height:1.05}
+.cond td,.cond th{padding:1.6px 2px;line-height:1.08}
+.cond th{background:#c9c7c7;text-align:center;overflow:visible!important;word-break:normal!important}
+.cond col.cond-category{width:30%}.cond col.cond-rate{width:7%}.cond col.cond-note{width:35%}
+.cond .group td{background:var(--beige);font-weight:bold}
+.grade-caption{display:block;font-weight:normal;font-size:4.8px;line-height:1.05;margin-top:1px;white-space:nowrap;letter-spacing:-.25px}
+.rating{cursor:pointer;text-align:center;user-select:none;font-weight:bold;font-size:11px}
+.rating:hover{background:#e3f1fb}
+.rate-E{color:#126ca8}.rate-G{color:#2e9e44}.rate-A{color:#d4b106}.rate-R{color:#e0791f}.rate-P{color:#d32f2f}
+.comment-cell{cursor:text;background:#fff}.comment-cell:focus{outline:2px solid #9bcbe9;outline-offset:-2px}
+.valuation{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:10px}
+.valuation-box{border:1.5px solid #182b40;padding:7px;min-height:72px;font-size:10.5px;line-height:1.45}
+.valuation-box h3{font-size:12px;letter-spacing:2px;margin:0 0 8px}
+.court-note{border:1px solid #1f3349;min-height:50px;padding:6px;margin-top:4px;color:#192ec2;font-size:11.5px;line-height:1.5;flex:1 1 auto}
+.court-value{border:1px solid #1f3349;margin-top:7px;padding:6px;font-size:11.5px;line-height:1.6;flex:none}
+
+/* Photos */
+.photo-title{text-align:center;font-size:22px;font-weight:bold;margin:2px 0 12px;flex:none}
+.photos{flex:1 1 auto;display:grid;min-height:0}
+.slot{border:1px solid #1d2c3e;padding:6px;display:flex;align-items:center;justify-content:center;color:#9aa5af;overflow:hidden;min-height:0}
+.slot img{height:100%;width:100%;object-fit:cover;display:block}
+
+/* Invoices */
+.inv-ar{font-size:14px;line-height:1.7}
+.inv-date{text-align:left;margin:6mm 0 12px}
+.inv-to{font-weight:bold;font-size:15px;margin-bottom:12px}
+.inv-to.has-client{margin-bottom:4px}.inv-client{margin:0 0 12px;line-height:1.55}.inv-client>div{margin:0}
+.inv-title{text-align:center;font-weight:bold;font-size:1.7em;text-decoration:underline;margin:4px 0 14px}
+.inv-party{margin:0}.inv-party b{font-weight:bold}
+.inv-table{margin-top:10px;font-size:.96em}
+.inv-table th{background:#d9e2f3;text-align:center;font-size:1.07em;padding:6px}
+.inv-table td{padding:8px 10px;vertical-align:middle}
+.inv-table .amt{text-align:center;font-weight:bold}
+.inv-table .total td{background:#f2f2f2;font-weight:bold}
+.inv-close{text-align:center;margin:18px 0 6px}
+.inv-sign{display:flex;justify-content:flex-end;margin-top:4px}
+.inv-sign>div{text-align:center;font-weight:bold;min-width:60mm}
+.terms-label{color:#c00000;font-weight:bold;text-decoration:underline;margin:auto 0 4px;direction:ltr;text-align:left;font-family:Arial,sans-serif;font-size:13px}
+.terms{border:1.5px solid #33475b;border-radius:10px;padding:8px 14px;direction:ltr;text-align:left;font-family:Arial,sans-serif;font-size:12.5px;line-height:1.7;white-space:pre-line;flex:none}
+.inv-en{direction:ltr;text-align:left;font-family:Calibri,Arial,sans-serif;font-size:11.5px;line-height:1.35}
+.inv-en .big{text-align:center;font-size:22px;font-weight:bold;text-decoration:underline;margin:0 0 2px}
+.inv-en .head{display:flex;justify-content:space-between}
+.inv-en .addr{white-space:pre-line;margin:2px 0 2px;line-height:1.3}
+.inv-en .sub{text-align:center;font-weight:bold;text-decoration:underline;font-size:13px;margin:3px 0}
+.bulk{font-size:8px;line-height:1.1;text-align:center}
+.bulk th{background:#b4c6e7;padding:1.5px 1px;font-size:7.8px}
+.bulk td{padding:1.3px 1.5px;vertical-align:middle;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bulk td.fee-cell{cursor:text;min-width:20px}
+.bulk-tail{display:flex;gap:4mm;align-items:flex-end;margin-top:auto;flex:none}
+.bulk-tail .terms{flex:1;font-size:10px;line-height:1.4;padding:4px 10px}
+.bulk-tail .terms-label{margin:0 0 2px;font-size:11px}
+.bulk-tail .stamp{width:22mm;height:21mm}.bulk-tail .signature{height:15mm}
+.bulk .subtotal td{background:#f7caac;font-weight:bold}
+.contd{text-align:center;font-size:10px;color:#555;margin-top:4px}
+
+/* doc number, PAID stamp, editable cells, log */
+.docno{position:absolute;top:23.6mm;left:var(--pad-side);z-index:2;color:#d00000;font-weight:bold;font-size:13px;font-family:Arial,sans-serif;direction:ltr;line-height:1}
+.paid{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;border:3px double #d00000;color:#d00000;border-radius:6px;padding:3px 10px 2px;transform:rotate(-12deg);font-family:Arial,sans-serif;font-weight:900;font-size:22px;letter-spacing:3px;line-height:1;opacity:.88;align-self:center;margin:0 2mm}
+.paid small{font-size:11px;letter-spacing:1px;margin-top:2px;font-weight:bold}
+.ed{cursor:text}.ed:hover{outline:1px dashed #126ca8}.ed:focus{outline:2px solid #9bcbe9;background:#fff}
+.ovr{background:#fff3c4!important}
+.extra-row{border:1px solid #dbe2e9;border-radius:7px;padding:7px;margin-top:7px;position:relative;background:#fafcfe}
+.extra-row .grid{gap:6px}.extra-row input,.extra-row textarea{padding:5px;font-size:12px}.extra-row textarea{min-height:40px}
+.extra-row .del{position:absolute;left:6px;top:4px;background:#fde8e8;color:#b00;border:0;border-radius:5px;padding:1px 7px;font-size:13px;cursor:pointer}
+.extra-row .kind{font-size:11px;font-weight:bold;color:#071f53;margin-bottom:5px}
+.lognow{font-size:12px;color:#455666;margin-top:6px}.lognow b{color:#d00000}
+.modal{position:fixed;inset:0;background:#0007;z-index:20;display:none;align-items:center;justify-content:center;direction:rtl}
+.modal.open{display:flex}
+.modal-box{background:#fff;border-radius:12px;width:min(980px,94vw);max-height:88vh;display:flex;flex-direction:column;box-shadow:0 10px 40px #0005}
+.modal-head{display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid #e4eaf0;flex-wrap:wrap}
+.modal-head h3{margin:0 0 0 auto;font-size:16px;color:#071f53}
+.modal-head select{width:auto}
+.modal-body{overflow:auto;padding:10px 16px}
+.logt{width:100%;border-collapse:collapse;font-size:12.5px}
+.logt th,.logt td{border-bottom:1px solid #e7ebef;padding:6px;text-align:right}
+.logt th{background:#f3f6f9;position:sticky;top:0}
+.logt td.num{color:#d00000;font-weight:bold}
+.modal-foot{padding:10px 16px;border-top:1px solid #e4eaf0;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.btn-blue{background:#071f53;color:#fff}
+/* segmented language switch */
+.seg{display:inline-flex;border:1px solid #cbd5df;border-radius:8px;overflow:hidden}
+.seg label{margin:0;display:flex;align-items:center;cursor:pointer;font-size:13px;font-weight:bold;color:#455666}
+.seg input{display:none}
+.seg span{padding:7px 18px;display:block}
+.seg input:checked+span{background:#071f53;color:#fff}
+.inv-ltr{direction:ltr;text-align:left;font-family:Arial,sans-serif}
+.inv-ltr .inv-date{text-align:right}
+.letterbox{text-transform:uppercase;text-align:center;font-weight:bold;color:#d00000}
+.logstatus{display:flex;align-items:center;gap:8px;flex-wrap:wrap;border-radius:7px;padding:7px 9px;margin-top:8px;font-size:12px;font-weight:bold}
+.logstatus.ok{background:#e7f6ec;color:#1d6b35}.logstatus.warn{background:#fff4d6;color:#8a5a00}.logstatus.bad{background:#fde8e8;color:#a40000}.logstatus.na{background:#eef1f4;color:#455666}
+.logstatus button{padding:5px 10px;font-size:12px;border:1px solid currentColor}
+.terms-qr{display:flex;align-items:center;gap:10px;white-space:normal}
+.terms-qr .terms-text{flex:1;white-space:pre-line}
+.qr{flex:none;display:flex;flex-direction:column;align-items:center;gap:1px}
+.qr img{width:24mm;height:auto;display:block}
+.qr span{font-size:8px;color:#555;font-weight:bold;letter-spacing:.3px}
+.bulk-tail .qr img{width:16mm}.bulk-tail .qr span{font-size:7px}.bulk-tail .terms-qr{padding:2px 8px}
+.plate-head{display:grid;grid-template-columns:1fr;gap:0}
+.plate-notes{border:1.5px solid #2f4a6b;box-shadow:inset 0 0 0 3px #fff,inset 0 0 0 4px #2f4a6b;padding:10px 14px;margin-top:4px;color:#182fa5;font-size:13px;line-height:2;min-height:30mm}
+.plate-notes ul{margin:0;padding-right:20px}.plate-notes li::marker{color:#d00000}
+.plate-notes .lbl{color:#17212d}
+.plate-wrap{flex:1 1 auto;display:flex;align-items:center;justify-content:center;min-height:0;padding:4mm 0}
+.plate-wrap svg{width:165mm;height:auto;max-height:100%}
+.plate-bottom{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:6mm;flex:none;align-items:end}
+.plate-val{font-size:13px;line-height:1.7;color:#17212d}.plate-val .box>div{margin:3px 0}
+.plate-val .box,.plate-sig .box{border:1px solid #25384a;padding:6px 9px}
+.plate-val .cap,.plate-sig .cap{font-weight:bold;margin-bottom:3px;font-size:12.5px}
+.plate-sig .box{min-height:30mm;display:flex;flex-direction:column;justify-content:space-between;font-size:13px;color:#17212d}.plate-sig .stamp{width:22mm;height:21mm}.plate-sig .signature{height:16mm;max-width:36mm}
+.feebox{display:inline-block;border:1.5px solid #182b40;padding:5px 12px;font-weight:bold;font-size:12.5px;text-decoration:none;background:#fff}
+.en .feebox,.signrow .feebox[dir],.court-fee{direction:ltr}
+.cond{font-size:8.8px!important}.cond td,.cond th{padding:2.4px 3px!important}.cond tr.z td{background:#f2f2f2}.cond tr.z td.rating{background:#f2f2f2}
+.findings{display:flex;flex-direction:column;flex:1 1 0!important;min-height:30mm!important;overflow:hidden}.findings>.efm{flex:1}
+@media screen{.findings{overflow:visible}}
+/* Preserve typed spaces using native editing, including Arabic and English text. */
+#pages [contenteditable="true"]{white-space:pre-wrap}
+/* Keep the compact vehicle table on one line while preserving its spaces. */
+#pages .bulk [contenteditable="true"]{white-space:pre}
+.efm{min-height:1.4em}.efm.bul>div{position:relative;padding-inline-start:16px}.efm.bul>div::before{content:"•";position:absolute;inset-inline-start:2px;color:#d00000}
+.court-note .efm.bul>div::before{color:#182fa5}
+.plate-notes .efm.bul>div{padding-inline-start:22px}
+.plate-val .box{padding:10px 12px!important}.plate-val .box>div{margin:0 0 12px!important;line-height:1.9}.plate-val .box>div:last-child{margin-bottom:0!important}
+@media screen{.ef{outline:none;border-radius:2px;cursor:text}.ef:hover{box-shadow:0 0 0 1px #7fb2d9}.ef:focus{box-shadow:0 0 0 2px #126ca8;background:#f3f9ff}
+ .ef:empty{display:inline-block;min-width:2.5em;min-height:1em;background:#fff6cc;vertical-align:middle}
+ .ef:empty[data-ph]::before{content:attr(data-ph);color:#9aa5af;font-weight:normal}.efm:empty{display:block}
+ .oe{opacity:.45}}
+@media print{.oe{display:none}.ef:empty{display:none}}
+.efm>div.red,.efm>div.red::before{color:#d00000!important}
+.blue.km-mid{color:#e07b00}.blue.km-high{color:#d00000}
+.redpick{margin-top:5px;font-size:11.5px}.redpick .rp-t{color:#455666;font-weight:bold;margin-bottom:2px}
+.redpick label{display:flex;gap:6px;align-items:flex-start;font-weight:normal;font-size:11.5px;color:#17212d;margin:2px 0;cursor:pointer}
+.redpick input{width:auto;margin-top:2px}.redpick label.on span{color:#d00000;font-weight:bold}
+.cond td.rating{font-size:12.5px;font-weight:900;line-height:1;padding:0 1px!important;-webkit-text-stroke:.4px currentColor}
+/* grade notes follow the tick: E/G/A blue, R/P red */
+.comment-cell.note-blue{color:#182fa5;font-weight:bold}.comment-cell.note-red{color:#d00000;font-weight:bold}
+/* single photo: show the whole photo, don't crop it */
+.photos.one .slot img{object-fit:contain}
+.lblsec summary{cursor:pointer;font-size:13px;font-weight:bold;color:var(--navy);padding:4px 0}.lblsec .grid{margin:8px 0}.lblsec input{padding:5px;font-size:12px}
+.acc-box{width:min(1250px,97vw)!important}
+.acc-tab.on{background:#071f53;color:#fff}
+.acc-filters{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;margin-bottom:10px}.acc-filters label{font-size:11.5px;margin:0;display:flex;flex-direction:column;gap:3px}.acc-filters select,.acc-filters input{padding:5px;font-size:12.5px;width:auto;min-width:120px}
+.acc-cards{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:12px}.acc-card{border:1px solid #dbe2e9;border-radius:9px;padding:8px 10px;background:#fafcfe}.acc-card .t{font-size:11.5px;color:#637180}.acc-card .v{font-size:17px;font-weight:bold;color:#071f53}.acc-card .s{font-size:11px;color:#637180}
+.acc-card.ok .v{color:#1d6b35}.acc-card.wait .v{color:#b86200}.acc-card.bad .v{color:#c00}.acc-card.bad{border-color:#f3b4b4;background:#fff5f5}
+.pill{display:inline-block;border-radius:20px;padding:2px 9px;font-size:11.5px;font-weight:bold;white-space:nowrap}.pill.ok{background:#e7f6ec;color:#1d6b35}.pill.wait{background:#fff4d6;color:#8a5a00}.pill.bad{background:#fde8e8;color:#b00}
+.acc-t tr.r-over td{background:#fff6f6}.acc-t a,.acc-two a{color:#126ca8;text-decoration:none}.acc-t a:hover,.acc-two a:hover{text-decoration:underline}
+.acc-t tr.sumrow td{font-weight:bold;background:#f3f6f9}
+.acc-two{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:14px}.acc-two h4{margin:0 0 6px;color:#071f53}.acc-two td.g{color:#1d6b35}.acc-two td.o{color:#b86200}.acc-two td.r{color:#c00}.acc-two tr.sel td{background:#eaf3fb}
+.btn-green{background:#1d6b35!important;color:#fff!important;border:0!important}
+.badge-over{background:#d00000!important;color:#fff!important;font-weight:bold;animation:pulse 2s infinite}@keyframes pulse{50%{opacity:.75}}
+@media print{.ovr{background:none!important}.ed:hover,.ed:focus{outline:none}}
+@media(max-width:1000px){.main{grid-template-columns:1fr}.form{max-height:none}.panel{position:static}}
+@media print{
+@page{size:A4 portrait;margin:0}
+*{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+html,body{width:210mm;margin:0;padding:0;background:#fff}
+.bar,.panel{display:none!important}
+.main,.preview-wrap,.pages{display:block!important;margin:0!important;padding:0!important;max-width:none!important;overflow:visible!important}
+.page{width:210mm;height:296.5mm;margin:0!important;box-shadow:none!important;overflow:hidden;break-after:page;page-break-after:always;break-inside:avoid}
+.page:last-child{break-after:auto;page-break-after:auto}
+.chkopt:hover,.rating:hover{background:none}
+}
+
+
+#colInfo{display:flex;gap:8px;align-items:flex-start;margin-top:6px}
+.colsum{flex:1;font-size:11px;line-height:1.7;color:#455666;background:#f3f6f9;border-radius:7px;padding:6px 8px}
+.colsum.warn{background:#fff4d6;color:#8a5a00}.colsum span{display:inline-block;background:#fff;border:1px solid #dbe2e9;border-radius:5px;padding:0 5px;margin:1px 0 1px 3px;white-space:nowrap}
+.colt td{vertical-align:middle}.colt td:first-child{width:38%}.colt select{width:100%;font-size:14px;padding:7px}
+.pick-tools{display:flex;gap:6px;align-items:center;margin-top:8px}.pick-tools span{font-size:11.5px;color:#637180;margin-inline-start:auto}
+.pick{display:grid;grid-template-columns:repeat(auto-fill,minmax(78px,1fr));gap:6px;margin-top:6px;max-height:340px;overflow:auto;padding:2px}
+.pick .pp{position:relative;aspect-ratio:1;border-radius:7px;overflow:hidden;cursor:pointer;opacity:.4;outline:2px solid transparent;outline-offset:-2px;transition:opacity 120ms ease}
+.pick .pp:hover{opacity:.75}.pick .pp.on{opacity:1;outline-color:#126ca8}
+.pick .pp img{width:100%;height:100%;object-fit:cover;display:block}
+.pick .pp b{position:absolute;top:3px;right:3px;background:#126ca8;color:#fff;border-radius:99px;font-size:11px;min-width:19px;text-align:center;padding:1px 5px}
+/* ===== Field inspection mode (phone / iPad) ===== */
+.fd{position:fixed;inset:0;z-index:40;background:#f2f2f7;display:flex;flex-direction:column;direction:rtl;
+ font-family:-apple-system,BlinkMacSystemFont,"SF Arabic","SF Pro Text","Segoe UI",system-ui,Tahoma,Arial,sans-serif;color:#1d1d1f;-webkit-font-smoothing:antialiased;-webkit-text-size-adjust:100%}
+.fd[hidden]{display:none}
+body.fd-on{overflow:hidden}
+body.fd-on>.bar,body.fd-on>.main{display:none}
+.fd *{box-sizing:border-box}
+.fd-bar{flex:none;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:calc(10px + env(safe-area-inset-top)) 16px 10px;
+ background:rgba(242,242,247,.8);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);box-shadow:0 .5px 0 rgba(60,60,67,.2);position:relative;z-index:2}
+.fd-bar b{font-size:17px;font-weight:700}
+.fd-link{background:none;border:0;color:#0a4cc2;font:inherit;font-size:15px;padding:6px 0;cursor:pointer}
+.fd-count{font-size:13px;color:#6e6e73;min-width:70px;text-align:left}
+.fd-scroll{flex:1;overflow:auto;-webkit-overflow-scrolling:touch;padding:14px 14px 30px;max-width:760px;width:100%;margin:0 auto}
+.fd-h{font-size:13px;font-weight:600;color:#6e6e73;margin:18px 6px 7px;display:flex;justify-content:space-between;align-items:center}
+.fd-h:first-child{margin-top:4px}
+.fd-card{background:#fff;border-radius:14px;padding:12px;box-shadow:0 .5px 0 rgba(0,0,0,.04)}
+.fd-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.fd-grid .full{grid-column:1/-1}
+.fd label.fd-l{display:block;font-size:12px;color:#6e6e73;margin:0 2px 4px;font-weight:500}
+.fd input,.fd textarea,.fd select{width:100%;font:inherit;font-size:16px;color:#1d1d1f;background:#f2f2f7;border:0;border-radius:10px;padding:10px 12px;outline:none;-webkit-appearance:none;appearance:none}
+.fd input:focus,.fd textarea:focus{background:#fff;box-shadow:0 0 0 2px #0a4cc2}
+.fd textarea{min-height:110px;line-height:1.55;resize:vertical}
+.fd button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.fd-btn,.fd-btn2,.fd-chip,.fd-rate,.fd-row,.fd-seg button,.fd-small{transition:transform 120ms cubic-bezier(.32,.72,0,1),background-color 150ms ease}
+.fd-btn:active,.fd-btn2:active,.fd-chip:active,.fd-rate:active,.fd-row:active,.fd-seg button:active,.fd-small:active{transform:scale(.96)}
+.fd-btn{border:0;border-radius:14px;background:#071f53;color:#fff;font-size:16px;font-weight:600;padding:14px 16px}
+.fd-btn2{border:0;border-radius:14px;background:#e4e4ea;color:#1d1d1f;font-size:16px;font-weight:600;padding:14px 16px}
+.fd-btn[disabled]{opacity:.4}
+.fd-small{border:0;border-radius:980px;background:#e9e9ef;color:#1d1d1f;font-size:14px;font-weight:600;padding:8px 14px}
+.fd-small.blue{background:#071f53;color:#fff}
+.fd-row-tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.fd-search{margin:10px 0 8px}
+.fd-list{max-height:260px;overflow:auto;margin:0 -4px;-webkit-overflow-scrolling:touch}
+.fd-row{display:flex;align-items:center;gap:10px;width:100%;text-align:right;border:0;background:none;padding:10px 8px;border-radius:10px;font-size:15px;color:#1d1d1f}
+.fd-row+.fd-row{box-shadow:0 -.5px 0 rgba(60,60,67,.15)}
+.fd-row.on{background:#e8effc}
+.fd-row .t{flex:1;min-width:0}.fd-row .t small{display:block;color:#86868b;font-size:12px;margin-top:2px;direction:ltr;text-align:right}
+.fd-row .ok{color:#1d8a3a;font-weight:700;font-size:14px}
+.fd-sel{display:flex;align-items:center;gap:10px;background:#e8effc;border-radius:12px;padding:10px 12px;margin-top:10px;font-weight:600}
+.fd-sel small{display:block;font-weight:400;color:#4a5a70;font-size:12px}
+.fd-seg{display:flex;background:#e4e4ea;border-radius:10px;padding:2px;gap:2px}
+.fd-seg button{flex:1;border:0;background:none;border-radius:8px;padding:9px 4px;font-size:14px;font-weight:600;color:#1d1d1f}
+.fd-seg button.on{background:#fff;box-shadow:0 3px 8px rgba(0,0,0,.12)}
+.fd-spec{margin-bottom:12px}.fd-spec:last-child{margin-bottom:0}
+.fd-chips{display:flex;flex-wrap:wrap;gap:7px}
+.fd-chip{border:0;border-radius:980px;background:#f2f2f7;padding:8px 14px;font-size:14px;color:#1d1d1f;direction:ltr}
+.fd-chip.on{background:#071f53;color:#fff}
+.fd-group{font-size:13px;font-weight:700;color:#071f53;background:#efe4c8;border-radius:8px;padding:6px 10px;margin:12px 0 4px}
+.fd-group:first-child{margin-top:0}
+.fd-cond{padding:9px 2px;box-shadow:0 .5px 0 rgba(60,60,67,.12)}
+.fd-cond:last-child{box-shadow:none}
+.fd-cond-top{display:flex;align-items:center;gap:8px}
+.fd-cond-name{flex:1;min-width:0;font-size:14px;line-height:1.3}
+.fd-cond-name small{display:block;color:#86868b;font-size:11px;direction:ltr;text-align:right}
+.fd-rates{display:flex;gap:5px;flex:none}
+.fd-rate{width:38px;height:38px;border-radius:10px;border:0;background:#f2f2f7;font-size:15px;font-weight:800;color:#8e8e93;display:flex;align-items:center;justify-content:center;flex-direction:column;line-height:1}
+.fd-rate small{font-size:8.5px;font-weight:600;margin-top:2px}
+.fd-rate.on.E{background:#126ca8;color:#fff}.fd-rate.on.G{background:#2e9e44;color:#fff}.fd-rate.on.A{background:#d4b106;color:#fff}.fd-rate.on.R{background:#e0791f;color:#fff}.fd-rate.on.P{background:#d32f2f;color:#fff}
+.fd-note{margin-top:7px;font-size:15px!important;padding:8px 10px!important}
+.fd-addnote{border:0;background:none;color:#0a4cc2;font-size:13px;padding:4px 0 0}
+.fd-legend{font-size:12px;color:#86868b;margin:0 4px 8px;line-height:1.6}
+.fd-pics{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px;margin-top:10px}
+.fd-pic{position:relative;aspect-ratio:1;border-radius:10px;overflow:hidden;background:#e4e4ea}
+.fd-pic img{width:100%;height:100%;object-fit:cover;display:block}
+.fd-pic .no{position:absolute;top:5px;right:5px;background:rgba(0,0,0,.55);color:#fff;font-size:11px;font-weight:700;border-radius:980px;padding:1px 7px}
+.fd-pic .x,.fd-pic .mv{position:absolute;border:0;width:28px;height:28px;border-radius:50%;background:rgba(0,0,0,.55);color:#fff;font-size:14px;display:flex;align-items:center;justify-content:center;padding:0}
+.fd-pic .x{top:5px;left:5px}.fd-pic .mv{bottom:5px;right:5px}
+.fd-saved .fd-row{cursor:default}
+.fd-foot{flex:none;display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:10px 14px calc(10px + env(safe-area-inset-bottom));background:rgba(242,242,247,.85);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);box-shadow:0 -.5px 0 rgba(60,60,67,.2)}
+.fd-foot>div{max-width:760px}
+.fd-toast{position:fixed;left:50%;bottom:calc(90px + env(safe-area-inset-bottom));transform:translate(-50%,20px);opacity:0;background:rgba(30,30,32,.92);color:#fff;padding:11px 18px;border-radius:980px;font-size:14px;font-weight:600;z-index:60;pointer-events:none;transition:opacity 200ms ease,transform 300ms cubic-bezier(.32,.72,0,1);max-width:90vw;text-align:center}
+.fd-toast.show{opacity:1;transform:translate(-50%,0)}
+.fd-empty{color:#86868b;font-size:14px;text-align:center;padding:10px}
+.fd-sub{font-size:12px;color:#86868b;margin-top:8px;line-height:1.5}
+@media(min-width:700px){.fd-grid{grid-template-columns:1fr 1fr 1fr}.fd-rate{width:44px;height:44px}}
+@media(prefers-reduced-motion:reduce){.fd-btn:active,.fd-btn2:active,.fd-chip:active,.fd-rate:active,.fd-row:active,.fd-seg button:active,.fd-small:active{transform:none}}
+@media print{.fd,.fd-toast{display:none!important}}
+
+.syncbox{margin:8px 0 4px}
+.syncstat{font-size:12px;font-weight:bold;border-radius:7px;padding:7px 9px}.syncstat.on{background:#e7f6ec;color:#1d6b35}.syncstat.off{background:#eef1f4;color:#455666}
+#syncListBtn:disabled{opacity:.45;cursor:not-allowed}
+.btn-inbox{background:#1d8a3a!important;color:#fff!important;font-weight:bold}
+.fd-conn{display:flex;align-items:center;gap:10px;justify-content:space-between;background:#fff7e0;border-radius:12px;padding:10px 12px;margin-bottom:10px;font-size:14px}
+.fd-conn.on{background:#e7f6ec;color:#1d6b35;font-weight:600;justify-content:flex-start}.fd-conn.on .fd-small{margin-inline-start:auto}
+.fd-lists{margin-bottom:10px}
+.fd-btn2[disabled]{opacity:.55}
+
+.privsec{background:#fffbe6;border:1px solid #f3e2a0;border-radius:10px;padding:10px 12px}
+.privsec h2{border:0;padding:0;margin:0 0 6px;color:#7a5c00}.privsec h2 small{font-weight:normal;color:#9a7b1c;font-size:11px}
+.privsec textarea{min-height:40px;background:#fffef6;border-color:#eadb9c;font-size:13px;line-height:1.6}
+.privsec.has{box-shadow:0 0 0 2px #f1c40f}.privsec.has textarea{min-height:90px}
+@media print{.privsec{display:none!important}}
+.fd-priv{background:#fffbe6!important;box-shadow:inset 0 0 0 1px #f3e2a0!important}
+.fd-priv textarea{background:#fffef6;min-height:70px}
+.ml-t{width:100%;border-collapse:collapse}.ml-t th{font-size:11.5px;color:#637180;text-align:right;padding:4px;font-weight:bold}
+.ml-t td{padding:3px}.ml-t input{width:100%;font:inherit;font-size:13px;padding:6px;border:1px solid #cbd5df;border-radius:6px}
+.ml-t td.x button{background:#fde8e8;color:#b00;border:0;border-radius:6px;padding:5px 9px;cursor:pointer}
+/* laptop side: list of inspections in a received file */
+.fd-in{margin-top:8px;display:flex;flex-direction:column;gap:6px}
+.fd-in-row{display:flex;align-items:center;gap:8px;border:1px solid #dbe2e9;border-radius:8px;padding:6px 8px;font-size:12px;background:#fafcfe}
+.fd-in-row .t{flex:1}.fd-in-row small{color:#637180;display:block}
+.fd-in-row.done{background:#eef8f0;border-color:#bfe3c8}
+</style></head><body>
+<header class="bar"><b>مولد تقارير عدنان العلوي <small>ADNAN AL ALAWI · v2026-11-04</small></b><div class="buttons"><button id="inboxBadge" class="btn-inbox" style="display:none" onclick="document.querySelector('#syncInbox').scrollIntoView({behavior:'smooth',block:'center'})"></button><button onclick="fdOpen()">📱 فحص ميداني</button><button onclick="saveDraft()">حفظ مسودة</button><button onclick="loadDraft()">استرجاع مسودة</button><button id="overdueBadge" class="badge-over" style="display:none" onclick="openAccounts('over')"></button><button onclick="openAccounts()">الحسابات</button><button onclick="openLog()">السجل</button><button onclick="printReport()">تصدير PDF</button></div></header>
+<main class="main"><aside class="panel"><h1>تقرير جديد</h1><form class="form" id="f" onsubmit="return false">
+<div class="sec privsec" id="privSec"><h2>📝 ملاحظاتي <small>— للتذكير فقط، لا تظهر في التقرير ولا في PDF</small></h2><textarea id="privNotes" placeholder="ملاحظات تريد تذكّرها أثناء كتابة التقرير (تصل أيضاً من الهاتف)"></textarea></div>
+
+<div class="sec"><h2>نوع المستند</h2><select id="type">
+<optgroup label="التقارير">
+<option value="report">تقرير</option>
+<option value="facilities">تثمين انقليزي</option>
+<option value="court">تثمين عربي</option>
+<option value="plates">تقييم لوحات</option>
+</optgroup>
+<optgroup label="الفواتير والتسعيرات">
+<option value="invoiceAr">فاتورة تثمين مركبة</option>
+<option value="quoteAr">تسعيرة تثمين مركبة</option>
+<option value="invoiceBulk">Invoice التسهيلات (عدة مركبات)</option>
+</optgroup>
+</select><div class="hint">نفس البيانات تُستخدم في كل المستندات — املأ مرة واحدة ثم بدّل النوع لإصدار التقرير ثم الفاتورة.</div></div>
+
+<div class="sec"><h2>رقم المستند (يظهر بالأحمر أعلى يسار الصفحة)</h2><div class="grid" style="grid-template-columns:70px 1fr auto"><div><label>الحرف</label><input id="docLetter" class="letterbox" maxlength="4"></div><div><label>الرقم</label><input id="docNo" inputmode="numeric"></div><div style="display:flex;align-items:flex-end;gap:6px"><button type="button" class="mini" onclick="logDoc(true)">تسجيل الآن</button><button type="button" class="mini" onclick="openLog()">عرض السجل</button></div></div><div class="logstatus na" id="logStatus">جارٍ تحميل السجل…</div><div class="lognow" id="logInfo"></div><div class="hint">الحروف: R تقرير · E تثمين (عربي وانجليزي سجل واحد) · P تقييم لوحات · I فاتورة · Q تسعيرة · TI Invoice التسهيلات. يمكنك تغيير الحرف لهذا المستند فقط — تسلسل الأرقام في السجل لا يتغير. بعد تصدير PDF سيسألك البرنامج لتسجيل الرقم، ويُحفظ معه ملف تعديل لتتمكن من فتحه لاحقاً من «السجل» وتصحيحه.</div></div>
+
+<div class="sec"><h2>استيراد قائمة الشركة</h2><div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap"><label class="upload">استيراد Excel<input id="excel" type="file" accept=".xlsx,.xls,.csv"></label><label class="check" data-for="court" style="margin:0" title="اسم الملف يصبح 1-REG#XXXXXX"><input id="tasNaming" type="checkbox"> تسهيلات</label></div><div class="hint" id="excelMsg">ارفع ملف الشركة (أي شكل — الأعمدة بالعربي أو الإنجليزي)، ثم اختر السيارة.</div><div id="colInfo"></div><select id="records" disabled style="margin-top:8px" data-for="report facilities court invoiceAr quoteAr plates"><option>لا يوجد ملف مستورد</option></select></div>
+
+<div class="sec"><h2>الفحص الميداني (من الهاتف / الآيباد)</h2><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><label class="upload">فتح ملف فحص<input id="fieldIn" type="file" accept=".json,application/json"></label><button type="button" class="mini" onclick="fdOpen()">وضع الهاتف</button></div><div class="syncbox"><div id="syncStat" class="syncstat off"></div><div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px"><button type="button" class="mini btn-blue" id="syncListBtn" onclick="sendListToPhone()">📤 إرسال القائمة للهاتف</button><button type="button" class="mini" onclick="openManual()">✍️ قائمة يدوية</button><button type="button" class="mini" id="syncRefBtn" onclick="syncInboxRefresh()">تحديث</button><button type="button" class="mini" id="syncConnBtn" onclick="syncConnect(()=>{syncDeskStatus('تم الربط ✓');syncInboxRefresh()})">ربط Google Drive</button></div><div id="syncInbox"></div></div><div class="hint" id="fieldMsg">بدون ربط: افتح الملف المرسل من الهاتف — تُعبأ بيانات السيارة والحالة والملاحظات والصور تلقائياً.</div><div class="fd-in" id="fieldList"></div></div>
+
+<div class="sec"><h2>بيانات عامة</h2><div class="grid"><div><label>التاريخ</label><input id="date" type="date"></div><div data-for="report facilities court invoiceAr quoteAr plates"><label for="case">رقم المعاملة</label><input id="case"></div><div data-for="report facilities court invoiceAr quoteAr"><label for="lawsuit">رقم الدعوى</label><input id="lawsuit"></div><div data-for="report facilities court invoiceAr quoteAr plates"><label for="owner">اسم المالك / مقدم الطلب</label><input id="owner"></div><div data-for="report facilities plates court"><label for="phone">الهاتف / فاكس</label><input id="phone"></div><div data-for="report facilities plates court"><label for="email">البريد الإلكتروني</label><input id="email"></div><div data-for="report invoiceAr quoteAr plates court"><label for="execution">ملف التنفيذ</label><input id="execution"></div><div data-for="report facilities court invoiceAr quoteAr plates"><label for="fee">رسوم الخبير (د.ب)</label><input id="fee" type="number" min="0" step="0.001"></div></div></div>
+
+<div class="sec" data-for="report facilities court invoiceAr quoteAr plates"><h2>تفاصيل المركبة</h2><div class="grid"><div data-for="report facilities court invoiceAr quoteAr plates"><label for="reg">رقم التسجيل</label><input id="reg"></div><div data-for="report facilities court plates"><label>نوع اللوحة</label><input id="plateType" list="plateTypes" value="خصوصي"><datalist id="plateTypes"><option value="خصوصي"><option value="أجرة"><option value="نقل"><option value="دراجة نارية"><option value="مؤقتة"><option value="تصدير"></datalist></div><div data-for="report facilities court invoiceAr quoteAr"><label for="make">الصانع</label><input id="make"></div><div data-for="report facilities court invoiceAr quoteAr"><label for="model">الطراز</label><input id="model"></div><div data-for="report facilities court invoiceAr quoteAr"><label for="year">سنة الصنع</label><input id="year" type="number"></div><div data-for="report facilities court"><label for="km">الكيلومترات</label><input id="km"><div class="hint" id="kmInfo" style="margin-top:3px"></div></div><div data-for="report facilities court"><label for="vin">رقم القاعدة VIN</label><input id="vin"></div><div data-for="report facilities court"><label for="color">اللون</label><input id="color"></div><div data-for="report facilities court"><label for="engine">حجم المحرك</label><input id="engine"></div></div></div>
+
+<div class="sec" data-for="report facilities court"><h2>المواصفات</h2><div class="grid"><div><label>الوقود</label><select id="fuel"><option>Petrol</option><option>Diesel</option></select></div><div><label>نوع التنفس (Aspiration)</label><select id="asp"><option>NA</option><option>Turbo</option><option>Supercharged</option></select></div><div><label>الأسطوانات</label><select id="cyl"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>8</option><option>10</option><option>12</option></select></div><div><label>ناقل الحركة</label><select id="trans"><option>Auto</option><option>Manual</option><option>Auto T</option><option>Auto F1</option><option>4WD</option></select></div><div><label>نوع الهيكل</label><select id="body"><option>جيب</option><option>صالون</option><option>Sport</option><option>واجون</option><option>باص</option><option>Van</option><option>كشف</option><option>دراجة نارية</option></select></div></div></div>
+
+<div class="sec" data-for="report"><h2>ملاحظات التقرير</h2><label>عنوان التقرير</label><input id="reportTitle" placeholder="تقييم المركبات" style="margin-bottom:8px"><textarea id="notes" placeholder="اكتب الملاحظات الفنية هنا"></textarea><div class="redpick" data-red="notes"></div><div class="hint">إذا زادت الملاحظات عن المربع، تُكمل تلقائياً في صفحة جديدة.</div></div>
+<div class="sec" data-for="facilities"><h2>تقييم التسهيلات</h2><div class="grid"><div><label>قيمة المركبة المقدرة (د.ب)</label><input id="estimated" type="number" min="0" step="0.001"></div><div><label>قيمة السكراب (د.ب)</label><input id="salvage" type="number" min="0" step="0.001"></div><div class="full"><label>تعليق حالة المركبة</label><textarea id="facComment" placeholder="The vehicle has been involved in an accident..."></textarea><div class="redpick" data-red="facComment"></div></div></div></div>
+<div class="sec" data-for="court"><h2>التثمين للمحكمة</h2><div class="grid"><div><label>قيمة المركبة المقدرة (د.ب)</label><input id="courtValue" type="number" min="0" step="0.001"></div><div><label>نسبة الخصم %</label><input id="depreciation" type="number" min="0" max="100" step="0.01"></div><div class="full"><label>ملاحظات حالة المركبة</label><textarea id="courtNotes" placeholder="اكتب كل ملاحظة في سطر منفصل"></textarea><div class="redpick" data-red="courtNotes"></div></div></div><div class="hint">القيمة بعد الخصم تحسب تلقائياً.</div></div>
+
+<div class="sec" data-for="plates"><h2>تقييم اللوحة</h2><div class="grid">
+<div><label>نوع المركبة (يظهر في الملاحظات)</label><input id="plateVeh" value="سيارة"></div>
+<div class="full"><label>المنفذ له</label><input id="pFor" value="شركة البحرين للتسهيلات التجارية"></div>
+<div class="full"><label>المنفذ ضده</label><input id="pAgainst"></div>
+<div class="full"><label>ملاحظات إضافية (كل ملاحظة في سطر)</label><textarea id="pNotes" style="min-height:44px"></textarea></div>
+<div><label>القيمة الحالية المقدرة (د.ب)</label><input id="plateValue" type="number" min="0" step="0.001"></div>
+<div><label>نسبة الخصم %</label><input id="plateDep" type="number" min="0" max="100" step="0.01"></div>
+</div><div class="hint">السطر الأول من الملاحظات وصورة اللوحة يتم إنشاؤهما تلقائياً من رقم اللوحة ونوعها. القيمة بعد الخصم والمبلغ كتابةً تحسب تلقائياً. الصور اختيارية — تُضاف صفحة الصور فقط إذا اخترت صوراً.</div></div>
+
+<div class="sec" data-for="invoiceAr quoteAr"><details class="lblsec"><summary>نصوص الفاتورة / التسعيرة (كل نص قابل للتعديل)</summary><div class="grid lblpanel"></div><button type="button" class="mini" onclick="resetLabels(this)">إرجاع النصوص الأصلية</button><div class="hint">يمكنك أيضاً الضغط على أي نص في المعاينة وتعديله مباشرة. التعديلات تُحفظ على هذا الجهاز.</div></details></div>
+<div class="sec" data-for="invoiceAr quoteAr"><h2>بيانات الفاتورة / التسعيرة</h2><div class="grid">
+<div class="full"><label>لغة المستند</label><div class="seg"><label><input type="radio" name="invLang" value="ar" checked><span>عربي</span></label><label><input type="radio" name="invLang" value="en"><span>English</span></label></div><div class="hint" style="margin-top:4px">النسختان العربية والإنجليزية تستخدمان نفس السجل ونفس التسلسل.</div></div>
+<div class="full lang-ar"><label>عنوان المستند</label><input id="invTitleAr"><div class="hint" style="margin-top:3px">اتركه فارغاً لاستخدام العنوان الأساسي.</div></div>
+<div class="full lang-en"><label>Document title (عنوان المستند)</label><input id="invTitleEn" dir="ltr"><div class="hint" style="margin-top:3px">Leave empty for the standard title.</div></div>
+<div class="full lang-ar"><label>السادة الأفاضل /</label><input id="arTo" list="companyList" autocomplete="off" value="شركة الجبل للتنفيذ"><div class="hint" style="margin-top:3px">اكتب اسم الشركة أو اختره من القائمة — بيانات الشركات المحفوظة تُعبأ تلقائياً.</div></div>
+<div class="full"><label class="check" style="margin:0"><input id="showClientInfo" type="checkbox" checked> إظهار بيانات الشركة (السجل التجاري، العنوان، رقم القيمة المضافة)</label></div>
+<div class="client-f"><label>سجل تجاري C.R.</label><input id="clientCR" dir="ltr"></div>
+<div class="client-f"><label>رقم حساب القيمة المضافة VAT No.</label><input id="clientVat" dir="ltr"></div>
+<div class="full lang-ar client-f"><label>العنوان</label><input id="arAddr"></div>
+<div class="full lang-ar"><label>المنفذ له</label><input id="arFor" value="تسهيلات البحرين التجارية"></div>
+<div class="full lang-ar"><label>نص خانة الملاحظات (الصف الأول)</label><input id="arFeeLabel" value="أتعاب الخبير في ملف تنفيذ رقم"></div>
+<div class="full lang-ar"><label>نص خانة سبب الاستحقاق (الصف الأول)</label><input id="arReason" value="تثمين لوحة تسجيل مركبة"></div>
+<div class="full lang-en"><label>To / Dear Sirs</label><input id="enTo" dir="ltr" list="companyList" autocomplete="off" value="Al Jabal Execution Company"></div>
+<div class="full lang-en client-f"><label>Address (العنوان)</label><input id="enAddr" dir="ltr"></div>
+<datalist id="companyList"></datalist>
+<div class="full lang-en"><label>Judgment Creditor (المنفذ له)</label><input id="enFor" dir="ltr" value="Bahrain Commercial Facilities Company"></div>
+<div class="full lang-en"><label>Notes text — first row (نص الملاحظات)</label><input id="enFeeLabel" dir="ltr" value="Expert fees in execution file No."></div>
+<div class="full lang-en"><label>Description text — first row (سبب الاستحقاق)</label><input id="enReason" dir="ltr" value="Valuation of vehicle registration plate"></div>
+<div class="full hint" style="margin:0">رقم ملف التنفيذ يُضاف تلقائياً بعد نص الملاحظات. امسح الحقل إذا لا تريده.</div>
+<div class="full"><label class="check" style="margin:0"><input id="arMulti" type="checkbox"> عدة مركبات (استخدم المركبات المحددة من قائمة Excel)</label></div>
+<div class="full"><label>صفوف إضافية</label><div style="display:flex;gap:6px"><button type="button" class="mini" onclick="addExtra('veh')">+ إضافة مركبة</button><button type="button" class="mini" onclick="addExtra('free')">+ إضافة صف حر</button></div><div id="arRows"></div><div class="hint">يمكنك أيضاً الضغط على أي مبلغ في المعاينة لتعديله.</div></div>
+<div class="full"><label>الشروط والأحكام</label><textarea id="arTerms">Payment should be in advance.
+Please make checks payable to: Adnan Al Alawi Expertise, Consultancy and Evaluation
+Or
+Through Bank transfer to: Al Salam Bank / IBAN: BH89ALSA00436034150000</textarea></div>
+</div><div class="hint">بيانات المركبة ورقم ملف التنفيذ ورقم الدعوى ورقم الاتفاقية تُؤخذ تلقائياً من الحقول أعلاه. المبلغ = رسوم الخبير × عدد المركبات.</div></div>
+
+<div class="sec" data-for="invoiceBulk"><details class="lblsec"><summary>نصوص Invoice التسهيلات (كل نص قابل للتعديل)</summary><div class="grid lblpanel" data-fixed="ti."></div><button type="button" class="mini" onclick="resetLabels(this)">إرجاع النصوص الأصلية</button><div class="hint">يمكنك أيضاً الضغط على أي نص في المعاينة وتعديله مباشرة.</div></details></div>
+<div class="sec" data-for="invoiceBulk"><h2>بيانات Invoice التسهيلات</h2><div class="grid">
+<div class="full"><label>To</label><input id="bTo" value="Bahrain Credit"></div>
+<div class="full"><label>Address</label><textarea id="bAddr" style="min-height:56px">BCFC Cares
+Isa Town, Bahrain
+Tell: 17786000</textarea></div>
+<div><label>تاريخ الإيميل (طلب التثمين)</label><input id="bEmailDate" type="date"></div>
+<div><label>الموقع / Yard</label><input id="bYard" value="Tubli"></div>
+<div><label>Area (افتراضي)</label><input id="bArea" value="Tubli"></div>
+<div><label>Fee per vehicle (BD) — للكل</label><input id="bFee" type="number" min="0" step="0.001"></div>
+<div class="full hint" style="margin:0">لتغيير سعر مركبة واحدة: اضغط على خانة Fee BD في المعاينة واكتب السعر الجديد (تظهر باللون الأصفر على الشاشة فقط). <button type="button" class="mini" onclick="resetFees()">إرجاع كل الأسعار للسعر الموحد</button></div>
+<div class="full"><label>Terms &amp; conditions</label><textarea id="bTerms">Payment is due within 7 days
+Please make checks payable to: Adnan Al Alawi Expertise, Consultancy and Evaluation
+Or
+Through Bank transfer to: Al Salam Bank / IBAN: BH89ALSA00436034150000</textarea></div>
+</div><div class="hint">الجدول يُعبّأ تلقائياً من ملف Excel. إذا كان في الملف عمود Area أو Fee يُستخدم، وإلا تُستخدم القيم الافتراضية. اترك الرسوم فارغة لترك عمود Fee فارغاً.</div></div>
+
+<div class="sec multiSec"><h2>المركبات المحددة للفاتورة</h2><div style="display:flex;gap:6px"><button type="button" class="mini" onclick="selectAll(true)">تحديد الكل</button><button type="button" class="mini" onclick="selectAll(false)">إلغاء الكل</button><span class="hint" id="selMsg" style="margin:5px 0 0"></span></div><div class="vlist" id="vlist"><div class="hint">استورد ملف Excel أولاً.</div></div></div>
+
+<div class="sec" data-for="report facilities court plates"><h2>صور المركبة</h2><div class="grid"><div><label>عدد الصور في الصفحة</label><select id="photoCount"><option value="1">صورة واحدة</option><option value="2">2 صور</option><option value="4">4 صور</option><option value="6">6 صور</option><option value="8" selected>8 صور</option><option value="10">10 صور</option><option value="12">12 صورة</option></select></div></div><label class="check" style="margin-top:8px"><input id="withPhotos" type="checkbox" checked> إضافة صفحة الصور للتقرير</label><label class="upload" style="margin-top:4px">اختر الصور<input id="photosIn" type="file" accept="image/*" multiple></label><div class="hint" id="photoMsg">لم يتم اختيار صور.</div><div id="picPick"></div></div>
+
+<div class="sec"><h2>الختم والتوقيع</h2><label class="check"><input id="showStamp" type="checkbox" checked> إظهار الختم</label><label class="check"><input id="showSignature" type="checkbox" checked> إظهار التوقيع</label><label class="check"><input id="showPaid" type="checkbox"> إظهار ختم PAID / مدفوع</label></div>
+</form></aside><section class="preview-wrap"><div class="pages" id="pages"></div></section></main>
+
+<div class="modal" id="accModal" onclick="if(event.target===this)closeAccounts()"><div class="modal-box acc-box"><div class="modal-head"><h3>الحسابات</h3><button class="mini acc-tab" data-tab="invoice" onclick="ACC.tab='invoice';ACC.period=null;ACC.client='';drawAccounts()">الفواتير I</button><button class="mini acc-tab" data-tab="bulk" onclick="ACC.tab='bulk';ACC.period=null;ACC.client='';drawAccounts()">Invoice التسهيلات TI</button><button class="mini" onclick="closeAccounts()">إغلاق ✕</button></div>
+<div class="modal-body"><div class="acc-filters" id="accFilters"></div><div class="acc-cards" id="accCards"></div><div id="accTable"></div><div class="acc-two"><div><h4>حسب العميل</h4><div id="accClients"></div></div><div><h4>حسب الشهر</h4><div id="accMonths"></div></div></div></div>
+<div class="modal-foot"><button class="mini btn-blue" onclick="exportAccExcel()">تصدير Excel</button><button class="mini btn-blue" onclick="exportAccPDF()">تصدير PDF</button><span class="hint" style="margin:0">التسعيرات (Q) لا تُحسب كدخل. التصدير يشمل ما يظهر حسب الاختيارات الحالية.</span></div></div></div>
+<div class="modal" id="logModal" onclick="if(event.target===this)closeLog()"><div class="modal-box"><div class="modal-head"><h3>سجل الأرقام</h3><select id="logType" onchange="drawLog()"></select><button class="mini" onclick="setNext()">تعديل الرقم التالي</button><button class="mini" onclick="setLetter()">تغيير الحرف الافتراضي</button><button class="mini" onclick="closeLog()">إغلاق ✕</button></div><div class="modal-body" id="logBody"></div><div class="modal-foot"><button class="mini btn-blue" onclick="exportLog()">تصدير السجل Excel (CSV)</button><label class="upload mini">فتح ملف محفوظ<input type="file" accept=".json" onchange="openEditFile(event)"></label><span class="hint" style="margin:0" id="logWhere"></span></div></div></div>
+<div class="modal" id="colModal" style="z-index:50" onclick="if(event.target===this)closeCols()"><div class="modal-box" style="width:min(680px,96vw)"><div class="modal-head"><h3>أعمدة ملف Excel</h3><button class="mini" onclick="closeCols()">إغلاق ✕</button></div><div class="modal-body" id="colBody"></div><div class="modal-foot"><button class="mini btn-blue" onclick="saveCols()">حفظ</button><button class="mini" onclick="autoCols()">إعادة التعرف التلقائي</button></div></div></div>
+<div class="modal" id="mlModal" onclick="if(event.target===this)closeManual()"><div class="modal-box" style="width:min(1100px,96vw)"><div class="modal-head"><h3>قائمة سيارات يدوية (بدون Excel)</h3><button class="mini" onclick="closeManual()">إغلاق ✕</button></div><div class="modal-body" id="mlBody"></div><div class="modal-foot"><button class="mini" onclick="mlAdd()">+ إضافة سيارة</button><button class="mini btn-blue" id="mlSend" onclick="mlSend()">📤 إرسال للهاتف</button><button class="mini" onclick="mlUse()">استخدامها هنا (للتقرير والفاتورة)</button><button class="mini" onclick="mlClear()">مسح القائمة</button><span class="hint" style="margin:0">تُحفظ القائمة على هذا الجهاز تلقائياً.</span></div></div></div>
+<div id="field" class="fd" hidden><header class="fd-bar"><button class="fd-link" onclick="fdClose()">‹ التقرير الكامل</button><b>فحص ميداني</b><span class="fd-count" id="fdCount"></span></header><div class="fd-scroll" id="fdBody"></div><footer class="fd-foot"><button class="fd-btn2" id="fdSendBtn" onclick="fdSecondary()">إرسال</button><button class="fd-btn" id="fdSaveBtn" onclick="fdSaveCar()">حفظ السيارة والتالي</button></footer><input type="file" id="fdCam" accept="image/*" capture="environment" hidden><input type="file" id="fdLib" accept="image/*" multiple hidden><input type="file" id="fdXls" accept=".xlsx,.xls,.csv" hidden></div><div class="fd-toast" id="fdToast" role="status"></div>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script>
+const APP_VERSION='2026-11-04';
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const ids=['privNotes','type','reportTitle','invTitleAr','invTitleEn','asp','plateType','plateVeh','pFor','pAgainst','pNotes','plateValue','plateDep','docLetter','docNo','arFeeLabel','arReason','enTo','enFor','enFeeLabel','enReason','date','case','owner','phone','email','execution','fee','reg','make','model','year','km','vin','color','engine','fuel','cyl','trans','body','notes','estimated','salvage','facComment','courtValue','depreciation','courtNotes','lawsuit','photoCount','arTo','arFor','clientCR','clientVat','arAddr','enAddr','arTerms','bTo','bAddr','bEmailDate','bYard','bArea','bFee','bTerms'];
+let pics=[],rows=[],sel=new Set(),created=new Date(),ratings={},conditionNotes={},feeOverride={},cellEdit={},arExtra=[],lastSum={};
+const val=id=>{let e=$('#'+id);return e?(e.type==='checkbox'?e.checked:e.value||''):''},
+esc=s=>(s+'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])),
+clean=s=>(s||'').toString().replace(/[\\/:*?"<>|]/g,'-').replace(/\s+/g,' ').trim(),
+n=v=>Number(v||0),money=v=>n(v).toLocaleString('en-US',{maximumFractionDigits:3}),
+dateFmt=v=>{if(!v)return '';let[a,b,c]=v.split('-');return `${c}/${b}/${a}`},
+dateShort=(v,sep)=>{if(!v)return '';let[a,b,c]=v.split('-');return `${+c}${sep}${+b}${sep}${a}`};
+const lang=()=>($('input[name=invLang]:checked')||{}).value||'ar',T=()=>val('type'),isReport=()=>['report','facilities','court','plates'].includes(T()),isArInv=()=>['invoiceAr','quoteAr'].includes(T());
+
+function sigStamp(){let sig=$('#showSignature').checked?'<img class="signature" src="vehicle-report-generator-assets/signature.png" onerror="this.remove()">':'',st=$('#showStamp').checked?'<img class="stamp" src="vehicle-report-generator-assets/stamp.png">':'';let pd=$('#showPaid').checked?`<span class="paid">PAID<small>مدفوع</small></span>`:'';return `<span class="sigwrap">${pd}${sig}${st}</span>`}
+/* ---------- editable fields in the preview (kept in sync with the left panel) ---------- */
+let FK={};
+function EF(attr,key,value,o={}){FK[key]=(FK[key]||0)+1;let multi=o.multi,txt=value==null?'':String(value);
+ let inner=multi?(txt?txt.split('\n').map(l=>o.red&&l[0]==='!'?`<div class="red">${esc(l.slice(1))||'<br>'}</div>`:`<div>${esc(l)||'<br>'}</div>`).join(''):''):esc(txt),tag=multi?'div':'span';
+ return`<${tag} class="ef${multi?' efm':''}${o.bul?' bul':''}${o.cls?' '+o.cls:''}" contenteditable="true" spellcheck="false" ${attr} data-k="${key}#${FK[key]}"${o.num?' data-num="1"':''}${o.date?' data-date="1"':''}${o.dir?` dir="${o.dir}"`:''}${o.ph?` data-ph="${esc(o.ph)}"`:''}${multi?' data-multi="1"':''}>${inner}</${tag}>`}
+function F(id,o={}){let v=val(id);if(o.fallback&&!v)v=val(o.fallback);let t=o.date?(o.fmt||dateFmt)(v):o.num?(v===''?'':money(v)):o.disp?o.disp(v):v;return EF(`data-f="${id}"`,'f:'+id,t,o)}
+const FM=(id,o={})=>F(id,{...o,multi:1}),B=(id,o)=>`<b class="blue">${F(id,o)}</b>`;
+function CF(key,f,v,o={}){return EF(`data-cell="${key}|${f}"`,`c:${key}:${f}`,v,o)}
+function XF(i,f,multi){return EF(`data-x="${i}|${f}"`,`x:${i}:${f}`,(arExtra[i]||{})[f]||'',{multi})}
+const FORM_MAP={agreement:'case',vin:'vin',reg:'reg',make:'make',model:'model',year:'year',color:'color'};
+function VF(v,f,o={}){return v.key==='form'&&FORM_MAP[f]?F(FORM_MAP[f],o):CF(v.key,f,v[f]||'',o)}
+const PLATE_EN={'خصوصي':'Private','أجرة':'Taxi','نقل':'Transport','دراجة نارية':'Motorcycle','مؤقتة':'Temporary','تصدير':'Export'};
+function docLabel(){let L=val('docLetter').trim().toUpperCase(),no=val('docNo').trim();return L?`${L} - ${no}`:no}
+/* terms box with the IBAN payment QR code (always shown) */
+function termsBox(id){return`<div class="terms terms-qr">${FM(id,{cls:'terms-text'})}<div class="qr"><img src="vehicle-report-generator-assets/iban-qr.png" alt="IBAN QR"><span>Scan to pay</span></div></div>`}
+function letter(x){let no=val('docNo').trim();return`<article class="page"><img class="letter" src="vehicle-report-generator-assets/letterhead.png">${no?`<div class="docno">No. ${val('docLetter').trim()?F('docLetter',{disp:v=>v.toUpperCase()})+' - ':''}${F('docNo')}</div>`:''}<div class="content">${x}</div></article>`}
+function enWords(x){x=Math.floor(n(x));if(!x)return'Zero';let o=['','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten','Eleven','Twelve','Thirteen','Fourteen','Fifteen','Sixteen','Seventeen','Eighteen','Nineteen'],t=['','','Twenty','Thirty','Forty','Fifty','Sixty','Seventy','Eighty','Ninety'],tri=x=>{let a=[];if(x>=100){a.push(o[Math.floor(x/100)]+' Hundred');x%=100}if(x>=20)a.push(t[Math.floor(x/10)]+(x%10?' '+o[x%10]:''));else if(x)a.push(o[x]);return a.join(' ')};let a=[];if(x>=1e6){a.push(tri(Math.floor(x/1e6))+' Million');x%=1e6}if(x>=1000){a.push(tri(Math.floor(x/1000))+' Thousand');x%=1000}if(x)a.push(tri(x));return a.join(' ')}
+function arTri(x){let o=['','واحد','اثنان','ثلاثة','أربعة','خمسة','ستة','سبعة','ثمانية','تسعة','عشرة','أحد عشر','اثنا عشر','ثلاثة عشر','أربعة عشر','خمسة عشر','ستة عشر','سبعة عشر','ثمانية عشر','تسعة عشر'],t=['','','عشرون','ثلاثون','أربعون','خمسون','ستون','سبعون','ثمانون','تسعون'],h=['','مئه','مئتان','ثلاث مئه','أربع مئه','خمس مئه','ست مئه','سبع مئه','ثمان مئه','تسع مئه'],a=[];if(x>=100){a.push(h[Math.floor(x/100)]);x%=100}if(x>=20)a.push(x%10?o[x%10]+' و'+t[Math.floor(x/10)]:t[Math.floor(x/10)]);else if(x)a.push(o[x]);return a.join(' و')}
+/* thousands / millions follow Arabic counting rules:
+   1 ألف · 2 ألفان · 3–10 آلاف · 11–99 ألفاً · 100, 200… (ends in 00) ألف · 101 مئة ألف وألف · 102 مئة ألف وألفان · 105 مئة وخمسة آلاف · 111 مئة وأحد عشر ألفاً */
+function arScale(z,w){if(z===1)return w.one;if(z===2)return w.two;let r=z%100;
+ let H=v=>arTri(v).replace(/مئتان$/,'مئتا');if(z>100&&(r===1||r===2))return H(z-r)+' '+w.one+' و'+(r===1?w.one:w.two);
+ if(r>=3&&r<=10)return arTri(z)+' '+w.few;if(r>=11)return arTri(z)+' '+w.many;return H(z)+' '+w.one}
+function arWords(x){x=Math.floor(n(x));if(!x)return'صفر دينار بحريني فقط';let a=[];if(x>=1e6){a.push(arScale(Math.floor(x/1e6),{one:'مليون',two:'مليونان',few:'ملايين',many:'مليوناً'}));x%=1e6}if(x>=1000){a.push(arScale(Math.floor(x/1000),{one:'ألف',two:'ألفان',few:'آلاف',many:'ألفاً'}));x%=1000}if(x)a.push(arTri(x));return a.join(' و')+' دينار بحريني فقط'}
+
+/* ---------- vehicle spec table ---------- */
+function chk(v,x){return v==x?'<b class="tick">☑</b>':'<span class="box">☐</span>'}
+function opts(id,a,v){let bodyLabels={Jeep:'جيب',Saloon:'صالون',Sport:'Sport',Bus:'باص',Wagon:'واجون',Van:'Van',Convertible:'كشف',Motorcycle:'دراجة نارية'};return a.map(x=>{let actual=id==='body'&&T()==='facilities'?(bodyLabels[x]||x):x;return`<span class="chkopt" onclick="setSpec('${id}','${esc(actual)}')">${chk(v,actual)}<span>${esc(x)}</span></span>`}).join('')}
+function setSpec(id,value){let el=$('#'+id);if(el){el.value=value;render()}}
+/* mileage per year: < 15,000 blue · 15,000–20,000 orange · over 20,000 red */
+function kmInfo(){let km=n(String(val('km')).replace(/[^0-9.]/g,'')),y=parseInt(val('year')),ry=parseInt((val('date')||'').slice(0,4))||new Date().getFullYear();
+ if(!km||!y)return{cls:'',txt:''};let age=Math.max(1,ry-y),per=km/age,cls=per>20000?'km-high':per>=15000?'km-mid':'';
+ return{cls,age,per,txt:`عمر المركبة: ${age} ${age>2&&age<11?'سنوات':'سنة'} · المعدل: ${Math.round(per).toLocaleString('en-US')} كم/سنة — ${cls==='km-high'?'🔴 مرتفع (أكثر من 20,000)':cls==='km-mid'?'🟠 متوسط (15,000–20,000)':'🔵 طبيعي (أقل من 15,000)'}`}}
+/* tick boxes under the comment boxes: choose which lines print in red */
+function drawRedPick(){$$('.redpick').forEach(box=>{let id=box.dataset.red,lines=val(id).split('\n');if(!lines.some(l=>l.replace(/^!/,'').trim())){box.innerHTML='';return}
+ box.innerHTML='<div class="rp-t">الأسطر باللون الأحمر:</div>'+lines.map((l,i)=>l.replace(/^!/,'').trim()?`<label class="${l[0]==='!'?'on':''}"><input type="checkbox" ${l[0]==='!'?'checked':''} onchange="toggleRed('${id}',${i},this.checked)"><span>${esc(l.replace(/^!/,''))}</span></label>`:'').join('')})}
+function toggleRed(id,i,on){let lines=val(id).split('\n');lines[i]=(on?'!':'')+lines[i].replace(/^!/,'');$('#'+id).value=lines.join('\n');render()}
+function vehicle(){let en=T()==='facilities',labels=en?['MAKE','MODEL','YEAR','KM','VIN','ENGINE TYPE','NO OF CYLINDERS','ENGINE SIZE','BODY','COLOR','TRANSMISSION']:['نوع المركبة','طراز المركبة','سنة الصنع','الكيلومترات','رقم القاعدة','نوع الوقود','عدد الأسطوانات','حجم المحرك','نوع الهيكل','اللون','ناقل الحركة'],dir=en?'ltr':'rtl',body=en?['Jeep','Saloon','Sport','Wagon','Bus','Van','Convertible','Motorcycle']:['جيب','صالون','Sport','واجون','باص','Van','كشف','دراجة نارية'];let label=i=>`<b>${labels[i]}:</b>`;return`<table class="table detail" dir="${dir}"><tr><td>${label(0)} ${B('make')}</td><td>${label(1)} ${B('model')}</td><td>${label(2)} ${B('year')}</td><td>${label(3)} <b class="blue ${kmInfo().cls}">${F('km')}</b></td><td>${label(4)} ${B('vin',{dir:'ltr'})}</td></tr><tr class="spec"><td>${label(5)}<br>${opts('fuel',['Petrol','Diesel'],val('fuel'))}<div class="spec-divider"></div><b>${en?'ASPIRATION':'نوع التنفس'}:</b><br>${opts('asp',['NA','Turbo','Supercharged'],val('asp'))}</td><td>${label(6)}<br>${opts('cyl',['1','2','3','4','5','6','8','10','12'],val('cyl'))}</td><td>${label(7)}<br>${B('engine')}</td><td>${label(8)}<br>${opts('body',body,val('body'))}</td><td>${label(9)}<br>${B('color')}<div class="spec-divider"></div>${label(10)}<br>${opts('trans',['Auto','Manual','Auto T','Auto F1','4WD'],val('trans'))}</td></tr></table>`}
+
+/* ---------- grading tables: '#' = beige section header, '!' = row that starts without a tick ---------- */
+const G_EN_1=['#1- Exterior','Exterior cleanliness','Accidents','Rust','Paint condition','!Missing/broken parts','#2- Interior','Dashboard','Seats','Windows','Floor','!Missing/broken parts'],
+G_EN_2=['#3- Underneath Vehicle','Shock absorbers','Tires','Wheels','Exhaust','!Missing/broken parts','#4- Engine','Engine condition','Oil condition','Transmission condition','Belts','!Missing/broken parts'],
+G_AR_1=['#1- المظهر الخارجي','النظافة الخارجية','حوادث','الصدأ','حالة الطلاء','!فقدان أو كسور في القطع','#2- المظهر الداخلي','الطبلون','المقاعد','النوافذ','الأرضية','!فقدان أو كسور في القطع'],
+G_AR_2=['#3- أسفل المركبة','المعونات','الإطارات','العجلات','العادم','!فقدان أو كسور في القطع','#4- المحرك','حالة المحرك','حالة الزيت','حالة ناقل الحركة','السيور','!فقدان أو كسور في القطع'];
+const RATES=['E','G','A','R','P'],rateOf=(key,def)=>key in ratings?ratings[key]:def;
+/* clicking the ticked box again removes the tick */
+function setRating(key,rate,def){ratings[key]=rateOf(key,def)===rate?'':rate;render()}
+function saveConditionNote(key,cell){conditionNotes[key]=cell.innerText}
+function conditions(a,prefix,ar){let letters=ar?['م','ج','و','ت','ض']:RATES,caps=['Excellent<br>ممتاز','Good<br>جيد','Average<br>وسط','Attention<br>تحتاج لعناية','Poor<br>ضعيف'],z=0;
+return`<table class="table cond" dir="${ar?'rtl':'ltr'}"><colgroup><col class="cond-category"><col class="cond-rate"><col class="cond-rate"><col class="cond-rate"><col class="cond-rate"><col class="cond-rate"><col class="cond-note"></colgroup><tr><th>${ar?'اسم التصنيف':'Category'}</th>${letters.map((x,i)=>`<th>${x}<span class="grade-caption">${caps[i]}</span></th>`).join('')}<th>${ar?'الملاحظات':'Note'}</th></tr>${a.map((x,i)=>{if(x[0]==='#')return`<tr class="group"><td colspan="7">${x.slice(1)}</td></tr>`;let miss=x[0]==='!',label=miss?x.slice(1):x,def=miss?'':'E',key=prefix+'-'+i,s=rateOf(key,def),note=esc(conditionNotes[key]||'');z++;return`<tr${z%2===0?' class="z"':''}><td>${label}</td>${RATES.map(r=>`<td class="rating rate-${r}" onclick="setRating('${key}','${r}','${def}')">${s===r?'✔':''}</td>`).join('')}<td class="comment-cell${s==='R'||s==='P'?' note-red':s?' note-blue':''}" contenteditable="true" data-k="cn:${key}" oninput="saveConditionNote('${key}',this)">${note}</td></tr>`}).join('')}</table>`}
+
+/* ---------- reports ---------- */
+const plateLine=en=>`${B('plateType',en?{disp:v=>PLATE_EN[v]||v}:{})} ${B('reg')}`;
+/* report notes flow onto extra pages when they don't fit the box (NOTE_SPLITS = first line of each extra page) */
+let NOTE_SPLITS=[];
+function FPart(id,a,b){let lines=val(id)?val(id).split('\n'):[];return EF(`data-fpart="${id}|${a}|${b-a}"`,`fp:${id}:${a}`,lines.slice(a,b).join('\n'),{multi:1,red:1})}
+function notesBox(i){let total=(val('notes')?val('notes').split('\n'):[]).length;if(!NOTE_SPLITS.length)return FM('notes',{ph:'اكتب الملاحظات الفنية هنا.',red:1});let cuts=[0,...NOTE_SPLITS,total];return FPart('notes',cuts[i],cuts[i+1])}
+const reportTitle=()=>F('reportTitle',{disp:v=>v||'تقييم المركبات'});
+function report(){let first=letter(`<div class="title">${reportTitle()}</div><table class="table"><tr><td>التاريخ: ${B('date',{date:1})}</td><td>رقم المعاملة: ${B('case')}</td></tr><tr><td colspan="2">ملف التنفيذ: ${B('execution')}</td></tr><tr><td>رقم لوحة المركبة ونوعها: ${plateLine()}</td><td>رقم الدعوى: ${B('lawsuit')}</td></tr><tr><td colspan="2">اسم المالك / مقدم الطلب: ${B('owner')}</td></tr><tr><td>رقم الهاتف / فاكس: ${B('phone')}</td><td>البريد الإلكتروني: ${B('email',{dir:'ltr'})}</td></tr></table><h3>تفاصيل المركبة</h3>${vehicle()}<div class="findings">${notesBox(0)}</div><div class="signrow"><span class="feebox">يتقاضى الخبير عن /- ${F('fee',{num:1})} دينار بحريني</span><span>الخبير السيد عدنان العلوي<br>${sigStamp()}</span></div>`);
+ return first+NOTE_SPLITS.map((_,k)=>letter(`<div class="title">${reportTitle()}</div><h3 style="margin:2px 0 4px">الملاحظات (تابع)</h3><div class="findings findings-cont">${notesBox(k+1)}</div>`)).join('')}
+/* index (in the last notes box) of the first line that doesn't fit, or -1 */
+function notesOverflow(){let boxes=$$('#pages .findings'),box=boxes[boxes.length-1];if(!box)return -1;let ef=box.querySelector('.efm');if(!ef)return -1;let lines=[...ef.children],lim=box.getBoundingClientRect().bottom-parseFloat(getComputedStyle(box).paddingBottom)+0.5;
+ for(let k=0;k<lines.length;k++)if(lines[k].getBoundingClientRect().bottom>lim)return k;return -1}
+function facilities(){return letter(`<div class="en" style="display:flex;flex-direction:column;height:100%"><div class="assess-title">Assessing Vehicle Value</div><table class="table"><tr><td>CASS NO: ${B('case')}</td><td>DATE: ${B('date',{date:1})}</td></tr><tr><td>Vehicle Reg no: ${plateLine(true)}</td><td>Case/Lawsuit No: ${B('lawsuit')}</td></tr><tr><td>NAME: ${B('owner',{dir:'auto'})}</td><td>Tel: Fax: ${B('phone')}</td></tr><tr><td colspan="2">E-MAIL: ${B('email')}</td></tr></table>${vehicle()}<div class="grade-legend">Vehicle condition codes: Excellent (E), Good (G), Average (A), Needs attention (R), Poor (P).</div><div class="condition-wrap" style="margin-top:3px"><div>${conditions(G_EN_1,'g-en-1')}</div><div>${conditions(G_EN_2,'g-en-2')}</div></div><div class="valuation"><div class="valuation-box"><h3>COMMENT ON THE VEHICLE CONDITION</h3>${FM('facComment',{ph:'Type the comment here',red:1})}</div><div class="valuation-box"><h3>ESTIMATED VEHICLE VALUE</h3>The estimated present value is: ${B('estimated',{num:1})}/-<br>The amount in words: <b class="blue">${enWords(val('estimated'))} BD only.</b><br>The estimated salvage value is: ${B('salvage',{num:1})}/-<br>Signed: ___________________________<br>Date: ${F('date',{date:1})}<br>${sigStamp()}</div></div><div style="margin-top:8px"><span class="feebox" dir="ltr">The estimated fees charge is BD ${F('fee',{num:1})}/-</span></div></div>`)}
+function court(){let base=n(val('courtValue')),p=n(val('depreciation')),after=base*(1-p/100);return letter(`<div class="title">تقييم المركبات</div><table class="table"><tr><td>التاريخ: ${B('date',{date:1})}</td><td>رقم المعاملة: ${B('case')}</td></tr><tr><td>ملف التنفيذ: ${B('execution')}</td><td>رقم الدعوى: ${B('lawsuit')}</td></tr><tr><td>رقم لوحة المركبة ونوعها: ${plateLine()}</td><td>اسم المالك / مقدم الطلب: ${B('owner')}</td></tr><tr><td>رقم الهاتف / فاكس: ${B('phone')}</td><td>البريد الإلكتروني: ${B('email',{dir:'ltr'})}</td></tr></table>${vehicle()}<div class="grade-legend">حالة المركبة و الرموز: ممتاز (م)، جيدة (ج)، وسط (و)، تحتاج الى عناية (ت)، ضعيفة (ض).</div><div class="condition-wrap" style="margin-top:3px"><div>${conditions(G_AR_1,'g-ar-1',true)}</div><div>${conditions(G_AR_2,'g-ar-2',true)}</div></div><h3 style="margin:6px 0 0;font-size:13px">ملاحظات حالة المركبة</h3><div class="court-note">${FM('courtNotes',{bul:1,red:1,ph:'اكتب كل ملاحظة في سطر'})}</div><div class="court-value">القيمة السوقية للمركبة على حسب المعاينة والحالة التي هي عليها من تاريخ ${F('date',{date:1})}<br>القيمة المقدرة هي: <b class="blue">${F('courtValue',{num:1})} دينار بحريني فقط</b> (${arWords(base)})<br>نسبة الخصم: <b class="blue">${F('depreciation',{num:1})}%</b><br>القيمة الجبرية المخفضة: <b class="blue">${money(after)} دينار بحريني فقط</b> (${arWords(after)})</div><div class="signrow"><span class="feebox" dir="ltr">The estimated fees charge is BD ${F('fee',{num:1})}/-</span><span>توقيع وختم الخبير<br>${sigStamp()}</span></div>`)}
+/* ---------- plate valuation (تقييم لوحات) ---------- */
+function plateSVG(num){num=(num||'').toString().trim()||'000000';let fs=Math.round(Math.min(185,560/(num.length*0.6)));
+return`<svg direction="ltr" viewBox="0 0 1000 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Bahrain plate ${esc(num)}"><rect x="6" y="6" width="988" height="268" rx="34" fill="#fff" stroke="#222" stroke-width="8"/><rect x="26" y="26" width="948" height="228" rx="20" fill="none" stroke="#222" stroke-width="5"/>
+<rect x="61" y="101" width="130" height="78" fill="#ce1126"/><polygon points="61,101 93.5,101 113,108.8 93.5,116.6 113,124.4 93.5,132.2 113,140 93.5,147.8 113,155.6 93.5,163.4 113,171.2 93.5,179 61,179" fill="#fff"/><rect x="61" y="101" width="130" height="78" fill="none" stroke="#999" stroke-width="1.5"/>
+<text x="462" y="${140+fs*0.36}" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-weight="bold" font-size="${fs}" letter-spacing="2" fill="#111">${esc(num)}</text>
+<text x="866" y="128" text-anchor="middle" font-family="Tahoma,Arial,sans-serif" font-weight="bold" font-size="52" fill="#111">البحرين</text><text x="866" y="196" text-anchor="middle" font-family="Arial,sans-serif" font-weight="bold" font-size="40" fill="#111">BAHRAIN</text></svg>`}
+function plates(){let base=n(val('plateValue')),p=n(val('plateDep')),after=base*(1-p/100),b=x=>`<b class="blue">${x}</b>`;
+let notes=[`التثمين على رقم لوحة تسجيل ${F('plateVeh')} ${F('plateType')}، رقم اللوحة ${B('reg')}`,`<span class="lbl">المنفذ له:</span> ${F('pFor')}`,`<span class="lbl">المنفذ ضده:</span> ${F('pAgainst')}`];
+return letter(`<div class="title">تقييم لوحات</div><table class="table"><tr><td>التاريخ: ${B('date',{date:1})}</td><td>رقم المعاملة: ${B('case')}</td></tr><tr><td>رقم الملف: ${B('execution')}</td><td>رقم لوحة المركبة ونوعها: ${plateLine()}</td></tr><tr><td colspan="2">اسم المالك / مقدم الطلب: ${B('owner')}</td></tr><tr><td>رقم الهاتف / فاكس: ${B('phone')}</td><td>البريد الإلكتروني: ${B('email',{dir:'ltr'})}</td></tr></table>
+<h3 style="margin:10px 0 4px">ملاحظات</h3><div class="plate-notes"><ul>${notes.map(x=>`<li>${x}</li>`).join('')}</ul>${FM('pNotes',{bul:1,ph:'ملاحظات إضافية (اختياري)'})}</div>
+<div class="plate-wrap">${plateSVG(val('reg'))}</div>
+<div class="plate-bottom"><div class="plate-val"><div class="cap">القيمة السوقية للرقم على حسب المعاينة والحالة التي هو عليها من تاريخ المعاينة</div><div class="box"><div>القيمة الحالية المقدرة للرقم: <b class="blue">${F('plateValue',{num:1})}/-</b> <bdi>(${b(arWords(base))})</bdi></div><div>القيمة الجبرية المخفضة <bdi dir="ltr"><b class="blue">${F('plateDep',{num:1})}%</b></bdi>: ${b(money(after)+'/-')} <bdi>(${b(arWords(after))})</bdi></div></div></div>
+<div class="plate-sig"><div class="cap">توقيع وختم الخبير</div><div class="box"><div>التاريخ: ${F('date',{date:1})}</div><div>التوقيع:</div><div style="text-align:center">${sigStamp()}</div></div></div></div>`)}
+const PHOTO_LAYOUT={1:[1,1],2:[1,2],4:[2,2],6:[2,3],8:[2,4],10:[2,5],12:[3,4]};
+function photos(){let count=n(val('photoCount'))||8,[c,r]=PHOTO_LAYOUT[count]||[2,4],gap=count>=10?'5mm':'8mm';return letter(`<div class="photo-title">صور المركبة</div><div class="photos${count===1?' one':''}" style="grid-template-columns:repeat(${c},minmax(0,1fr));grid-template-rows:repeat(${r},minmax(0,1fr));gap:${gap}">${Array.from({length:count},(_,i)=>`<div class="slot">${pics[i]?`<img src="${pics[i]}">`:`صورة ${i+1}`}</div>`).join('')}</div>`)}
+
+/* ---------- Excel helpers ---------- */
+let norm=x=>(x||'').toString().replace(/ /g,' ').trim().toLowerCase().replace(/[^a-z0-9]/g,'');
+function col(r,...names){let k=Object.keys(r).find(k=>names.map(norm).includes(norm(k)));return k===undefined?'':(r[k]+'').replace(/ /g,' ').trim()}
+const rowData=r=>{let m=mapFor(r),g=f=>m[f]?String(r[m[f]]??'').replace(/\u00a0/g,' ').trim():'';return Object.fromEntries(COLF.map(([f])=>[f,g(f)]))};
+
+/* ===================== flexible Excel import =====================
+   Reads any company Excel: finds the header row (any of the first 15 rows, any sheet),
+   recognises Arabic or English column names, and checks the values (a "Model" column
+   full of years is the year; 17-character codes are the VIN). Corrections made in
+   «تعديل الأعمدة» are remembered for files with the same columns. */
+const nz=s=>String(s??'').toLowerCase().replace(/[ً-ْـ]/g,'').replace(/[أإآ]/g,'ا').replace(/ة/g,'ه').replace(/ى/g,'ي').replace(/[^a-z0-9ء-ي]/g,'');
+const COLF=[
+ ['agreement','رقم الاتفاقية / المعاملة',['agreement no','agreement number','agreement #','agreement','agreementno','contract no','contract number','contract','case no','case number','cass no','ref no','reference','reference no','رقم الاتفاقيه','الاتفاقيه','رقم العقد','العقد','رقم المعامله','المعامله','رقم المرجع','المرجع']],
+ ['reg','رقم التسجيل / اللوحة',['reg num','reg no','reg number','reg','registration','registration no','registration number','plate','plate no','plate number','vehicle no','رقم التسجيل','التسجيل','رقم اللوحه','اللوحه','رقم المركبه']],
+ ['vin','رقم القاعدة VIN',['chassis','chassis no','chassis number','vin','vin no','vin number','frame no','frame number','رقم القاعده','القاعده','رقم الشاصي','الشاصي','شاصي','رقم الهيكل']],
+ ['make','الصانع',['make','vehicle make','manufacturer','brand','vehicle','car','car make','الصانع','الشركه الصانعه','الشركه المصنعه','الماركه','ماركه','نوع المركبه','المركبه','نوع السياره','النوع']],
+ ['model','الطراز',['type','model name','vehicle model','car model','model','الطراز','طراز','الطراز التجاري','طراز المركبه','طراز السياره']],
+ ['year','سنة الصنع',['year','model year','year of manufacture','manufacture year','yom','mfg year','سنه الصنع','الصنع','سنه التصنيع','السنه','سنه الموديل','موديل','الموديل']],
+ ['color','اللون',['color','colour','vehicle color','اللون','لون','لون المركبه','لون السياره']],
+ ['plateType','نوع اللوحة',['plate type','registration type','نوع اللوحه','نوع التسجيل']],
+ ['km','الكيلومترات',['km','kms','mileage','odometer','kilometers','kilometres','الكيلومترات','الممشى','العداد','قراءه العداد','المسافه المقطوعه']],
+ ['engine','حجم المحرك',['engine','engine size','engine capacity','cc','حجم المحرك','سعه المحرك','المحرك']],
+ ['owner','اسم المالك / العميل',['owner','owner name','customer','customer name','client','client name','debtor','name','اسم المالك','المالك','اسم العميل','العميل','الاسم','المنفذ ضده','اسم المدين','المدين']],
+ ['phone','الهاتف',['phone','mobile','tel','telephone','contact','contact no','mobile no','الهاتف','رقم الهاتف','الجوال','النقال','رقم التواصل']],
+ ['lawsuit','رقم الدعوى',['lawsuit','lawsuit no','case/lawsuit no','claim no','رقم الدعوي','الدعوي']],
+ ['execution','ملف التنفيذ',['execution','execution file','execution no','execution file no','رقم ملف التنفيذ','ملف التنفيذ','التنفيذ']],
+ ['area','الموقع / المنطقة',['area','location','yard','place','المنطقه','الموقع','الساحه','الكراج','المكان']],
+ ['fee','الرسوم',['fee','fees','fee bd','fees bd','amount','price','الرسوم','الاتعاب','المبلغ']]];
+const COL_SYN=COLF.map(([f,l,s])=>[f,s.map(nz).filter(Boolean)]);
+const YEAR_RE=/^(19[5-9]\d|20[0-4]\d)$/,VIN_RE=/^[A-HJ-NPR-Z0-9]{17}$/i;
+let COLMAPS={},AUTOMAPS={};try{COLMAPS=JSON.parse(localStorage.getItem('adnanColMaps')||'{}')||{}}catch(e){}
+const colSig=keys=>keys.map(nz).join('|');
+function synScore(hn,sn){return hn===sn?3:(sn.length>=5&&hn.includes(sn))?2:(hn.length>=5&&sn.includes(hn))?1:0}
+function headerScore(row){return (row||[]).filter(c=>{let hn=nz(c);return hn&&COL_SYN.some(([f,ss])=>ss.some(s=>synScore(hn,s)>=2))}).length}
+function valShare(rs,h,re){let v=rs.map(r=>String(r[h]??'').trim()).filter(Boolean);return v.length?v.filter(x=>re.test(x)).length/v.length:0}
+function autoMap(headers,rs){let cand=[];
+ headers.forEach(h=>{let hn=nz(h);if(!hn)return;COL_SYN.forEach(([f,ss])=>{let b=0;ss.forEach(s=>{let sc=synScore(hn,s);if(sc>b)b=sc});if(b)cand.push([b,f,h])})});
+ /* "Model" / "موديل" holding years = the year; holding names = the model */
+ headers.forEach(h=>{let hn=nz(h);if(['model','موديل','الموديل','modelyear'].includes(hn)){let y=valShare(rs,h,YEAR_RE)>=.6;cand=cand.filter(c=>c[2]!==h);cand.push([3.5,y?'year':'model',h])}});
+ cand.sort((a,b)=>b[0]-a[0]);let map={},used=new Set();cand.forEach(([s,f,h])=>{if(!map[f]&&!used.has(h)){map[f]=h;used.add(h)}});
+ /* nothing matched by name? recognise the year and VIN by their values */
+ let free=()=>headers.filter(h=>!used.has(h));
+ if(!map.year){let h=free().find(h=>valShare(rs,h,YEAR_RE)>=.7);if(h){map.year=h;used.add(h)}}
+ if(!map.vin){let h=free().find(h=>valShare(rs,h,VIN_RE)>=.7);if(h){map.vin=h;used.add(h)}}
+ return map}
+function registerRows(rs){if(!rs||!rs.length)return;let k=Object.keys(rs[0]),sig=colSig(k);AUTOMAPS[sig]=autoMap(k,rs)}
+function mapFor(r){let k=Object.keys(r),sig=colSig(k);return COLMAPS[sig]||AUTOMAPS[sig]||(AUTOMAPS[sig]=autoMap(k,[r]))}
+/* CSV files: decode as UTF-8, or Windows Arabic (1256) if UTF-8 doesn't fit */
+function readWorkbook(buf,name){if(/\.(csv|txt)$/i.test(name||'')){let t;try{t=new TextDecoder('utf-8',{fatal:true}).decode(buf)}catch(e){try{t=new TextDecoder('windows-1256').decode(buf)}catch(e2){t=new TextDecoder('utf-8').decode(buf)}}return XLSX.read(t.replace(/^﻿/,''),{type:'string'})}return XLSX.read(buf,{type:'array'})}
+/* read the best sheet and header row of a workbook */
+function readSheetRows(wb){let best=null;
+ wb.SheetNames.forEach(sn=>{let a=XLSX.utils.sheet_to_json(wb.Sheets[sn],{header:1,defval:''});for(let i=0;i<Math.min(15,a.length);i++){let sc=headerScore(a[i]);if(!best||sc>best.sc)best={sc,a,i}}});
+ if(!best||best.sc<2)best={a:XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{header:1,defval:''}),i:0};
+ let {a,i}=best;if(!a.length)return[];let seen={},hdr=(a[i]||[]).map((h,j)=>{h=String(h).replace(/\s+/g,' ').trim()||('عمود '+(j+1));if(seen[h])h+=' ('+(++seen[h])+')';else seen[h]=1;return h});
+ return a.slice(i+1).filter(r=>r.some(v=>String(v).trim())).map(r=>Object.fromEntries(hdr.map((h,j)=>[h,r[j]??''])))}
+const colLabel=f=>(COLF.find(c=>c[0]===f)||[,f])[1];
+/* one-line summary under the Excel button (laptop) */
+function colSummary(){let box=$('#colInfo');if(!box)return;if(!rows.length){box.innerHTML='';return}let m=mapFor(rows[0]),got=COLF.filter(([f])=>m[f]),miss=['reg','vin','make'].filter(f=>!m[f]);
+ box.innerHTML=`<div class="colsum${miss.length?' warn':''}">${miss.length?`⚠️ لم يُعثر على: ${miss.map(colLabel).join('، ')}<br>`:''}تم التعرف على ${got.length} عمود: ${got.map(([f])=>`<span>${esc(colLabel(f))} ← ${esc(m[f])}</span>`).join(' ')}</div><button type="button" class="mini" onclick="openCols('desk')">تعديل الأعمدة</button>`}
+/* column mapping window (laptop and phone) */
+let COL_CTX=null;
+function openCols(which){let rs=which==='field'?FD.rows:rows;if(!rs.length)return alert('استورد ملف Excel أولاً.');let keys=Object.keys(rs[0]);COL_CTX={which,sig:colSig(keys),keys,rs};drawCols(mapFor(rs[0]));$('#colModal').classList.add('open')}
+function drawCols(m){let {keys,rs}=COL_CTX,sample=h=>{let v=rs.map(r=>String(r[h]??'').trim()).find(Boolean);return v?'  —  '+v.slice(0,24):''};
+ $('#colBody').innerHTML=`<div class="hint" style="margin:0 0 10px">تم التعرف على الأعمدة تلقائياً. إذا كان أي اختيار خاطئاً غيّره فقط — يُحفظ لنفس شكل الملف في المرات القادمة.</div><table class="logt colt">${COLF.map(([f,l])=>`<tr><td><b>${l}</b></td><td><select data-colf="${f}"><option value="">— غير موجود —</option>${keys.map(h=>`<option value="${esc(h)}"${m[f]===h?' selected':''}>${esc(h)}${esc(sample(h))}</option>`).join('')}</select></td></tr>`).join('')}</table>`}
+function saveCols(){let m={};$$('#colBody select').forEach(s=>{if(s.value)m[s.dataset.colf]=s.value});COLMAPS[COL_CTX.sig]=m;try{localStorage.setItem('adnanColMaps',JSON.stringify(COLMAPS))}catch(e){}closeCols();
+ if(COL_CTX.which==='field'){fdPersist();fdDraw();fdToast('تم حفظ الأعمدة')}else{fillRecords();buildList();colSummary();render()}}
+function autoCols(){delete COLMAPS[COL_CTX.sig];try{localStorage.setItem('adnanColMaps',JSON.stringify(COLMAPS))}catch(e){}AUTOMAPS[COL_CTX.sig]=autoMap(COL_CTX.keys,COL_CTX.rs);drawCols(AUTOMAPS[COL_CTX.sig])}
+function closeCols(){$('#colModal').classList.remove('open')}
+/* extra details a company file may carry (owner, km, engine…) */
+const ROW_EXTRA=['owner','phone','lawsuit','execution','engine','plateType','km'];
+
+/* ===================== photo picker (laptop) =====================
+   All photos from the phone (or chosen on the laptop) are kept; tick the ones
+   that go into the report. The order you tick them = the order they print. */
+let picPool=[],picSel=[];
+function fitLayout(){let k=picSel.length;if(k)$('#photoCount').value=String([1,2,4,6,8,10,12].find(x=>x>=k)||12)}
+function syncPics(){pics=picSel.map(i=>picPool[i]).filter(Boolean);drawPicPick();let t=picPool.length;
+ $('#photoMsg').textContent=!t?'لم يتم اختيار صور.':t>1?`في التقرير ${pics.length} من ${t} صورة — اضغط على الصورة لإضافتها أو إزالتها (الترتيب حسب الضغط).`:'صورة واحدة.';render()}
+function setPool(arr,selN){picPool=arr||[];picSel=[...Array(Math.min(selN,picPool.length,12)).keys()];fitLayout();syncPics()}
+function togglePic(i){let j=picSel.indexOf(i);if(j>=0)picSel.splice(j,1);else{if(picSel.length>=12)return alert('صفحة الصور تتسع لـ 12 صورة كحد أقصى. أزل صورة أولاً.');picSel.push(i)}fitLayout();syncPics()}
+function picAll(on){picSel=on?[...Array(Math.min(12,picPool.length)).keys()]:[];fitLayout();syncPics()}
+function drawPicPick(){let b=$('#picPick');if(!b)return;if(picPool.length<2){b.innerHTML='';return}
+ b.innerHTML=`<div class="pick-tools"><button type="button" class="mini" onclick="picAll(true)">أول ${Math.min(12,picPool.length)}</button><button type="button" class="mini" onclick="picAll(false)">إلغاء الكل</button><span>${picSel.length}/${picPool.length}</span></div><div class="pick">${picPool.map((p,i)=>{let k=picSel.indexOf(i);return`<div class="pp${k>=0?' on':''}" onclick="togglePic(${i})" title="صورة ${i+1}"><img src="${p}" loading="lazy" alt="">${k>=0?`<b>${k+1}</b>`:''}</div>`}).join('')}</div>`}
+
+const formVehicle=()=>({agreement:val('case'),vin:val('vin'),reg:val('reg'),make:val('make'),model:val('model'),year:val('year'),color:val('color'),area:'',fee:'',key:'form'});
+/* per-row amount override (edited by clicking the amount in the preview) */
+function editCell(scope,key,el){let v=el.innerText.replace(/[^0-9.]/g,''),k=scope+':'+key;if(v==='')delete feeOverride[k];else feeOverride[k]=v;
+setTimeout(()=>{let a=document.activeElement,nk=a&&a.dataset?a.dataset.k:null;render();if(nk){let e=document.querySelector(`[data-k="${nk}"]`);if(e){e.focus();let r=document.createRange();r.selectNodeContents(e);let sl=getSelection();sl.removeAllRanges();sl.addRange(r)}}},0)}
+function edAttrs(scope,key){return`contenteditable="true" data-k="${scope}:${key}" class="ed${feeOverride[scope+':'+key]!==undefined?' ovr':''}" onblur="editCell('${scope}','${key}',this)" onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur()}"`}
+function resetFees(){Object.keys(feeOverride).forEach(k=>{if(k.startsWith('bulk:'))delete feeOverride[k]});render()}
+function selectedVehicles(){return rows.map((r,i)=>[r,i]).filter(([r,i])=>sel.has(i)).map(([r,i])=>({...rowData(r),...(cellEdit['r'+i]||{}),key:'r'+i}))}
+function buildList(){if(!rows.length){$('#vlist').innerHTML='<div class="hint">استورد ملف Excel أولاً.</div>';$('#selMsg').textContent='';return}$('#vlist').innerHTML=rows.map((r,i)=>{let d=rowData(r);return`<label><span>${i+1}. ${esc(d.reg)} — ${esc(d.make)} ${esc(d.model)} ${esc(d.year)}</span><input type="checkbox" data-i="${i}" ${sel.has(i)?'checked':''}></label>`}).join('');$$('#vlist input').forEach(x=>x.onchange=()=>{x.checked?sel.add(+x.dataset.i):sel.delete(+x.dataset.i);updSel();render()});updSel()}
+function updSel(){$('#selMsg').textContent=rows.length?`المحدد: ${sel.size} من ${rows.length}`:''}
+function selectAll(on){sel=on?new Set(rows.map((_,i)=>i)):new Set();buildList();render()}
+
+/* ---------- Arabic invoice / quotation ---------- */
+function addExtra(kind){arExtra.push(kind==='veh'?{kind,make:'',model:'',year:'',reg:'',agreement:'',amount:val('fee')}:{kind,desc:'',note:'',amount:val('fee')});drawExtras();render()}
+function delExtra(i){arExtra.splice(i,1);drawExtras();render()}
+function drawExtras(){let f=(i,k,ph,w)=>`<div${w?' class="full"':''}><input placeholder="${ph}" value="${esc(arExtra[i][k]||'')}" oninput="arExtra[${i}].${k}=this.value;render()"></div>`;
+$('#arRows').innerHTML=arExtra.map((r,i)=>`<div class="extra-row"><button type="button" class="del" onclick="delExtra(${i})">✕</button><div class="kind">${r.kind==='veh'?'مركبة إضافية':'صف حر'}</div><div class="grid">${r.kind==='veh'?f(i,'make','الصانع')+f(i,'model','الطراز')+f(i,'year','سنة الصنع')+f(i,'reg','رقم التسجيل')+f(i,'agreement','رقم الاتفاقية')+f(i,'amount','المبلغ (د.ب)'):`<div class="full"><textarea placeholder="سبب الاستحقاق" oninput="arExtra[${i}].desc=this.value;render()">${esc(r.desc||'')}</textarea></div><div class="full"><textarea placeholder="ملاحظات" oninput="arExtra[${i}].note=this.value;render()">${esc(r.note||'')}</textarea></div>`+f(i,'amount','المبلغ (د.ب)')}</div></div>`).join('')}
+/* ---------- every fixed text on the invoice / quotation / TI invoice is editable ----------
+   Edits are remembered on this computer and saved inside each edit file. */
+const LBL_DEF={
+ 'ar.date':'تاريخ:','ar.to':'السادة الأفاضل /','ar.cr':'سجل تجاري:','ar.addr':'العنوان:','ar.vat':'رقم حساب القيمة المضافة:','ar.for':'المنفذ له:','ar.against':'المنفذ ضده:','ar.thNotes':'ملاحظات','ar.thReason':'سبب الاستحقاق','ar.thAmount':'المبلغ المستحق','ar.law':'رقم ملف الدعوى','ar.agr':'رقم الاتفاقية','ar.veh1':'تثمين مركبة من نوع','ar.veh2':'سنة الصنع','ar.veh3':'والتي تحمل رقم تسجيل','ar.cur':'دينار','ar.total':'المجموع','ar.close':'هذا وتفضلوا بقبول وافر التحية والاحترام','ar.sign1':'خبير معتمد','ar.sign2':'السيد عدنان العلوي','ar.terms':'Terms & conditions',
+ 'en.date':'Date:','en.to':'To:','en.cr':'C.R. No:','en.addr':'Address:','en.vat':'VAT No:','en.for':'Judgment Creditor:','en.against':'Judgment Debtor:','en.thNotes':'Notes','en.thReason':'Description','en.thAmount':'Amount Due','en.law':'Case file No.','en.agr':'Agreement No.','en.veh1':'Valuation of a','en.veh2':'vehicle, model year','en.veh3':', registration No.','en.cur':'BD','en.total':'Total','en.words':'Bahraini Dinars only','en.close':'Yours faithfully,','en.sign1':'Certified Expert','en.sign2':'Mr. Adnan Al Alawi','en.terms':'Terms & conditions',
+ 'ti.big':'INVOICE','ti.to':'To:','ti.date':'Date:','ti.sub1':'This is the evaluation of','ti.sub2':'vehicles','ti.p1':'As per your e-mail on','ti.p2':', requesting an evaluation of','ti.p3':'vehicles at','ti.p4':'yard, the total evaluated vehicles is','ti.h1':'No','ti.h2':'Agreement #','ti.h3':'Chassis','ti.h4':'Reg Num','ti.h5':'Vehicle','ti.h6':'Type','ti.h7':'Model','ti.h8':'Color','ti.h9':'Area','ti.h10':'Fee BD','ti.subtotal':'Sub Total','ti.terms':'Terms & conditions','ti.cont':'INVOICE (continued)','ti.contNext':'continued on next page…'};
+let labels={};try{labels=JSON.parse(localStorage.getItem('adnanInvoiceTexts')||'{}')||{}}catch(e){labels={}}
+function saveLabels(){try{localStorage.setItem('adnanInvoiceTexts',JSON.stringify(labels))}catch(e){}}
+const LV=id=>id in labels?labels[id]:(LBL_DEF[id]??'');
+function L(id){return EF(`data-lbl="${id}"`,'l:'+id,LV(id),{})}
+/* left-panel list of the same texts */
+function drawLabelPanels(){$$('.lblpanel').forEach(box=>{let pfx=box.dataset.fixed||(lang()==='en'?'en.':'ar.');if(box.dataset.cur===pfx)return;box.dataset.cur=pfx;
+ box.innerHTML=Object.keys(LBL_DEF).filter(k=>k.startsWith(pfx)).map(k=>`<div class="full"><label>${esc(LBL_DEF[k])}</label><input data-lbl="${k}" value="${esc(LV(k))}"${pfx!=='ar.'?' dir="ltr"':''} oninput="setLbl(this)"></div>`).join('')})}
+function setLbl(inp){labels[inp.dataset.lbl]=inp.value;saveLabels();render()}
+function resetLabels(btn){let box=btn.parentElement.querySelector('.lblpanel'),pfx=box.dataset.cur;if(!confirm('إرجاع كل نصوص هذا المستند إلى النص الأصلي؟'))return;Object.keys(labels).filter(k=>k.startsWith(pfx)).forEach(k=>delete labels[k]);saveLabels();box.dataset.cur='';drawLabelPanels();render()}
+function arInvoice(){let quote=T()==='quoteAr',en=lang()==='en',P=en?'en.':'ar.',Lx=k=>L(P+k),vs=val('arMulti')&&sel.size?selectedVehicles():[formVehicle()],fee=val('fee'),has=v=>v!==''&&v!==undefined,cur=esc(LV(P+'cur')),feeTxt=v=>has(v)?(en?`${cur} ${money(v)}/-`:`${money(v)}/- ${cur}`):'';
+let items=vs.map(v=>({kind:'veh',...v,amount:fee,key:'v'+v.key,src:v.key})).concat(arExtra.map((r,i)=>({...r,key:'x'+i,xi:i})));
+items.forEach(it=>{let o=feeOverride['ar:'+it.key];if(o!==undefined)it.amount=o});
+let total=items.reduce((s,it)=>s+n(it.amount),0),oe=v=>v?'':' class="oe"';
+const vf=(it,f)=>it.xi!==undefined?XF(it.xi,f):VF({...it,key:it.src},f);
+let rowsHtml=items.map((v,i)=>{let left,mid,law=i===0?`<span${oe(val('lawsuit'))}>${Lx('law')}<br><span dir="ltr">${F('lawsuit')}</span><br></span>`:'';
+ if(v.kind==='veh'){left=law+`<span${oe(v.agreement)}>${Lx('agr')}<br><span dir="ltr">${vf(v,'agreement')}</span></span>`;
+  mid=en?`${i+1}- ${Lx('veh1')} ${vf(v,'make')} ${vf(v,'model')} ${Lx('veh2')} ${vf(v,'year')}${Lx('veh3')} ${vf(v,'reg')}`:`${i+1}- ${Lx('veh1')} ${vf(v,'make')} ${vf(v,'model')} ${Lx('veh2')} ${vf(v,'year')} ${Lx('veh3')} <span dir="ltr">${vf(v,'reg')}</span>`}
+ else{left=law+XF(v.xi,'note',1);mid=`<div style="display:flex;gap:4px"><span>${i+1}-</span>${XF(v.xi,'desc',1)}</div>`}
+ return`<tr><td>${left}</td><td>${mid}</td><td class="amt"><span ${edAttrs('ar',v.key)}>${feeTxt(v.amount)||'&nbsp;'}</span></td></tr>`}).join('');
+lastSum={ref:items.filter(it=>it.kind==='veh').map(it=>it.reg).filter(Boolean).join(', '),name:val('owner'),client:val(en?'enTo':'arTo'),amount:total};
+let first=`<tr><td>${F(en?'enFeeLabel':'arFeeLabel')} <b dir="ltr"${oe(val('execution'))}>${F('execution')}</b></td><td>${F(en?'enReason':'arReason')}</td><td class="amt"></td></tr>`,
+ head=`<tr><th>${Lx('thNotes')}</th><th>${Lx('thReason')}</th><th>${Lx('thAmount')}</th></tr>`,
+ tot=`<tr class="total"><td colspan="2">${Lx('total')}${total?` (${en?enWords(total)+' '+Lx('words'):arWords(total)})`:''}</td><td class="amt">${total?feeTxt(total):''}</td></tr>`,
+ tail=`<div class="inv-close">${Lx('close')}</div><div class="inv-sign"><div>${Lx('sign1')}<br>${Lx('sign2')}<br>${sigStamp()}</div></div><div class="terms-label">${Lx('terms')}</div>${termsBox('arTerms')}`;
+let ci=val('showClientInfo'),toCls=ci?'inv-to has-client':'inv-to',client=ci?`<div class="inv-client"><div${oe(val('clientCR'))}>${Lx('cr')} <bdi dir="ltr">${F('clientCR')}</bdi></div><div${oe(val(en?'enAddr':'arAddr'))}>${Lx('addr')} ${F(en?'enAddr':'arAddr')}</div><div${oe(val('clientVat'))}>${Lx('vat')} <bdi dir="ltr">${F('clientVat')}</bdi></div></div>`:'';
+if(en)return letter(`<div class="inv-ar inv-ltr" style="display:flex;flex-direction:column;height:100%"><div class="inv-date">${Lx('date')} ${F('date',{date:1,fmt:v=>dateShort(v,'/')})}</div><div class="${toCls}">${Lx('to')} ${F('enTo')}</div>${client}<div class="inv-title">${F('invTitleEn',{disp:v=>v||(quote?'Vehicle Valuation Quotation':'Vehicle Valuation Invoice')})}</div><p class="inv-party"><b>${Lx('for')}</b> ${F('enFor')}</p><p class="inv-party"><b>${Lx('against')}</b> ${F('owner',{dir:'auto'})}</p><table class="table inv-table" dir="ltr"><colgroup><col style="width:30%"><col style="width:48%"><col style="width:22%"></colgroup>${head}${first}${rowsHtml}${tot}</table>${tail}</div>`);
+return letter(`<div class="inv-ar" style="display:flex;flex-direction:column;height:100%"><div class="inv-date">${Lx('date')} ${F('date',{date:1,fmt:v=>dateShort(v,'/')})}</div><div class="${toCls}">${Lx('to')} ${F('arTo')}</div>${client}<div class="inv-title">${F('invTitleAr',{disp:v=>v||(quote?'تسعيرة تثمين مركبات':'فاتورة تثمين مركبات')})}</div><p class="inv-party"><b>${Lx('for')}</b> ${F('arFor')}</p><p class="inv-party"><b>${Lx('against')}</b> ${F('owner')}</p><table class="table inv-table"><colgroup><col style="width:34%"><col style="width:44%"><col style="width:22%"></colgroup>${head}${first}${rowsHtml}${tot}</table>${tail}</div>`)}
+/* shrink the Arabic invoice text when many rows are added so it stays on one page */
+function fitArInvoice(){let el=$('.inv-ar');if(!el)return;let fs=14;el.style.fontSize=fs+'px';while(el.scrollHeight>el.clientHeight+1&&fs>8){fs-=.5;el.style.fontSize=fs+'px'}}
+
+/* ---------- English bulk invoice (multi-page) ---------- */
+const BULK_ONE=56,BULK_FIRST=64,BULK_MID=74,BULK_LAST=62;
+function bulkInvoice(){let vs=sel.size?selectedVehicles():(val('reg')?[formVehicle()]:[]),N=vs.length,dfee=val('bFee');
+const feeOf=v=>{let o=feeOverride['bulk:'+v.key];return o!==undefined?o:(v.fee!==''?v.fee:dfee)};
+let total=vs.reduce((s,v)=>s+n(feeOf(v)),0),anyFee=vs.some(v=>feeOf(v)!=='');
+lastSum={ref:`${N} vehicles`,name:val('bTo'),client:val('bTo'),count:N,amount:total};const TL=k=>L('ti.'+k);
+// one page holds up to BULK_ONE rows with terms; otherwise the table continues over extra pages
+let chunks=[];if(N<=BULK_ONE)chunks=[vs];else{chunks.push(vs.slice(0,BULK_FIRST));let rest=vs.slice(BULK_FIRST);while(rest.length>BULK_LAST){let take=Math.min(BULK_MID,rest.length-10);chunks.push(rest.slice(0,take));rest=rest.slice(take)}chunks.push(rest)}
+let head=()=>`<colgroup><col style="width:4%"><col style="width:14%"><col style="width:18%"><col style="width:8%"><col style="width:11%"><col style="width:12%"><col style="width:6%"><col style="width:9%"><col style="width:9%"><col style="width:9%"></colgroup><tr>${[1,2,3,4,5,6,7,8,9,10].map(h=>`<th>${TL('h'+h)}</th>`).join('')}</tr>`,k=0;
+return chunks.map((ch,p)=>{let last=p===chunks.length-1,body=ch.map(v=>{k++;let f=feeOf(v);return`<tr><td>${k}</td><td>${VF(v,'agreement')}</td><td>${VF(v,'vin')}</td><td>${VF(v,'reg')}</td><td>${VF(v,'make')}</td><td>${VF(v,'model')}</td><td>${VF(v,'year')}</td><td>${VF(v,'color')}</td><td>${v.key==='form'?F('bArea'):CF(v.key,'area',v.area||val('bArea'))}</td><td ${edAttrs('bulk',v.key).replace('class="ed','class="fee-cell ed')}>${f!==''?money(f):''}</td></tr>`}).join('');
+let top=p===0?`<div class="big">${TL('big')}</div><div class="head"><div><b>${TL('to')}</b> ${F('bTo')}${FM('bAddr',{cls:'addr'})}</div><div><b>${TL('date')}</b> ${F('date',{date:1,fmt:v=>dateShort(v,'-')})}</div></div><div class="sub">${TL('sub1')} ${N} ${TL('sub2')}</div><p style="margin:2px 0 5px">${TL('p1')} ${F('bEmailDate',{date:1,fallback:'date',fmt:v=>dateShort(v,'-')})}${TL('p2')} ${N} ${TL('p3')} ${F('bYard')} ${TL('p4')} ${N}.</p>`:`<div class="sub" style="margin-top:0">${TL('cont')} — ${p+1} / ${chunks.length}</div>`;
+let sub=last?`<tr class="subtotal"><td colspan="9" style="text-align:right">${TL('subtotal')}</td><td>${anyFee?money(total):''}</td></tr>`:'';
+let tail=last?`<div class="bulk-tail"><div style="flex:1"><div class="terms-label">${TL('terms')}</div>${termsBox('bTerms')}</div><div>${sigStamp()}</div></div>`:`<div class="contd">${TL('contNext')}</div>`;
+return letter(`<div class="inv-en" style="display:flex;flex-direction:column;height:100%">${top}<table class="table bulk">${head()}${body}${sub}</table>${tail}</div>`)}).join('')}
+
+/* ---------- render ---------- */
+/* car's position in the imported Excel list (1, 2, 3 …), or null */
+const recNo=()=>{let v=$('#records').value;return rows.length&&v!==''&&rows[v]?(+v+1):null};
+function autoFile(){let t=T(),N=recNo(),pre=N?`${N}- `:'',d=created,s=String(d.getDate()).padStart(2,'0')+String(d.getMonth()+1).padStart(2,'0')+String(d.getFullYear()).slice(-2)+'_'+String(d.getHours()).padStart(2,'0')+String(d.getMinutes()).padStart(2,'0')+String(d.getSeconds()).padStart(2,'0');
+if(t==='court'&&$('#tasNaming').checked)return clean(`${N||1}-REG#${val('reg')}`);
+if(t==='report'||t==='facilities'||t==='court')return clean(`${N||1}- ${val('year')} ${val('make')} ${val('model')} Reg# ${val('reg')}`)||'1- Vehicle Report';
+if(t==='plates')return clean(pre+`تقييم لوحة رقم ${val('reg')}_${s}`);
+if(t==='invoiceAr')return clean(pre+(lang()==='en'?`Invoice Reg# ${val('reg')}_${s}`:`فاتورة مركبة رقم ${val('reg')}_${s}`));
+if(t==='quoteAr')return clean(pre+(lang()==='en'?`Quotation Reg# ${val('reg')}_${s}`:`تسعير تثمين مركبة رقم ${val('reg')}_${s}`));
+if(t==='invoiceBulk')return clean(`Invoice التسهيلات ${dateShort(val('date'),'-')}_${s}`);
+return clean(`Vehicle Report Reg# ${val('reg')}_${s}`)||'Vehicle Report'}
+const LABELS={
+reg:{def:'رقم التسجيل',plates:'رقم اللوحة'},
+case:{def:'رقم المعاملة',facilities:'رقم المعاملة / CASS NO',invoiceAr:'رقم الاتفاقية',quoteAr:'رقم الاتفاقية'},
+owner:{def:'اسم المالك / مقدم الطلب',invoiceAr:'المنفذ ضده',quoteAr:'المنفذ ضده'},
+lawsuit:{def:'رقم الدعوى',facilities:'رقم الدعوى / Case No.',invoiceAr:'رقم ملف الدعوى',quoteAr:'رقم ملف الدعوى'},
+execution:{def:'ملف التنفيذ',plates:'رقم الملف',invoiceAr:'رقم ملف التنفيذ',quoteAr:'رقم ملف التنفيذ'},
+fee:{def:'رسوم الخبير (د.ب)',invoiceAr:'المبلغ لكل مركبة (د.ب)',quoteAr:'المبلغ لكل مركبة (د.ب)'}};
+const FEE_DEFAULT={report:35,facilities:25,court:19,invoiceAr:20,quoteAr:20};
+function render(){let t=T();FK={};{let q=t==='quoteAr';$('#invTitleAr').placeholder=q?'تسعيرة تثمين مركبات':'فاتورة تثمين مركبات';$('#invTitleEn').placeholder=q?'Vehicle Valuation Quotation':'Vehicle Valuation Invoice'}
+$$('[data-for]').forEach(x=>x.style.display=x.dataset.for.split(' ').includes(t)?'':'none');
+$$('.lang-ar').forEach(x=>x.style.display=lang()==='ar'?'':'none');$$('.lang-en').forEach(x=>x.style.display=lang()==='en'?'':'none');
+$('.multiSec').style.display=(t==='invoiceBulk'||(isArInv()&&val('arMulti')))?'':'none';
+Object.entries(LABELS).forEach(([id,m])=>{let l=$(`label[for="${id}"]`);if(l)l.textContent=m[t]||m.def});
+$('#excelMsg').textContent=rows.length?(t==='invoiceBulk'?`تم استيراد ${rows.length} سيارة — حدد المركبات من القائمة أدناه.`:`تم استيراد ${rows.length} سيارة.`):(t==='invoiceBulk'?'ارفع ملف الشركة لتعبئة جدول الفاتورة.':'ارفع ملف الشركة، ثم اختر السيارة.');
+if(!val('fee')&&FEE_DEFAULT[t])$('#fee').value=FEE_DEFAULT[t];
+if(isReport())lastSum={ref:val('reg'),name:t==='plates'?(val('pAgainst')||val('owner')):val('owner'),amount:n(val('fee'))};
+document.title=autoFile()+'.pdf';
+const build=()=>{FK={};let h=t==='report'?report():t==='facilities'?facilities():t==='court'?court():t==='plates'?plates():isArInv()?arInvoice():bulkInvoice();if(isReport()&&$('#withPhotos').checked&&(t!=='plates'||pics.some(Boolean)))h+=photos();return h};
+NOTE_SPLITS=[];$('#pages').innerHTML=build();
+if(t==='report'){let total=(val('notes')?val('notes').split('\n'):[]).length;for(let guard=0;guard<20;guard++){let k=notesOverflow();if(k<0)break;let start=NOTE_SPLITS.length?NOTE_SPLITS[NOTE_SPLITS.length-1]:0,cut=start+Math.max(1,k);if(cut>=total)break;NOTE_SPLITS.push(cut);$('#pages').innerHTML=build()}}drawLabelPanels();drawRedPick();{let k=kmInfo(),el=$('#kmInfo');el.textContent=k.txt;el.style.color=k.cls==='km-high'?'#d00000':k.cls==='km-mid'?'#b86200':'#182fa5'}if(isArInv())fitArInvoice();updLogInfo()}
+
+/* ---------- number log: one counter + log per document type, saved in this browser ---------- */
+const TYPE_NAMES={plates:'تقييم لوحات',report:'تقرير',facilities:'تثمين انقليزي',court:'تثمين عربي',invoiceAr:'فاتورة',quoteAr:'تسعيرة',invoiceBulk:'Invoice التسهيلات'},LOGKEY='adnanNumberLog';
+/* log groups: Arabic + English versions of the same document share one log and one number sequence */
+const GROUPS={report:{letter:'R',name:'R — تقرير'},plates:{letter:'P',name:'P — تقييم لوحات'},eval:{letter:'E',name:'E — تثمين (عربي وانجليزي)'},invoice:{letter:'I',name:'I — فاتورة (عربي وانجليزي)'},quote:{letter:'Q',name:'Q — تسعيرة (عربي وانجليزي)'},bulk:{letter:'TI',name:'TI — Invoice التسهيلات'}},
+GROUP_OF={plates:'plates',report:'report',facilities:'eval',court:'eval',invoiceAr:'invoice',quoteAr:'quote',invoiceBulk:'bulk'},G=()=>GROUP_OF[T()];
+const docName=()=>{let t=T();return(t==='invoiceAr'||t==='quoteAr')?TYPE_NAMES[t]+(lang()==='en'?' (English)':' (عربي)'):TYPE_NAMES[t]};
+/* ===== Log storage =====
+   The log lives in a file (numbers-log.json) INSIDE the program folder, so it travels with the folder
+   (USB / external drive). Chrome/Edge only: the first time on each computer you pick the folder once.
+   Browsers without folder access (Safari/Firefox) fall back to saving inside the browser. */
+const LOGFILE='numbers-log.json',FS_OK=typeof window.showDirectoryPicker==='function';
+let LOG={counters:{},entries:{},letters:{}},logDir=null,logState=FS_OK?'loading':'na',writeQ=Promise.resolve();
+function normLog(l){l=JSON.parse(JSON.stringify(l&&l.entries?l:{counters:{},entries:{}}));l.counters=l.counters||{};l.letters=l.letters||{};l.companies=Array.isArray(l.companies)?l.companies:[];
+// migrate logs saved by older versions (one log per document type)
+Object.keys(GROUP_OF).forEach(k=>{let g=GROUP_OF[k];if(k===g)return;if(l.entries[k]){l.entries[g]=(l.entries[g]||[]).concat(l.entries[k].map(e=>({doc:TYPE_NAMES[k],...e})));delete l.entries[k]}if(l.counters[k]){l.counters[g]=Math.max(l.counters[g]||0,l.counters[k]);delete l.counters[k]}});return l}
+function mergeLog(base,add){add=normLog(add);Object.entries(add.entries).forEach(([g,list])=>{let t=base.entries[g]=base.entries[g]||[];list.forEach(e=>{if(!t.some(x=>x.no==e.no))t.push(e)})});Object.entries(add.counters).forEach(([g,c])=>base.counters[g]=Math.max(base.counters[g]||0,c));Object.entries(add.letters).forEach(([g,v])=>{if(!base.letters[g])base.letters[g]=v});base.companies=mergeCompanies(base.companies||[],add.companies||[]);return base}
+function getLog(){return normLog(LOG)}
+function putLog(l){l=normLog(l);
+ if(!FS_OK){try{localStorage.setItem(LOGKEY,JSON.stringify(l));LOG=l;return true}catch(e){alert('تعذر حفظ السجل.');return false}}
+ if(logState!=='ok'){alert('السجل غير مربوط بمجلد البرنامج.\nاضغط زر «ربط السجل» في قسم رقم المستند أولاً.');return false}
+ LOG=l;let data=JSON.stringify(l,null,1);
+ writeQ=writeQ.then(async()=>{let fh=await logDir.getFileHandle(LOGFILE,{create:true}),w=await fh.createWritable();await w.write(data);await w.close()}).catch(e=>{console.error(e);alert('تعذر حفظ السجل في الملف '+LOGFILE+'.\nتأكد أن الفلاش/الهارد متصل ثم اضغط «ربط السجل».');setLogState('need')});
+ return true}
+/* remember the chosen folder on this computer (IndexedDB) */
+function idb(){return new Promise((res,rej)=>{let r=indexedDB.open('adnanGenerator',1);r.onupgradeneeded=()=>r.result.createObjectStore('kv');r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}
+async function idbGet(k){let db=await idb();return new Promise(res=>{let r=db.transaction('kv').objectStore('kv').get(k);r.onsuccess=()=>res(r.result);r.onerror=()=>res(null)})}
+async function idbSet(k,v){let db=await idb();return new Promise(res=>{let t=db.transaction('kv','readwrite');t.objectStore('kv').put(v,k);t.oncomplete=()=>res(true);t.onerror=()=>res(false)})}
+function setLogState(st){logState=st;try{refreshCompanyList()}catch(e){}let el=$('#logStatus'),name=logDir?esc(logDir.name):'';
+ let m={ok:['ok',`✓ السجل محفوظ في ${LOGFILE} داخل مجلد «${name}»`,'<button type="button" onclick="connectLog(true)">تغيير المجلد</button>'],
+  need:['warn','السجل يحتاج إذن للوصول إلى مجلد البرنامج','<button type="button" onclick="connectLog(false)">تفعيل السجل</button>'],
+  none:['bad','السجل غير مربوط — اختر مجلد البرنامج مرة واحدة على هذا الجهاز','<button type="button" onclick="connectLog(true)">ربط السجل</button>'],
+  bad:['bad',`ملف ${LOGFILE} لا يمكن قراءته`,'<button type="button" onclick="connectLog(true)">اختيار مجلد آخر</button>'],
+  loading:['na','جارٍ تحميل السجل…',''],
+  na:['na','هذا المتصفح لا يستطيع حفظ السجل داخل المجلد، لذلك يُحفظ داخل المتصفح فقط. استخدم Chrome أو Edge ليُحفظ مع المجلد.','']}[st];
+ el.className='logstatus '+m[0];el.innerHTML=`<span>${m[1]}</span>${m[2]}`;
+ let w=$('#logWhere');if(w)w.textContent=st==='ok'?`السجل محفوظ في ${LOGFILE} داخل مجلد «${logDir.name}». لنقله لجهاز آخر انقل المجلد كاملاً.`:FS_OK?'السجل غير مربوط بالمجلد حالياً.':'السجل محفوظ داخل هذا المتصفح.'}
+async function readLogFile(){let fh=await logDir.getFileHandle(LOGFILE,{create:true}),txt=await (await fh.getFile()).text();return txt.trim()?JSON.parse(txt):{counters:{},entries:{}}}
+async function loadLogFile(){let l;try{l=normLog(await readLogFile())}catch(e){console.error(e);setLogState('bad');return}
+ // one-time move of a log that older versions kept inside the browser
+ let old=null;try{old=JSON.parse(localStorage.getItem(LOGKEY)||'null')}catch(e){}
+ LOG=l;setLogState('ok');
+ if(old&&old.entries){LOG=mergeLog(l,old);if(putLog(LOG)){try{localStorage.setItem(LOGKEY+'_moved_to_file',JSON.stringify(old));localStorage.removeItem(LOGKEY)}catch(e){}}}
+ syncNumber(true);render()}
+async function connectLog(pick){try{
+ if(pick||!logDir){let d=await window.showDirectoryPicker({id:'adnan-generator',mode:'readwrite'});
+  let isApp=true;try{await d.getFileHandle('vehicle-report-generator.html')}catch(e){isApp=false}
+  if(!isApp&&!confirm(`المجلد «${d.name}» لا يحتوي على vehicle-report-generator.html.\nالأفضل اختيار مجلد البرنامج نفسه. هل تريد استخدام هذا المجلد على أي حال؟`))return;
+  logDir=d;await idbSet('logDir',d)}
+ let p=await logDir.requestPermission({mode:'readwrite'});if(p!=='granted'){setLogState('need');return}
+ await loadLogFile()}catch(e){if(e&&e.name==='AbortError')return;console.error(e);alert('تعذر ربط السجل: '+(e&&e.message||e))}}
+async function initLog(){if(!FS_OK){try{LOG=normLog(JSON.parse(localStorage.getItem(LOGKEY)||'null'))}catch(e){}setLogState('na');syncNumber(true);render();return}
+ try{logDir=await idbGet('logDir')}catch(e){logDir=null}
+ if(!logDir){setLogState('none');return}
+ let p='prompt';try{p=await logDir.queryPermission({mode:'readwrite'})}catch(e){}
+ if(p==='granted')await loadLogFile();else setLogState('need')}
+/* pick up changes if the file was edited elsewhere while this window was in the background */
+window.addEventListener('focus',async()=>{if(logState!=='ok')return;try{let l=normLog(await readLogFile());await writeQ;if(JSON.stringify(l)!==JSON.stringify(LOG)){LOG=l;render()}}catch(e){setLogState('need')}});
+function nextNo(g){let l=getLog(),c=l.counters[g];if(c)return c;let nums=(l.entries[g]||[]).map(e=>parseInt(e.no)).filter(x=>!isNaN(x));return nums.length?Math.max(...nums)+1:1}
+function defLetter(g){return getLog().letters[g]||GROUPS[g].letter}
+const fmtNo=e=>`${e.letter?e.letter+' - ':''}${e.no}`;
+function lastEntry(g){let e=getLog().entries[g]||[];return e.length?e[e.length-1]:null}
+/* ===================== الحسابات — accounts (I and TI invoices only; quotations are not income) ===================== */
+const AR_MONTHS=['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
+let ACC={tab:'invoice',period:null,client:'',status:'all'};
+const todayStr=()=>{let d=new Date();return`${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`};
+function parseD(s){let m=String(s||'').match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);return m?new Date(+m[3],+m[2]-1,+m[1]):null}
+const dueDays=()=>{let v=(getLog().settings||{}).overdueDays;return v===undefined?7:n(v)};
+function accRows(g){let today=new Date();today.setHours(0,0,0,0);let dd=dueDays();
+ return(getLog().entries[g]||[]).map((e,i)=>{let d=parseD(e.date)||parseD(e.saved),age=d?Math.floor((today-d)/864e5):0;
+  return{...e,i,g,d,age,over:!e.paid&&!!d&&age>dd,client:(e.client||e.name||'—').trim()||'—',amount:n(e.amount),mk:d?`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`:'?'}})}
+const monthName=mk=>{if(mk==='?')return'بدون تاريخ';let[y,m]=mk.split('-');return`${AR_MONTHS[+m-1]} ${y}`};
+function overdueAll(){return['invoice','bulk'].flatMap(g=>accRows(g)).filter(r=>r.over)}
+function updOverdueBadge(){let b=$('#overdueBadge');if(!b)return;let o=overdueAll();b.style.display=o.length?'':'none';b.textContent=`⚠ ${o.length} ${o.length===1?'فاتورة متأخرة':'فواتير متأخرة'}`}
+function openAccounts(status){if(status)ACC.status=status;$('#accModal').classList.add('open');drawAccounts()}
+function closeAccounts(){$('#accModal').classList.remove('open')}
+function accFilter(rows,ignore){return rows.filter(r=>(ignore==='period'||ACC.period==='all'||(ACC.period[0]==='y'?r.mk.startsWith(ACC.period.slice(1)):r.mk===ACC.period.slice(1)))
+ &&(ignore==='client'||!ACC.client||r.client===ACC.client)
+ &&(ignore==='status'||ACC.status==='all'||(ACC.status==='paid'&&r.paid)||(ACC.status==='unpaid'&&!r.paid)||(ACC.status==='over'&&r.over)))}
+function sums(rows){let t=0,p=0,u=0,o=0;rows.forEach(r=>{t+=r.amount;if(r.paid)p+=r.amount;else{u+=r.amount;if(r.over)o+=r.amount}});return{t,p,u,o,c:rows.length,pc:rows.filter(r=>r.paid).length,uc:rows.filter(r=>!r.paid).length,oc:rows.filter(r=>r.over).length}}
+function statusCell(r){return r.paid?`<span class="pill ok">مدفوع</span>`:r.over?`<span class="pill bad">متأخر ${r.age} يوم</span>`:`<span class="pill wait">غير مدفوع (${r.age} يوم)</span>`}
+function setPaid(g,i,v){let l=getLog(),e=l.entries[g][i];if(!e)return;if(!v&&!confirm(`إلغاء الدفع للرقم ${fmtNo(e)}؟`))return;e.paid=v;e.paidDate=v?todayStr():'';if(putLog(l)){drawAccounts();updOverdueBadge();if($('#logModal').classList.contains('open'))drawLog()}}
+function accState(){let all=accRows(ACC.tab),months=[...new Set(all.map(r=>r.mk))].filter(m=>m!=='?').sort().reverse(),years=[...new Set(months.map(m=>m.slice(0,4)))];
+ let curM=new Date(),cm=`${curM.getFullYear()}-${String(curM.getMonth()+1).padStart(2,'0')}`;
+ let opts=[['all','كل الفترات'],...years.map(y=>['y'+y,'سنة '+y]),...months.map(m=>['m'+m,monthName(m)])];
+ if(!ACC.period||!opts.some(o=>o[0]===ACC.period))ACC.period=months.includes(cm)?'m'+cm:'all';
+ return{all,opts}}
+function drawAccounts(){let{all,opts}=accState(),rows=accFilter(all).sort((a,b)=>(b.d||0)-(a.d||0)),S=sums(rows),ti=ACC.tab==='bulk';
+ let clients=[...new Set(all.map(r=>r.client))].sort();if(ACC.client&&!clients.includes(ACC.client))ACC.client='';
+ $$('#accModal .acc-tab').forEach(b=>b.classList.toggle('on',b.dataset.tab===ACC.tab));
+ $('#accFilters').innerHTML=`<label>الفترة<select onchange="ACC.period=this.value;drawAccounts()">${opts.map(o=>`<option value="${o[0]}"${o[0]===ACC.period?' selected':''}>${o[1]}</option>`).join('')}</select></label>
+ <label>العميل<select onchange="ACC.client=this.value;drawAccounts()"><option value="">كل العملاء</option>${clients.map(c=>`<option${c===ACC.client?' selected':''}>${esc(c)}</option>`).join('')}</select></label>
+ <label>الحالة<select onchange="ACC.status=this.value;drawAccounts()">${[['all','الكل'],['unpaid','غير مدفوع'],['over','متأخر فقط'],['paid','مدفوع']].map(o=>`<option value="${o[0]}"${o[0]===ACC.status?' selected':''}>${o[1]}</option>`).join('')}</select></label>
+ <label>متأخر بعد (يوم)<input type="number" min="0" value="${dueDays()}" style="width:70px" onchange="let l=getLog();l.settings=l.settings||{};l.settings.overdueDays=n(this.value);if(putLog(l)){drawAccounts();updOverdueBadge()}"></label>`;
+ $('#accCards').innerHTML=[['عدد الفواتير',S.c,''],['الإجمالي',money(S.t)+' د.ب',''],['المدفوع',money(S.p)+' د.ب',`${S.pc} فاتورة`,'ok'],['غير المدفوع',money(S.u)+' د.ب',`${S.uc} فاتورة`,'wait'],['المتأخر',money(S.o)+' د.ب',`${S.oc} فاتورة`,'bad']].map(c=>`<div class="acc-card ${c[3]||''}"><div class="t">${c[0]}</div><div class="v">${c[1]}</div>${c[2]?`<div class="s">${c[2]}</div>`:''}</div>`).join('');
+ let head=ti?['الرقم','التاريخ','العميل','عدد المركبات','المبلغ (د.ب)','الحالة','تاريخ الدفع','']:['الرقم','التاريخ','العميل (السادة)','المنفذ ضده','المركبة','المبلغ (د.ب)','الحالة','تاريخ الدفع',''];
+ $('#accTable').innerHTML=rows.length?`<table class="logt acc-t"><tr>${head.map(h=>`<th>${h}</th>`).join('')}</tr>${rows.map(r=>`<tr class="${r.over?'r-over':r.paid?'r-paid':''}"><td class="num"><bdi dir="ltr">${esc(fmtNo(r))}</bdi></td><td>${esc(r.date||'')}</td><td dir="auto"><a href="#" onclick="ACC.client=this.textContent;drawAccounts();return false">${esc(r.client)}</a></td>${ti?`<td>${r.count||parseInt(r.ref)||''}</td>`:`<td dir="auto">${esc(r.name||'')}</td><td dir="auto">${esc(r.ref||'')}</td>`}<td><b>${money(r.amount)}</b></td><td>${statusCell(r)}</td><td>${esc(r.paidDate||'')}</td><td style="white-space:nowrap">${r.paid?`<button class="mini" onclick="setPaid('${r.g}',${r.i},false)">إلغاء الدفع</button>`:`<button class="mini btn-green" onclick="setPaid('${r.g}',${r.i},true)">✓ تم الدفع</button>`} ${r.file?`<button class="mini" onclick="closeAccounts();openEdit('${r.g}',${r.i})">فتح</button>`:''}</td></tr>`).join('')}<tr class="sumrow"><td colspan="${ti?4:5}">المجموع</td><td><b>${money(S.t)}</b></td><td colspan="3">مدفوع ${money(S.p)} · غير مدفوع ${money(S.u)}</td></tr></table>`:'<div class="hint">لا توجد فواتير لهذه الاختيارات.</div>';
+ // by client (same period & status, all clients)
+ let byC={};accFilter(all,'client').forEach(r=>(byC[r.client]=byC[r.client]||[]).push(r));
+ $('#accClients').innerHTML=Object.keys(byC).length?`<table class="logt"><tr><th>العميل</th><th>عدد</th><th>الإجمالي</th><th>المدفوع</th><th>غير المدفوع</th><th>المتأخر</th></tr>${Object.entries(byC).sort((a,b)=>sums(b[1]).u-sums(a[1]).u).map(([c,rs])=>{let s=sums(rs);return`<tr${c===ACC.client?' class="sel"':''}><td dir="auto"><a href="#" onclick="ACC.client=ACC.client===this.textContent?'':this.textContent;drawAccounts();return false">${esc(c)}</a></td><td>${s.c}</td><td>${money(s.t)}</td><td class="g">${money(s.p)}</td><td class="o">${money(s.u)}</td><td class="r">${s.o?money(s.o)+` (${s.oc})`:'—'}</td></tr>`}).join('')}</table>`:'';
+ // by month (same client & status, all periods)
+ let byM={};accFilter(all,'period').forEach(r=>(byM[r.mk]=byM[r.mk]||[]).push(r));
+ $('#accMonths').innerHTML=Object.keys(byM).length?`<table class="logt"><tr><th>الشهر</th><th>عدد</th><th>الإجمالي</th><th>المدفوع</th><th>غير المدفوع</th><th>المتأخر</th></tr>${Object.keys(byM).sort().reverse().map(mk=>{let s=sums(byM[mk]);return`<tr${ACC.period==='m'+mk?' class="sel"':''}><td><a href="#" onclick="ACC.period='m${mk}';drawAccounts();return false">${monthName(mk)}</a></td><td>${s.c}</td><td>${money(s.t)}</td><td class="g">${money(s.p)}</td><td class="o">${money(s.u)}</td><td class="r">${s.o?money(s.o)+` (${s.oc})`:'—'}</td></tr>`}).join('')}</table>`:'';
+ ACC.last={rows,S,byC,byM,ti}}
+function accTitle(){let p=ACC.period==='all'?'كل الفترات':ACC.period[0]==='y'?'سنة '+ACC.period.slice(1):monthName(ACC.period.slice(1));return`${ACC.tab==='bulk'?'Invoice التسهيلات (TI)':'الفواتير (I)'} — ${p}${ACC.client?' — '+ACC.client:''}${ACC.status!=='all'?' — '+{unpaid:'غير مدفوع',over:'متأخر',paid:'مدفوع'}[ACC.status]:''}`}
+function accStatusTxt(r){return r.paid?'مدفوع':r.over?`متأخر ${r.age} يوم`:'غير مدفوع'}
+/* export file names in English so every browser keeps them */
+const accFile=()=>`Accounts ${ACC.tab==='bulk'?'TI':'I'} ${ACC.period==='all'?'all':ACC.period.slice(1)}${ACC.status!=='all'?' '+ACC.status:''}${ACC.client?' (filtered)':''}`;
+function exportAccExcel(){let{rows,S,byC,byM,ti}=ACC.last,title=accTitle(),fname=accFile();
+ let main=[[title],[`تاريخ التقرير: ${todayStr()}`],[],['الإجمالي',S.t,'المدفوع',S.p,'غير المدفوع',S.u,'المتأخر',S.o],[],
+  ti?['الرقم','التاريخ','العميل','عدد المركبات','المبلغ','الحالة','تاريخ الدفع']:['الرقم','التاريخ','العميل','المنفذ ضده','المركبة','المبلغ','الحالة','تاريخ الدفع'],
+  ...rows.map(r=>ti?[fmtNo(r),r.date,r.client,r.count||parseInt(r.ref)||'',r.amount,accStatusTxt(r),r.paidDate||'']:[fmtNo(r),r.date,r.client,r.name||'',r.ref||'',r.amount,accStatusTxt(r),r.paidDate||'']),
+  ti?['','','','المجموع',S.t]:['','','','','المجموع',S.t]];
+ let cl=[['العميل','عدد','الإجمالي','المدفوع','غير المدفوع','المتأخر'],...Object.entries(byC).map(([c,rs])=>{let s=sums(rs);return[c,s.c,s.t,s.p,s.u,s.o]})];
+ let mo=[['الشهر','عدد','الإجمالي','المدفوع','غير المدفوع','المتأخر'],...Object.keys(byM).sort().reverse().map(mk=>{let s=sums(byM[mk]);return[monthName(mk),s.c,s.t,s.p,s.u,s.o]})];
+ if(window.XLSX){let wb=XLSX.utils.book_new();[['الفواتير',main],['حسب العميل',cl],['حسب الشهر',mo]].forEach(([n_,a])=>{let ws=XLSX.utils.aoa_to_sheet(a);ws['!cols']=a[5]?a[5].map(()=>({wch:18})):[{wch:22},{wch:8},{wch:12},{wch:12},{wch:12},{wch:12}];XLSX.utils.book_append_sheet(wb,ws,n_)});wb.Workbook={Views:[{RTL:true}]};XLSX.writeFile(wb,fname+'.xlsx')}
+ else{let q=x=>'"'+String(x??'').replace(/"/g,'""')+'"';download(fname+'.csv','﻿'+[...main,[],...cl,[],...mo].map(r=>r.map(q).join(',')).join('\r\n'),'text/csv;charset=utf-8');alert('تعذر تحميل مكتبة Excel (يحتاج إنترنت)، تم الحفظ كملف CSV يفتح في Excel.')}}
+function exportAccPDF(){let{rows,S,byC,byM,ti}=ACC.last,title=accTitle(),w=window.open('','_blank');if(!w)return alert('اسمح بالنوافذ المنبثقة لهذا الملف ثم أعد المحاولة.');
+ let t=(h,b)=>`<table><tr>${h.map(x=>`<th>${x}</th>`).join('')}</tr>${b.join('')}</table>`;
+ let main=t(ti?['الرقم','التاريخ','العميل','المركبات','المبلغ','الحالة','تاريخ الدفع']:['الرقم','التاريخ','العميل','المنفذ ضده','المركبة','المبلغ','الحالة','تاريخ الدفع'],rows.map(r=>`<tr class="${r.over?'over':r.paid?'paid':''}"><td dir="ltr">${esc(fmtNo(r))}</td><td>${esc(r.date||'')}</td><td>${esc(r.client)}</td>${ti?`<td>${r.count||parseInt(r.ref)||''}</td>`:`<td>${esc(r.name||'')}</td><td>${esc(r.ref||'')}</td>`}<td><b>${money(r.amount)}</b></td><td>${accStatusTxt(r)}</td><td>${esc(r.paidDate||'')}</td></tr>`).concat([`<tr class="sum"><td colspan="${ti?4:5}">المجموع</td><td>${money(S.t)}</td><td colspan="2"></td></tr>`]));
+ let sumT=(o,lab)=>t([lab,'عدد','الإجمالي','المدفوع','غير المدفوع','المتأخر'],o.map(([k,rs])=>{let s=sums(rs);return`<tr><td>${esc(k)}</td><td>${s.c}</td><td>${money(s.t)}</td><td>${money(s.p)}</td><td>${money(s.u)}</td><td>${money(s.o)}</td></tr>`}));
+ w.document.write(`<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>${esc(accFile())}</title><style>@page{size:A4;margin:12mm}body{font-family:Tahoma,Arial,sans-serif;font-size:11px;color:#17212d}h1{font-size:18px;margin:0 0 2px;color:#071f53}.sub{color:#555;margin-bottom:10px}.cards{display:flex;gap:8px;margin:8px 0 12px}.cards div{flex:1;border:1px solid #ccd;border-radius:6px;padding:6px 8px}.cards b{display:block;font-size:14px}.ok b{color:#1d6b35}.wait b{color:#b86200}.bad b{color:#c00}h2{font-size:13px;margin:14px 0 4px;color:#071f53}table{width:100%;border-collapse:collapse}th,td{border:1px solid #c5ccd4;padding:3px 5px;text-align:right}th{background:#e8edf3}tr.over td{color:#c00}tr.paid td{color:#1d6b35}tr.sum td{font-weight:bold;background:#f3f3f3}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}</style></head><body>
+ <h1>كشف حسابات — ${esc(title)}</h1><div class="sub">عدنان العلوي للخبرة والاستشارات والتثمين · تاريخ التقرير ${todayStr()} · متأخر بعد ${dueDays()} يوم</div>
+ <div class="cards"><div>الإجمالي<b>${money(S.t)} د.ب</b>${S.c} فاتورة</div><div class="ok">المدفوع<b>${money(S.p)} د.ب</b>${S.pc} فاتورة</div><div class="wait">غير المدفوع<b>${money(S.u)} د.ب</b>${S.uc} فاتورة</div><div class="bad">المتأخر<b>${money(S.o)} د.ب</b>${S.oc} فاتورة</div></div>
+ <h2>الفواتير</h2>${rows.length?main:'لا توجد فواتير.'}<h2>حسب العميل</h2>${sumT(Object.entries(byC),'العميل')}<h2>حسب الشهر</h2>${sumT(Object.keys(byM).sort().reverse().map(k=>[monthName(k),byM[k]]),'الشهر')}
+ <script>window.onload=()=>setTimeout(()=>window.print(),200)<\/script></body></html>`);w.document.close()}
+
+function updLogInfo(){updOverdueBadge();let g=G(),le=lastEntry(g);$('#logInfo').innerHTML=`سجل «${GROUPS[g].name}»: آخر رقم مسجل <b>${le?`<bdi dir="ltr">${esc(fmtNo(le))}</bdi>`:'—'}</b> · الرقم التالي <b>${nextNo(g)}</b>`}
+/* ---------- edit files: a copy of everything typed, so a saved document can be reopened and fixed ----------
+   saved in  <program folder>/edit files/<letter>/<code>.json   e.g. edit files/E/E - 15.json */
+const EDIT_DIR='edit files';let openedKey=null;
+async function editFolder(sub,create){let root=await logDir.getDirectoryHandle(EDIT_DIR,{create});return root.getDirectoryHandle(sub,{create})}
+async function writeEditFile(sub,name,data){let d=await editFolder(sub,true),fh=await d.getFileHandle(name,{create:true}),w=await fh.createWritable();await w.write(data);await w.close()}
+function logDoc(manual){let g=G(),no=val('docNo').trim(),L=val('docLetter').trim().toUpperCase();if(!no)return alert('اكتب رقم المستند أولاً.');let l=getLog(),list=l.entries[g]=l.entries[g]||[],i=list.findIndex(e=>e.no==no),reopened=openedKey===g+'|'+no;
+let sub=GROUPS[g].letter,fname=clean(`${L?L+' - ':''}${no}`)+'.json',state=JSON.stringify(collectState(true));
+let entry={no,letter:L,doc:docName(),date:dateFmt(val('date')),ref:lastSum.ref||'',name:lastSum.name||'',client:lastSum.client||lastSum.name||'',count:lastSum.count||'',amount:lastSum.amount||0,paid:$('#showPaid').checked,saved:new Date().toLocaleString('en-GB'),file:`${sub}/${fname}`};
+{let prev=i>=0?list[i]:null;if(prev&&prev.paid&&!entry.paid){entry.paid=true;entry.paidDate=prev.paidDate||''}else if(entry.paid)entry.paidDate=(prev&&prev.paidDate)||todayStr()}
+if(i>=0){if(!reopened&&!confirm(`الرقم ${no} مسجل مسبقاً في سجل ${GROUPS[g].name}. تحديث بياناته؟`))return;list[i]=entry}else list.push(entry);
+if(!FS_OK)download(fname,state,'application/json');
+let num=parseInt(no);if(!isNaN(num)&&String(num)===no)l.counters[g]=Math.max(l.counters[g]||1,num+1);
+if(T()==='invoiceAr'||T()==='quoteAr')l.companies=upsertCompany(l.companies);
+if(putLog(l)){refreshCompanyList();if(FS_OK)writeQ=writeQ.then(()=>writeEditFile(sub,fname,state)).catch(e=>{console.error(e);alert('تم تسجيل الرقم، لكن تعذر حفظ ملف التعديل '+fname)});
+ openedKey=null;$('#docNo').value=nextNo(g);$('#docLetter').value=defLetter(g);
+ let cur=$('#records').value,nextCar=!reopened&&T()!=='invoiceBulk'&&rows.length&&cur!==''&&rows[+cur+1]?+cur+1:null;
+ if(nextCar!==null){$('#records').value=nextCar;$('#records').onchange({target:$('#records')})}else render();
+ if(nextCar!==null&&!manual)setTimeout(()=>alert(`تم الحفظ. انتقلنا للمركبة التالية في القائمة: ${nextCar+1}. ${val('reg')}`),50);
+ else if(!reopened&&!manual&&T()!=='invoiceBulk'&&rows.length&&cur!==''&&+cur===rows.length-1)setTimeout(()=>alert('تم الحفظ. هذه كانت آخر مركبة في قائمة Excel.'),50);
+ if(manual||reopened)alert(`${reopened?'تم تحديث':'تم تسجيل'} ${L?L+' - ':''}${no} وحفظ ملف التعديل.\nالرقم التالي: ${nextNo(g)}`)}}
+async function openEdit(g,i){let e=(getLog().entries[g]||[])[i];if(!e||!e.file)return;if(FS_OK&&logState!=='ok')return alert('اربط السجل أولاً.');
+ if(!confirm(`فتح ${fmtNo(e)} للتعديل؟\nسيتم استبدال البيانات الموجودة حالياً في النموذج.`))return;
+ try{let[sub,name]=e.file.split('/'),f=await (await (await editFolder(sub,false)).getFileHandle(name)).getFile();applyState(JSON.parse(await f.text()));openedKey=g+'|'+e.no;closeLog();
+  alert(`تم فتح ${fmtNo(e)}. عدّل ما تريد ثم صدّر PDF واحفظه مرة أخرى — سيبقى نفس الرقم.`)}
+ catch(err){console.error(err);alert(`لم يتم العثور على ملف التعديل:\n${EDIT_DIR}/${e.file}`)}}
+function openEditFile(ev){let f=ev.target.files[0];ev.target.value='';if(!f)return;if(!confirm('سيتم استبدال البيانات الموجودة حالياً في النموذج. متابعة؟'))return;
+ f.text().then(t=>{let d=JSON.parse(t);if(!d.fields)throw 0;applyState(d);openedKey=G()+'|'+val('docNo').trim();closeLog();alert(`تم فتح ${docLabel()}.`)}).catch(()=>alert('ملف غير صالح.'))}
+function openLog(){$('#logType').innerHTML=Object.entries(GROUPS).map(([k,v])=>`<option value="${k}">${v.name}</option>`).join('');$('#logType').value=G();drawLog();$('#logModal').classList.add('open')}
+function closeLog(){$('#logModal').classList.remove('open')}
+function drawLog(){let g=$('#logType').value,le=lastEntry(g),list=(getLog().entries[g]||[]).map((e,i)=>[e,i]).reverse();
+$('#logBody').innerHTML=`<div class="hint" style="margin:0 0 8px">الحرف الافتراضي: <b style="color:#d00000">${esc(defLetter(g))}</b> · عدد المسجل: ${list.length} · آخر رقم: <b style="color:#d00000">${le?`<bdi dir="ltr">${esc(fmtNo(le))}</bdi>`:'—'}</b> · الرقم التالي: <b>${nextNo(g)}</b></div>`+(list.length?`<table class="logt"><tr><th>الرقم</th><th>المستند</th><th>التاريخ</th><th>المركبة / المرجع</th><th>الاسم</th><th>المبلغ</th><th>مدفوع</th><th>وقت التسجيل</th><th></th></tr>${list.map(([e,i])=>`<tr><td class="num"><bdi dir="ltr">${esc(fmtNo(e))}</bdi></td><td>${esc(e.doc||'')}</td><td>${esc(e.date)}</td><td dir="auto">${esc(e.ref)}</td><td dir="auto">${esc(e.name)}</td><td>${money(e.amount)}</td><td><input type="checkbox" style="width:auto" ${e.paid?'checked':''} onchange="togglePaid('${g}',${i},this.checked)"></td><td>${esc(e.saved||'')}</td><td style="white-space:nowrap">${e.file?`<button class="mini btn-blue" onclick="openEdit('${g}',${i})">فتح للتعديل</button> `:''}<button class="mini" onclick="delEntry('${g}',${i})">حذف</button></td></tr>`).join('')}</table>`:'<div class="hint">لا توجد أرقام مسجلة لهذا النوع بعد.</div>')}
+function togglePaid(g,i,v){let l=getLog();l.entries[g][i].paid=v;l.entries[g][i].paidDate=v?todayStr():'';putLog(l);updOverdueBadge()}
+function delEntry(g,i){let l=getLog(),e=l.entries[g][i];if(!confirm(`حذف الرقم ${fmtNo(e)} من السجل؟`))return;l.entries[g].splice(i,1);putLog(l);drawLog();updLogInfo()}
+function setNext(){let g=$('#logType').value,v=prompt(`الرقم التالي لسجل ${GROUPS[g].name}:`,nextNo(g));if(v===null)return;v=parseInt(v);if(isNaN(v)||v<1)return alert('رقم غير صحيح.');let l=getLog();l.counters[g]=v;putLog(l);if(g===G())$('#docNo').value=v;drawLog();render()}
+function setLetter(){let g=$('#logType').value,v=prompt(`الحرف الافتراضي لسجل ${GROUPS[g].name} (الأصلي: ${GROUPS[g].letter}).\nتغيير الحرف لا يغير تسلسل الأرقام.`,defLetter(g));if(v===null)return;v=v.trim().toUpperCase();let l=getLog();if(v&&v!==GROUPS[g].letter)l.letters[g]=v;else delete l.letters[g];putLog(l);if(g===G())$('#docLetter').value=defLetter(g);drawLog();render()}
+function download(name,data,type){let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([data],{type}));a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500)}
+function exportLog(){let l=getLog(),q=x=>'"'+String(x??'').replace(/"/g,'""')+'"',lines=[['Log','No','Document','Date','Vehicle / Ref','Name','Amount BD','Paid','Logged at'].map(q).join(',')];Object.keys(GROUPS).forEach(g=>(l.entries[g]||[]).forEach(e=>lines.push([GROUPS[g].name,fmtNo(e),e.doc||'',e.date,e.ref,e.name,e.amount,e.paid?'Yes':'No',e.saved].map(q).join(','))));download(`Numbers log ${new Date().toISOString().slice(0,10)}.csv`,'﻿'+lines.join('\r\n'),'text/csv;charset=utf-8')}
+
+function printReport(){if(FS_OK&&logState!=='ok'&&!confirm('تنبيه: السجل غير مربوط بمجلد البرنامج، لذلك لن يُسجل رقم هذا المستند.\nاضغط «ربط السجل» أولاً، أو OK للمتابعة بدون تسجيل.'))return;render();alert('عند ظهور نافذة الطباعة، اختر Save as PDF ثم ألغِ “Headers and footers / رؤوس وتذييلات الصفحة”. هذا يمنع ظهور الوقت ومسار الكمبيوتر.');window.print();setTimeout(()=>{let no=val('docNo').trim();if(no&&(!FS_OK||logState==='ok')&&confirm(`هل تم حفظ المستند؟\nاضغط OK لتسجيل الرقم ${docLabel()} في سجل «${GROUPS[G()].name}» والانتقال للرقم التالي.`))logDoc(false)},300)}
+/* ---------- full document state (used by drafts and by edit files) ---------- */
+const CHECKS=['showStamp','showSignature','showPaid','arMulti','withPhotos','tasNaming','showClientInfo'];
+function collectState(withPics){return{v:1,labels,rec:$('#records').value,fields:Object.fromEntries(ids.map(i=>[i,val(i)])),checks:Object.fromEntries(CHECKS.map(c=>[c,$('#'+c).checked])),invLang:lang(),ratings,conditionNotes,feeOverride,cellEdit,arExtra,rows,sel:[...sel],...(withPics?{pics:pics.filter(Boolean)}:{})}}
+function applyState(d){if(d.labels){labels=d.labels;saveLabels();$$('.lblpanel').forEach(b=>b.dataset.cur='')}Object.entries(d.fields||{}).forEach(([i,v])=>{if($('#'+i))$('#'+i).value=v});{let f=(d.fields||{}).fuel;if(f==='Turbo'||f==='Supercharge'){$('#fuel').value='Petrol';$('#asp').value=f==='Turbo'?'Turbo':'Supercharged'}else if(!(d.fields||{}).asp)$('#asp').value='NA'}if(d.type&&!(d.fields||{}).type)$('#type').value=d.type;
+ if('arMulti' in d)$('#arMulti').checked=!!d.arMulti;if('withPhotos' in d)$('#withPhotos').checked=d.withPhotos;
+ Object.entries(d.checks||{}).forEach(([c,v])=>{if($('#'+c))$('#'+c).checked=v});
+ if(d.invLang){let r=$(`input[name=invLang][value=${d.invLang}]`);if(r)r.checked=true}
+ ratings=d.ratings||{};conditionNotes=d.conditionNotes||{};feeOverride=d.feeOverride||{};cellEdit=d.cellEdit||{};arExtra=d.arExtra||[];drawExtras();
+ rows=d.rows||[];registerRows(rows);sel=new Set(d.sel||[]);if(rows.length){fillRecords();if(d.rec!=null&&rows[d.rec])$('#records').value=d.rec}buildList();
+ if(d.pics){picPool=d.pics.slice();picSel=picPool.map((_,i)=>i);pics=picPool.slice();drawPicPick();$('#photoMsg').textContent=pics.length?`${pics.length} صور من الملف المحفوظ.`:'لم يتم اختيار صور.'}
+ curGroup=G();render();if(window.privMark)privMark()}
+function saveDraft(){try{localStorage.setItem('adnanReportDraft',JSON.stringify(collectState(false)));alert('تم حفظ المسودة على هذا الجهاز.')}catch(e){alert('تعذر حفظ المسودة.')}}
+function loadDraft(){let d;try{d=JSON.parse(localStorage.getItem('adnanReportDraft')||'null')}catch(e){}if(!d)return alert('لا توجد مسودة محفوظة.');applyState(d);alert('تم استرجاع المسودة.')}
+
+function fillRecords(){$('#records').innerHTML='<option value="">اختر السيارة</option>'+rows.map((r,i)=>{let d=rowData(r);return`<option value="${i}">${i+1}. ${esc(d.reg)} - ${esc(d.make)} ${esc(d.model)} ${esc(d.year)}</option>`}).join('');$('#records').disabled=false;$('#excelMsg').textContent=`تم استيراد ${rows.length} سيارة.`}
+$('#excel').onchange=e=>{let file=e.target.files[0];if(!file)return;lastExcelName=file.name.replace(/\.[^.]+$/,'');if(!window.XLSX){$('#excelMsg').textContent='تعذر تحميل قارئ Excel. تأكد من الاتصال بالإنترنت.';return}let rd=new FileReader;rd.onload=x=>{try{let wb=readWorkbook(x.target.result,file.name),got=readSheetRows(wb);if(!got.length)throw 0;rows=got;registerRows(rows);sel=new Set(rows.map((_,i)=>i));cellEdit={};fillRecords();buildList();colSummary();render();syncDeskStatus();{let m=mapFor(rows[0]);if(!m.reg&&!m.vin)openCols('desk')}}catch(err){$('#excelMsg').textContent='تعذر قراءة ملف Excel أو الملف فارغ.'+(rows.length?' القائمة السابقة ما زالت محملة.':'')}};rd.readAsArrayBuffer(file);e.target.value=''};
+$('#records').onchange=e=>{let r=rows[e.target.value];if(!r)return;let d=rowData(r);Object.entries({case:d.agreement,vin:d.vin,reg:d.reg,make:d.make,model:d.model,year:d.year,color:d.color}).forEach(([k,v])=>$('#'+k).value=v);
+ $('#km').value='0';ROW_EXTRA.forEach(k=>{if(d[k])$('#'+k).value=d[k]});$('#photosIn').value='';picPool=[];picSel=[];pics=[];drawPicPick();$('#photoMsg').textContent='لم يتم اختيار صور.';render()};
+function shrinkPhoto(file){return new Promise(res=>{let r=new FileReader;r.onload=()=>{let im=new Image;im.onload=()=>{let M=1400,k=Math.min(1,M/Math.max(im.width,im.height));if(k===1&&file.size<400e3)return res(r.result);let c=document.createElement('canvas');c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext('2d').drawImage(im,0,0,c.width,c.height);res(c.toDataURL('image/jpeg',.8))};im.onerror=()=>res(r.result);im.src=r.result};r.readAsDataURL(file)})}
+$('#photosIn').onchange=async e=>{let all=[...e.target.files].slice(0,40);if(!all.length)return;$('#photoMsg').textContent='جارٍ تحميل الصور…';let arr=await Promise.all(all.map(shrinkPhoto));setPool(arr,arr.length>12?8:arr.length);e.target.value=''};
+$('#photoCount').addEventListener('change',()=>{let max=n(val('photoCount'));if(picSel.length>max)picSel=picSel.slice(0,max);syncPics()});
+ids.forEach(i=>$('#'+i).addEventListener('input',render));
+['showStamp','showSignature','showPaid','arMulti','withPhotos','tasNaming','showClientInfo'].forEach(i=>$('#'+i).addEventListener('change',render));
+let curGroup=null;function syncNumber(force){let g=G();if(force||g!==curGroup){$('#docNo').value=nextNo(g);$('#docLetter').value=defLetter(g);curGroup=g}}
+$('#type').addEventListener('change',()=>{{let t=T();if(t==='invoiceAr')$('#showClientInfo').checked=true;else if(t==='quoteAr')$('#showClientInfo').checked=false}$('#fee').value='';$('#invTitleAr').value='';$('#invTitleEn').value='';syncNumber();render()});
+$$('input[name=invLang]').forEach(r=>r.addEventListener('change',render));
+/* ---- typing in the preview updates the left panel (and vice versa) ---- */
+let dirtyExtras=false;const pagesEl=$('#pages');
+try{document.execCommand('defaultParagraphSeparator',false,'div')}catch(e){}
+function efValue(el){let t=el.innerText.replace(/\u00a0/g,' ');if(el.dataset.multi&&el.querySelector('div.red'))t=[...el.childNodes].map(nd=>nd.nodeType===1&&nd.tagName==='DIV'?(nd.classList.contains('red')?'!':'')+nd.innerText.replace(/\n$/,''):nd.textContent).join('\n').replace(/\u00a0/g,' ');
+ if(el.dataset.multi)t=t.replace(/\n{3,}/g,'\n\n').replace(/^\n+|\n+$/g,'');else t=t.replace(/\s*\n\s*/g,' ');
+ if(el.dataset.num)t=t.replace(/[^0-9.]/g,'');
+ if(el.dataset.date){t=t.trim();if(!t)return'';let m=t.match(/(\d{1,2})\D+(\d{1,2})\D+(\d{4})/);if(!m)return null;t=`${m[3]}-${m[2].padStart(2,'0')}-${m[1].padStart(2,'0')}`}
+ return t}
+pagesEl.addEventListener('input',e=>{let el=e.target.closest&&e.target.closest('.ef');if(!el)return;let v=efValue(el);if(v===null)return;
+ if(el.dataset.f){let i=$('#'+el.dataset.f);if(i)i.value=i.type==='number'?v.trim():el.dataset.f==='docLetter'?v.toUpperCase():v;if(!el.dataset.multi)$$(`#pages .ef[data-f="${el.dataset.f}"]`).forEach(o=>{if(o!==el&&!o.dataset.date&&!o.dataset.num&&!o.dataset.multi)o.textContent=v});if(el.dataset.f==='facComment'||el.dataset.f==='courtNotes'||el.dataset.f==='notes')drawRedPick()}
+ else if(el.dataset.fpart){let[id,st,cnt]=el.dataset.fpart.split('|');st=+st;cnt=+cnt;let all=val(id)?val(id).split('\n'):[],mine=v===''?[]:v.split('\n');all.splice(st,cnt,...mine);$('#'+id).value=all.join('\n');let d=mine.length-cnt;el.dataset.fpart=`${id}|${st}|${mine.length}`;$$(`#pages .ef[data-fpart^="${id}|"]`).forEach(o=>{if(o!==el){let[a,b,c]=o.dataset.fpart.split('|');if(+b>st)o.dataset.fpart=`${a}|${+b+d}|${c}`}});drawRedPick()}
+ else if(el.dataset.lbl){labels[el.dataset.lbl]=v;saveLabels();let pi=$(`.lblpanel input[data-lbl="${el.dataset.lbl}"]`);if(pi)pi.value=v}
+ else if(el.dataset.cell){let[k,f]=el.dataset.cell.split('|');(cellEdit[k]=cellEdit[k]||{})[f]=v}
+ else if(el.dataset.x){let[i,f]=el.dataset.x.split('|');if(arExtra[i]){arExtra[i][f]=v;dirtyExtras=true}}});
+function refreshKeepFocus(){let a=document.activeElement,h=a&&a.closest?a.closest('#pages [data-k]'):null,k=h?h.dataset.k:null;if(dirtyExtras){drawExtras();dirtyExtras=false}render();
+ if(k){let e=[...$$('#pages [data-k]')].find(x=>x.dataset.k===k);if(e){e.focus();let r=document.createRange();r.selectNodeContents(e);r.collapse(false);let sl=getSelection();sl.removeAllRanges();sl.addRange(r)}}}
+pagesEl.addEventListener('focusout',e=>{if(e.target.closest&&e.target.closest('.ef'))setTimeout(refreshKeepFocus,0)});
+pagesEl.addEventListener('keydown',e=>{let el=e.target.closest&&e.target.closest('.ef');if(el&&!el.dataset.multi&&e.key==='Enter'){e.preventDefault();el.blur()}});
+pagesEl.addEventListener('paste',e=>{let el=e.target.closest&&e.target.closest('[contenteditable]');if(!el)return;e.preventDefault();let t=(e.clipboardData||window.clipboardData).getData('text/plain');if(!el.dataset.multi)t=t.replace(/\s*\n\s*/g,' ');document.execCommand('insertText',false,t)});
+
+/* ===== saved companies (السادة الأفاضل): name, C.R., address, VAT — saved with the numbers log =====
+   Saving an invoice / quotation remembers the company. Next time, pick or type the name and the rest fills in. */
+const COMPKEY='adnanCompanies',normName=x=>String(x||'').replace(/\s+/g,' ').trim().toLowerCase();
+function companyKey(c){return normName(c.arName)||normName(c.enName)}
+function mergeCompanies(a,b){let out=(a||[]).map(c=>({...c}));(b||[]).forEach(c=>{let i=out.findIndex(x=>sameCompany(x,c));if(i<0)out.push({...c});else{let o=out[i];Object.keys(c).forEach(k=>{if(c[k]&&(!o[k]||(c.updated||'')>(o.updated||'')))o[k]=c[k]})}});return out}
+function localCompanies(){try{return JSON.parse(localStorage.getItem(COMPKEY)||'[]')||[]}catch(e){return[]}}
+function allCompanies(){return mergeCompanies(getLog().companies||[],localCompanies())}
+function sameCompany(x,c){return (c.arName&&normName(x.arName)===normName(c.arName))||(c.enName&&normName(x.enName)===normName(c.enName))||(c.cr&&normName(x.cr)===normName(c.cr))}
+function upsertCompany(list){let en=lang()==='en',c={arName:en?'':val('arTo').trim(),enName:en?val('enTo').trim():'',cr:val('clientCR').trim(),vat:val('clientVat').trim(),arAddr:val('arAddr').trim(),enAddr:val('enAddr').trim(),updated:new Date().toISOString()};
+ if(!c.arName&&!c.enName)return list||[];list=list||[];
+ /* the same company in Arabic and English is linked by its name or its C.R. number */
+ let olds=list.filter(x=>sameCompany(x,c)),old=Object.assign({},...olds),merged={...old,...Object.fromEntries(Object.entries(c).filter(([k,v])=>v))};
+ let out=list.filter(x=>!olds.includes(x));out.push(merged);
+ try{let loc=localCompanies().filter(x=>!sameCompany(x,merged));loc.push(merged);localStorage.setItem(COMPKEY,JSON.stringify(loc))}catch(e){}
+ return out}
+function findCompany(name){let k=normName(name);if(!k)return null;return allCompanies().find(c=>normName(c.arName)===k||normName(c.enName)===k)||null}
+function refreshCompanyList(){let dl=$('#companyList');if(!dl)return;let en=lang()==='en',names=[...new Set(allCompanies().map(c=>en?(c.enName||c.arName):(c.arName||c.enName)).filter(Boolean))].sort();
+ let html=names.map(n=>`<option value="${esc(n)}"></option>`).join('');if(dl.dataset.h!==html){dl.innerHTML=html;dl.dataset.h=html}}
+function applyCompany(name){let c=findCompany(name);if(!c)return false;
+ [['clientCR','cr'],['clientVat','vat'],['arAddr','arAddr'],['enAddr','enAddr']].forEach(([id,k])=>{$('#'+id).value=c[k]||''});
+ if(c.arName&&!val('arTo').trim())$('#arTo').value=c.arName;if(c.enName)$('#enTo').value=c.enName;if(c.arName)$('#arTo').value=c.arName;return true}
+['arTo','enTo'].forEach(id=>['input','change'].forEach(ev=>$('#'+id).addEventListener(ev,()=>{if(applyCompany(val(id)))render()})));
+$('#pages').addEventListener('focusout',e=>{let el=e.target.closest&&e.target.closest('.ef[data-f="arTo"],.ef[data-f="enTo"]');if(el)applyCompany(val(el.dataset.f))},true);
+$$('input[name=invLang]').forEach(r=>r.addEventListener('change',refreshCompanyList));
+refreshCompanyList();setTimeout(refreshCompanyList,1500);
+try{$('#tasNaming').checked=localStorage.getItem('adnanTasNaming')==='1'}catch(e){}
+$('#tasNaming').addEventListener('change',()=>{try{localStorage.setItem('adnanTasNaming',$('#tasNaming').checked?'1':'0')}catch(e){}});
+$('#date').value=new Date().toISOString().slice(0,10);
+syncNumber(true);
+render();
+initLog();
+
+/* =====================================================================
+   FIELD INSPECTION MODE (phone / iPad)
+   On site: import the company Excel, pick the car, fill details, tick the
+   condition grid, take photos. Save each car, then «إرسال» shares ONE file
+   (AirDrop / WhatsApp / Files). On the laptop: «فتح ملف فحص» → pick a car →
+   the report is filled (details, ticks, notes, photos).
+   ===================================================================== */
+const carsTxt=k=>k===1?'سيارة واحدة':k===2?'سيارتان':(k>=3&&k<=10)?`${k} سيارات`:`${k} سيارة`;
+const FD_TYPES=[['court','تثمين عربي'],['facilities','تثمين انقليزي'],['report','تقرير']];
+const FD_SPECS=[['fuel','الوقود',['Petrol','Diesel']],['asp','نوع التنفس',['NA','Turbo','Supercharged']],['cyl','الأسطوانات',['1','2','3','4','5','6','8','10','12']],['trans','ناقل الحركة',['Auto','Manual','Auto T','Auto F1','4WD']],['body','نوع الهيكل',['جيب','صالون','Sport','واجون','باص','Van','كشف','دراجة نارية']]];
+const FD_FIELDS=[['reg','رقم التسجيل',''],['plateType','نوع اللوحة',''],['make','الصانع',''],['model','الطراز',''],['year','سنة الصنع','num'],['km','الكيلومترات','num'],['color','اللون',''],['engine','حجم المحرك',''],['vin','رقم القاعدة VIN','ltr'],['case','رقم المعاملة / الاتفاقية',''],['owner','اسم المالك / مقدم الطلب','full']];
+const FD_RATE=[['E','م','ممتاز'],['G','ج','جيد'],['A','و','وسط'],['R','ت','عناية'],['P','ض','ضعيف']];
+const FD_MAXPICS=40,FD_KEY='fieldState';
+let FD={rows:[],cur:null,saved:[],type:'court',q:'',loaded:false},fdTimer=null;
+
+function fdBlank(){return{id:'c'+Date.now(),row:null,type:FD.type,date:new Date().toISOString().slice(0,10),
+ fields:{plateType:'خصوصي',fuel:'Petrol',asp:'NA',cyl:'4',trans:'Auto',body:'صالون'},rate:{},note:{},notes:'',pics:[]}}
+const fdHas=c=>!!(c&&(Object.entries(c.fields).some(([k,v])=>!['plateType','fuel','asp','cyl','trans','body'].includes(k)&&String(v).trim())||c.pics.length||c.notes.trim()||(c.priv||'').trim()||Object.keys(c.rate).length));
+const fdCarName=c=>[c.fields.reg,c.fields.make,c.fields.model,c.fields.year].filter(Boolean).join(' · ')||'سيارة بدون رقم';
+function fdToast(msg){let t=$('#fdToast');t.textContent=msg;t.classList.add('show');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('show'),2200)}
+function fdPersist(){clearTimeout(fdTimer);fdTimer=setTimeout(()=>{idbSet(FD_KEY,{rows:FD.rows,cur:FD.cur,saved:FD.saved,type:FD.type,listId:FD.listId,listName:FD.listName,lists:FD.lists,seenLists:FD.seenLists,pendingList:FD.pendingList}).catch(()=>{})},400)}
+const fdGroups=()=>[[1,G_AR_1,G_EN_1],[2,G_AR_2,G_EN_2]];
+const fdDef=label=>label[0]==='!'?'':'E';
+
+/* ---------- open / close ---------- */
+async function fdOpen(){if(!FD.loaded){try{let d=await idbGet(FD_KEY);if(d){FD.rows=d.rows||[];registerRows(FD.rows);FD.saved=d.saved||[];FD.type=d.type||'court';FD.cur=d.cur||null;FD.listId=d.listId||'';FD.listName=d.listName||'';FD.lists=d.lists||[];FD.seenLists=d.seenLists||[];FD.pendingList=d.pendingList||null;let old=Date.now()-14*864e5;FD.saved=FD.saved.filter(x=>!(x.sent&&x.sentAt&&Date.parse(x.sentAt)<old))}}catch(e){}FD.loaded=true}
+ if(!FD.cur)FD.cur=fdBlank();$('#field').hidden=false;document.body.classList.add('fd-on');try{localStorage.setItem('adnanFieldMode','1')}catch(e){}fdDraw();if(syncOn()){fdSyncLists();fdUpload()}}
+function fdClose(){$('#field').hidden=true;document.body.classList.remove('fd-on');try{localStorage.setItem('adnanFieldMode','0')}catch(e){}}
+
+/* ---------- drawing ---------- */
+function fdDraw(){let c=FD.cur,f=c.fields,q=FD.q.trim().toLowerCase(),doneKeys=new Set(FD.saved.map(s=>s.rowKey).filter(Boolean)),rk=d=>(d.reg||'')+'|'+(d.vin||'')+'|'+(d.agreement||''),doneRows={size:FD.rows.filter(r=>doneKeys.has(rk(rowData(r)))).length};
+ let list=FD.rows.map((r,i)=>[rowData(r),i]).filter(([d])=>!q||[d.reg,d.make,d.model,d.agreement,d.vin,d.year].join(' ').toLowerCase().includes(q));
+ let on=syncOn(),conn=on?`<div class="fd-conn on">☁️ متصل بالمكتب<button class="fd-small" data-act="refresh">تحديث</button><button class="fd-link" data-act="connect" style="font-size:13px">تغيير</button></div>`:`<div class="fd-conn"><div><b>اربط الهاتف بالمكتب (مرة واحدة)</b><div class="fd-sub" style="margin:2px 0 0">بعدها تصل قوائم السيارات من الكمبيوتر تلقائياً، وتُرسل الفحوصات بضغطة واحدة.</div></div><button class="fd-small blue" data-act="connect">لصق رابط المزامنة</button></div>`,lists=on&&(FD.lists||[]).length>1?`<select class="fd-lists" data-in="list">${FD.lists.map(x=>`<option value="${esc(x.id)}"${x.id===FD.listId?' selected':''}>${esc((x.meta||{}).name||'قائمة')}${(x.meta||{}).from==='phone'&&!/(من الهاتف)/.test((x.meta||{}).name||'')?' (من الهاتف)':''} — ${esc((x.updated||'').slice(5,16).replace('T',' '))}</option>`).join('')}</select>`:'';
+ let carCard=conn+lists+(FD.rows.length?`<div class="fd-row-tools"><button class="fd-small" data-act="xls">${on?'Excel من الهاتف':'استيراد Excel آخر'}</button><button class="fd-small" data-act="cols">الأعمدة</button><button class="fd-small blue" data-act="newcar">+ سيارة جديدة</button><span class="fd-sub" style="margin:0">${carsTxt(FD.rows.length)} · تم ${doneRows.size}</span></div>
+  <input class="fd-search" type="search" placeholder="ابحث برقم اللوحة أو الاتفاقية أو الصانع" value="${esc(FD.q)}" data-in="q">
+  <div class="fd-list">${list.length?list.map(([d,i])=>`<button class="fd-row${c.row===i?' on':''}" data-act="pick" data-i="${i}"><span class="t">${esc(d.reg||'—')} — ${esc(d.make)} ${esc(d.model)} ${esc(d.year)}<small>${esc(d.agreement||'')}${d.color?' · '+esc(d.color):''}</small></span>${doneKeys.has(rk(d))?'<span class="ok">✓ تم</span>':''}</button>`).join(''):'<div class="fd-empty">لا توجد نتائج</div>'}</div>`
+  :on?`<div class="fd-empty">لا توجد قائمة بعد — أرسلها من الكمبيوتر بزر «إرسال القائمة للهاتف»، أو <button class="fd-link" data-act="xls" style="font-size:14px">استورد Excel من الهاتف</button>.</div>`:`<button class="fd-btn" style="width:100%" data-act="xls">استيراد ملف Excel من الشركة</button><div class="fd-sub">أو اترك الملف وأدخل بيانات السيارة يدوياً بالأسفل.</div>`);
+ $('#fdBody').innerHTML=`
+ <div class="fd-h">١. اختر السيارة</div><div class="fd-card">${carCard}${c.row!=null||f.reg?`<div class="fd-sel">🚗 <div>${esc(fdCarName(c))}<small>${f.case?'اتفاقية / معاملة: '+esc(f.case):''}</small></div></div>`:''}</div>
+ <div class="fd-h">٢. نوع التقرير</div><div class="fd-seg" data-seg="type">${FD_TYPES.map(([v,l])=>`<button class="${c.type===v?'on':''}" data-act="type" data-v="${v}">${l}</button>`).join('')}</div>
+ <div class="fd-h">٣. بيانات المركبة</div><div class="fd-card"><div class="fd-grid">${FD_FIELDS.map(([k,l,o])=>`<div class="${o==='full'?'full':''}"><label class="fd-l">${l}</label><input data-f="${k}" value="${esc(f[k]||'')}"${o==='num'?' inputmode="numeric"':''}${o==='ltr'?' dir="ltr" autocapitalize="characters"':''}${k==='plateType'?' list="plateTypes"':''}></div>`).join('')}</div></div>
+ <div class="fd-h">٤. المواصفات</div><div class="fd-card">${FD_SPECS.map(([k,l,a])=>`<div class="fd-spec"><label class="fd-l">${l}</label><div class="fd-chips">${a.map(v=>`<button class="fd-chip${f[k]===v?' on':''}" data-act="spec" data-k="${k}" data-v="${esc(v)}">${esc(v)}</button>`).join('')}</div></div>`).join('')}</div>
+ <div class="fd-h">٥. حالة المركبة <button class="fd-small" data-act="allE">الكل ممتاز</button></div>
+ <div class="fd-legend">م ممتاز · ج جيد · و وسط · ت تحتاج عناية · ض ضعيف — اضغط مرة ثانية لإزالة العلامة.</div>
+ <div class="fd-card">${fdGroups().map(([t,ar,en])=>ar.map((x,i)=>{if(x[0]==='#')return`<div class="fd-group">${esc(x.slice(1))}</div>`;let k=t+'-'+i,s=k in c.rate?c.rate[k]:fdDef(x),note=c.note[k]||'',show=note||s==='R'||s==='P';
+   return`<div class="fd-cond" data-k="${k}"><div class="fd-cond-top"><div class="fd-cond-name">${esc(x.replace(/^!/,''))}<small>${esc(en[i].replace(/^!/,''))}</small></div><div class="fd-rates">${FD_RATE.map(([r,a,lb])=>`<button class="fd-rate ${r}${s===r?' on':''}" data-act="rate" data-k="${k}" data-r="${r}" data-def="${fdDef(x)}" aria-label="${lb}">${a}<small>${r}</small></button>`).join('')}</div></div>${show?`<input class="fd-note" data-note="${k}" placeholder="ملاحظة (تظهر في عمود الملاحظات)" value="${esc(note)}">`:`<button class="fd-addnote" data-act="addnote" data-k="${k}">+ ملاحظة</button>`}</div>`}).join('')).join('')}</div>
+ <div class="fd-h">٦. الملاحظات</div><div class="fd-card"><textarea data-f="__notes" placeholder="اكتب كل ملاحظة في سطر. ابدأ السطر بعلامة ! ليظهر باللون الأحمر.">${esc(c.notes)}</textarea></div>
+ <div class="fd-h">📝 ملاحظات لي <span style="font-weight:400;font-size:12px">لا تظهر في التقرير</span></div><div class="fd-card fd-priv"><textarea data-f="__priv" placeholder="ملاحظات للتذكير عند كتابة التقرير في المكتب">${esc(c.priv||'')}</textarea></div>
+ <div class="fd-h">٧. الصور <span id="fdPicN">${c.pics.length}/${FD_MAXPICS}</span></div><div class="fd-card"><div class="fd-row-tools"><button class="fd-small blue" data-act="cam">📷 التقاط صورة</button><button class="fd-small" data-act="lib">🖼 من الألبوم</button></div><div class="fd-pics" id="fdPics"></div></div>
+ <div class="fd-h">السيارات المحفوظة (${FD.saved.length})${FD.saved.some(s=>s.sent)?'<button class="fd-small" data-act="clearSent">مسح المرسلة</button>':''}</div>
+ <div class="fd-card fd-saved">${FD.saved.length?FD.saved.map((s,i)=>`<div class="fd-row"><span class="t">${esc(fdCarName(s))}<small>${s.pics.length} صور · ${esc(FD_TYPES.find(t=>t[0]===s.type)?.[1]||'')}${s.sent?' · أُرسلت':''}</small></span><button class="fd-small" data-act="edit" data-i="${i}">تعديل</button><button class="fd-small" data-act="del" data-i="${i}">حذف</button></div>`).join(''):'<div class="fd-empty">لم تُحفظ أي سيارة بعد.</div>'}</div>
+ <div class="fd-row-tools" style="justify-content:center;margin-top:18px"><button class="fd-small" data-act="openHere">فتح هذه السيارة في التقرير على هذا الجهاز</button></div>`;
+ fdDrawPics();fdCount()}
+function fdDrawPics(){let c=FD.cur;$('#fdPics').innerHTML=c.pics.map((p,i)=>`<div class="fd-pic"><img src="${p}" alt=""><span class="no">${i+1}</span><button class="x" data-act="pdel" data-i="${i}" aria-label="حذف">✕</button>${i?`<button class="mv" data-act="pmv" data-i="${i}" aria-label="تقديم">‹</button>`:''}</div>`).join('');$('#fdPicN').textContent=`${c.pics.length}/${FD_MAXPICS}`}
+function fdCount(){let n=FD.saved.filter(s=>!s.sent).length+(FD.pendingList&&syncOn()?1:0),on=syncOn(),b=$('#fdSendBtn');$('#fdSaveBtn').textContent=on?'حفظ وإرسال ✓':'حفظ السيارة والتالي';
+ if(on){$('#fdCount').textContent=fdSyncBusy?'جارٍ الإرسال…':n?`${n} بانتظار الإرسال`:'';b.textContent=fdSyncBusy?'جارٍ الإرسال…':n?`⏳ إرسال الآن (${n})`:'✓ كل شيء أُرسل';b.disabled=fdSyncBusy||!n}
+ else{$('#fdCount').textContent=n?`${n} للإرسال`:'';b.textContent=n?`مشاركة ملف (${n})`:'مشاركة ملف';b.disabled=false}}
+function fdSecondary(){if(syncOn())fdUpload();else fdSend()}
+
+/* ---------- actions ---------- */
+function fdPick(i){let c=FD.cur;if(c.row!==i&&fdHas(c)&&c.row!=null){if(confirm('حفظ السيارة الحالية قبل الانتقال؟'))fdSaveCar(true);else{let keepType=c.type;FD.cur=fdBlank();FD.cur.type=keepType}}
+ if(FD.cur.row!==i&&FD.cur.row!=null&&!fdHas(FD.cur))FD.cur.row=null;
+ c=FD.cur;let d=rowData(FD.rows[i]);c.row=i;c.rowKey=(d.reg||'')+'|'+(d.vin||'')+'|'+(d.agreement||'');Object.assign(c.fields,{case:d.agreement,vin:d.vin,reg:d.reg,make:d.make,model:d.model,year:d.year,color:d.color});ROW_EXTRA.forEach(k=>{if(d[k])c.fields[k]=d[k]});fdPersist();fdDraw();
+ setTimeout(()=>{let k=$('#field [data-f="km"]');if(k)k.scrollIntoView({block:'center',behavior:'smooth'})},50)}
+function fdSaveCar(silent){let c=FD.cur;if(!fdHas(c)){if(!silent)fdToast('لا توجد بيانات لحفظها');return false}
+ c.sent=false;let i=FD.saved.findIndex(s=>s.id===c.id);if(i<0)FD.saved.push(c);else FD.saved[i]=c;
+ FD.cur=fdBlank();FD.cur.type=c.type;FD.q='';fdPersist();fdDraw();$('#fdBody').scrollTop=0;$('.fd-scroll').scrollTop=0;if(!silent)fdToast(syncOn()?`تم حفظ ${fdCarName(c)} — جارٍ الإرسال…`:`تم حفظ ${fdCarName(c)} ✓`);if(syncOn())setTimeout(fdUpload,300);return true}
+async function fdSend(){if(fdHas(FD.cur))fdSaveCar(true);let list=FD.saved.filter(s=>!s.sent);if(!list.length)list=FD.saved;if(!list.length)return fdToast('احفظ سيارة واحدة على الأقل');
+ let stamp=new Date(),nm=list.length===1?(list[0].fields.reg||'car'):`${list.length} cars`,name=clean(`فحص ميداني - ${nm} - ${stamp.toISOString().slice(0,10)} ${String(stamp.getHours()).padStart(2,'0')}${String(stamp.getMinutes()).padStart(2,'0')}`)+'.json';
+ let data=JSON.stringify({kind:'adnan-field',v:1,created:stamp.toISOString(),inspections:list}),ok=false;
+ try{let file=new File([data],name,{type:'application/json'});if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:name});ok=true}}catch(e){if(e&&e.name==='AbortError')return}
+ if(!ok){download(name,data,'application/json');ok=true}
+ list.forEach(s=>s.sent=true);fdPersist();fdDraw();fdToast(`تم تجهيز ملف ${list.length===1?'سيارة واحدة':list.length+' سيارات'} ✓`)}
+async function fdAddPics(files){let c=FD.cur,room=FD_MAXPICS-c.pics.length;files=[...files];if(!files.length)return;if(room<=0)return fdToast(`الحد الأقصى ${FD_MAXPICS} صورة`);
+ fdToast('جارٍ تجهيز الصور…');let add=await Promise.all(files.slice(0,room).map(shrinkPhoto));c.pics.push(...add);fdDrawPics();fdPersist();
+ fdToast(files.length>room?`أُضيفت ${room} فقط — الحد ${FD_MAXPICS}`:`أُضيفت ${add.length} ${add.length===1?'صورة':'صور'}`)}
+function fdRate(btn){let c=FD.cur,k=btn.dataset.k,r=btn.dataset.r,cur=k in c.rate?c.rate[k]:btn.dataset.def,nv=cur===r?'':r;c.rate[k]=nv;
+ let row=btn.closest('.fd-cond');row.querySelectorAll('.fd-rate').forEach(b=>b.classList.toggle('on',b.dataset.r===nv));
+ if((nv==='R'||nv==='P')&&!row.querySelector('.fd-note')){let a=row.querySelector('.fd-addnote');if(a)a.outerHTML=`<input class="fd-note" data-note="${k}" placeholder="ملاحظة (تظهر في عمود الملاحظات)" value="${esc(c.note[k]||'')}">`}
+ if(navigator.vibrate)try{navigator.vibrate(8)}catch(e){}fdPersist()}
+
+$('#field').addEventListener('click',e=>{let b=e.target.closest('[data-act]');if(!b)return;let a=b.dataset.act,c=FD.cur,i=+b.dataset.i;
+ if(a==='xls')$('#fdXls').click();
+ else if(a==='connect')syncConnect(ok=>{fdToast(syncUrl?'تم الربط بالمكتب ✓':'تم إلغاء الربط');fdRedrawKeep();if(syncUrl){fdSyncLists();fdUpload()}});
+ else if(a==='refresh'){fdSyncLists(true);fdUpload()}
+ else if(a==='cols')openCols('field');
+ else if(a==='newcar'){if(fdHas(c)&&!confirm('السيارة الحالية غير محفوظة وسيتم مسحها. متابعة؟'))return;let t=c.type;FD.cur=fdBlank();FD.cur.type=t;fdPersist();fdDraw();setTimeout(()=>{let r=$('#field [data-f="reg"]');if(r){r.scrollIntoView({block:'center',behavior:'smooth'});r.focus()}},60)}
+ else if(a==='pick')fdPick(i);
+ else if(a==='type'){c.type=FD.type=b.dataset.v;b.parentNode.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));fdPersist()}
+ else if(a==='spec'){c.fields[b.dataset.k]=b.dataset.v;b.parentNode.querySelectorAll('.fd-chip').forEach(x=>x.classList.toggle('on',x===b));fdPersist()}
+ else if(a==='rate')fdRate(b);
+ else if(a==='allE'){fdGroups().forEach(([t,ar])=>ar.forEach((x,j)=>{if(x[0]!=='#'&&x[0]!=='!')c.rate[t+'-'+j]='E'}));let y=$('.fd-scroll').scrollTop;fdDraw();$('.fd-scroll').scrollTop=y;fdPersist();fdToast('تم تعيين الكل ممتاز — غيّر ما يختلف فقط')}
+ else if(a==='addnote'){b.outerHTML=`<input class="fd-note" data-note="${b.dataset.k}" placeholder="ملاحظة (تظهر في عمود الملاحظات)">`;let inp=$(`#field [data-note="${b.dataset.k}"]`);if(inp)inp.focus()}
+ else if(a==='cam')$('#fdCam').click();
+ else if(a==='lib')$('#fdLib').click();
+ else if(a==='pdel'){c.pics.splice(i,1);fdDrawPics();fdPersist()}
+ else if(a==='pmv'){[c.pics[i-1],c.pics[i]]=[c.pics[i],c.pics[i-1]];fdDrawPics();fdPersist()}
+ else if(a==='edit'){if(fdHas(c)&&!confirm('السيارة الحالية غير محفوظة وسيتم استبدالها. متابعة؟'))return;FD.cur=JSON.parse(JSON.stringify(FD.saved[i]));fdDraw();$('.fd-scroll').scrollTop=0}
+ else if(a==='del'){if(confirm(`حذف ${fdCarName(FD.saved[i])}؟`)){FD.saved.splice(i,1);fdPersist();fdDraw()}}
+ else if(a==='clearSent'){FD.saved=FD.saved.filter(s=>!s.sent);fdPersist();fdDraw()}
+ else if(a==='openHere'){if(!fdHas(c))return fdToast('لا توجد بيانات');fdApply(JSON.parse(JSON.stringify(c)));fdClose()}});
+$('#field').addEventListener('input',e=>{let el=e.target,c=FD.cur;
+ if(el.dataset.in==='list'){fdLoadList(el.value);return}
+ if(el.dataset.in==='q'){FD.q=el.value;let pos=el.selectionStart;fdDraw();let s=$('#field [data-in="q"]');s.focus();try{s.setSelectionRange(pos,pos)}catch(x){}return}
+ if(el.dataset.f==='__notes')c.notes=el.value;else if(el.dataset.f==='__priv')c.priv=el.value;else if(el.dataset.f)c.fields[el.dataset.f]=el.value;else if(el.dataset.note)c.note[el.dataset.note]=el.value;fdPersist()});
+$('#fdCam').onchange=e=>{fdAddPics(e.target.files);e.target.value=''};
+$('#fdLib').onchange=e=>{fdAddPics(e.target.files);e.target.value=''};
+$('#fdXls').onchange=e=>{let file=e.target.files[0];e.target.value='';if(!file)return;if(!window.XLSX)return fdToast('قارئ Excel يحتاج اتصال إنترنت');
+ let rd=new FileReader;rd.onload=x=>{try{let wb=readWorkbook(x.target.result,file.name),got=readSheetRows(wb);if(!got.length)throw 0;FD.rows=got;registerRows(FD.rows);FD.listId='';FD.q='';fdQueueList(file.name.replace(/\.[^.]+$/,''));fdPersist();fdDraw();fdToast(`تم استيراد ${carsTxt(FD.rows.length)}`+(syncOn()?' — جارٍ إرسالها للمكتب':''));if(syncOn())setTimeout(fdUpload,300);if(FD.rows.length){let m=mapFor(FD.rows[0]);if(!m.reg&&!m.vin)openCols('field')}}catch(err){fdToast('تعذر قراءة ملف Excel أو الملف فارغ')}};rd.readAsArrayBuffer(file)};
+
+/* ---------- laptop: apply an inspection to the report ---------- */
+function fdApply(c){$('#type').value=c.type||'court';$('#type').dispatchEvent(new Event('change'));$('#privNotes').value=c.priv||'';privMark();
+ Object.entries(c.fields||{}).forEach(([k,v])=>{let el=$('#'+k);if(el)el.value=v});if(c.date)$('#date').value=c.date;
+ ['notes','courtNotes','facComment'].forEach(id=>$('#'+id).value=c.notes||'');
+ ratings={};conditionNotes={};Object.entries(c.rate||{}).forEach(([k,v])=>{ratings['g-en-'+k]=v;ratings['g-ar-'+k]=v});Object.entries(c.note||{}).forEach(([k,v])=>{if(v){conditionNotes['g-en-'+k]=v;conditionNotes['g-ar-'+k]=v}});
+ {let all=(c.pics||[]).slice();if(all.length)$('#withPhotos').checked=true;setPool(all,all.length>12?8:all.length)}
+ drawRedPick();render()}
+let FD_IN=[],fdOpened=new Set();
+function fdDrawIn(){$('#fieldList').innerHTML=FD_IN.map((c,i)=>`<div class="fd-in-row${fdOpened.has(c.id)?' done':''}"><span class="t"><b>${esc(fdCarName(c))}</b><small>${esc(FD_TYPES.find(t=>t[0]===c.type)?.[1]||'')} · ${(c.pics||[]).length} صور · ${esc(c.date||'')}</small></span>${fdOpened.has(c.id)?'✓ ':''}<button type="button" class="mini btn-blue" onclick="fdOpenIn(${i})">فتح في التقرير</button></div>`).join('')}
+function fdOpenIn(i){if(!confirm('سيتم وضع بيانات هذه السيارة وصورها في التقرير الحالي. متابعة؟'))return;fdApply(FD_IN[i]);fdOpened.add(FD_IN[i].id);fdDrawIn();$('#fieldMsg').textContent=`تم فتح ${fdCarName(FD_IN[i])}`+((FD_IN[i].pics||[]).length>1?` — اختر الصور للتقرير من قسم «صور المركبة» بالأسفل (${FD_IN[i].pics.length} صورة).`:' — راجع التقرير ثم صدّر PDF.')}
+$('#fieldIn').onchange=e=>{let f=e.target.files[0];e.target.value='';if(!f)return;f.text().then(t=>{let d=JSON.parse(t);if(d.kind!=='adnan-field'||!Array.isArray(d.inspections))throw 0;FD_IN=d.inspections;fdOpened=new Set();fdDrawIn();
+ $('#fieldMsg').textContent=`في الملف ${carsTxt(FD_IN.length)}. اختر السيارة لفتحها.`;if(FD_IN.length===1)fdOpenIn(0)}).catch(()=>{$('#fieldMsg').textContent='هذا ليس ملف فحص ميداني.'})};
+
+
+/* =====================================================================
+   GOOGLE DRIVE SYNC (phone ↔ laptop, through the office's own Google Drive)
+   Laptop: «إرسال القائمة للهاتف» → the phone gets the car list by itself.
+   Phone: «حفظ وإرسال» → the inspection appears on the laptop by itself.
+   The link (with its private key) is saved on each device only.
+   ===================================================================== */
+const SYNC_KEY='adnanSync';
+let syncUrl=(()=>{try{return localStorage.getItem(SYNC_KEY)||''}catch(e){return''}})();
+function syncParts(){if(!syncUrl)return null;let u;try{u=new URL(syncUrl)}catch(e){return null}let k=u.searchParams.get('k');if(!k)return null;u.search='';u.hash='';return{base:u.toString(),k}}
+const syncOn=()=>!!syncParts();
+async function syncGet(a,extra={}){let s=syncParts();if(!s)throw new Error('nolink');let r=await fetch(s.base+'?'+new URLSearchParams({k:s.k,a,...extra}),{cache:'no-store'});let j=await r.json();if(!j.ok)throw new Error(j.error||'fail');return j}
+async function syncPost(body){let s=syncParts();if(!s)throw new Error('nolink');let r=await fetch(s.base,{method:'POST',body:JSON.stringify({...body,k:s.k}),headers:{'Content-Type':'text/plain;charset=utf-8'}});let j=await r.json();if(!j.ok)throw new Error(j.error||'fail');return j}
+async function syncConnect(onDone){let v=prompt('الصق رابط المزامنة (يبدأ بـ https://script.google.com/…).\nاتركه فارغاً لإلغاء الربط.',syncUrl);if(v===null)return;v=v.trim();let old=syncUrl;syncUrl=v;
+ if(v&&!syncParts()){syncUrl=old;return alert('الرابط غير صحيح — يجب أن ينتهي بـ ?k= ثم المفتاح.')}
+ try{if(v)await syncGet('ping');localStorage.setItem(SYNC_KEY,v);onDone&&onDone(true)}catch(e){syncUrl=old;alert('تعذر الاتصال بهذا الرابط. تأكد من نسخه كاملاً ومن وجود إنترنت.')}}
+
+/* ---------------- laptop ---------------- */
+let syncPhoneLists=[],syncLoadedLists=new Set(),lastExcelName='',syncInboxItems=[],syncOpened=new Set(),syncTimer=null;
+function syncDeskStatus(msg){let s=$('#syncStat');if(!s)return;let on=syncOn();
+ s.className='syncstat '+(on?'on':'off');s.innerHTML=on?`☁️ متصل بـ Google Drive${msg?' — '+esc(msg):''}`:'غير مربوط — اضغط «ربط Google Drive» (مرة واحدة فقط).';
+ $('#syncConnBtn').textContent=on?'تغيير الرابط':'ربط Google Drive';$('#syncListBtn').disabled=!on||!rows.length;$('#syncListBtn').title=rows.length?'':'استورد ملف Excel أولاً'}
+async function sendListToPhone(){if(!syncOn())return alert('اربط Google Drive أولاً.');if(!rows.length)return alert('استورد ملف Excel أولاً.');
+ let idx=sel.size?[...sel].sort((a,b)=>a-b):rows.map((_,i)=>i),cars=idx.map(i=>({...rowData(rows[i]),...(cellEdit['r'+i]||{})})),
+  name=(lastExcelName||'قائمة')+` — ${carsTxt(cars.length)}`,id='L'+Date.now(),b=$('#syncListBtn');
+ b.disabled=true;b.textContent='جارٍ الإرسال…';
+ try{await syncPost({a:'putList',id,meta:{name,count:cars.length,created:new Date().toISOString(),from:'laptop'},data:{name,created:new Date().toISOString(),cars}});syncDeskStatus(`أُرسلت القائمة للهاتف (${carsTxt(cars.length)})`)}
+ catch(e){alert('تعذر إرسال القائمة. تأكد من الإنترنت.')}finally{b.textContent='📤 إرسال القائمة للهاتف';b.disabled=!syncOn()||!rows.length}}
+async function syncInboxRefresh(quiet){if(!syncOn()){syncDrawInbox();return}let btn=$('#syncRefBtn');if(btn&&!quiet)btn.textContent='جارٍ التحديث…';
+ try{let j=await syncGet('inbox');syncInboxItems=j.items||[];let l=await syncGet('lists');syncPhoneLists=(l.items||[]).filter(x=>(x.meta||{}).from==='phone').slice(0,5);syncDeskStatus()}catch(e){if(!quiet)syncDeskStatus('تعذر التحديث — تحقق من الإنترنت')}finally{if(btn)btn.textContent='تحديث'}syncDrawInbox()}
+function syncDrawInbox(){let box=$('#syncInbox'),badge=$('#inboxBadge');if(!box)return;let list=syncInboxItems,n=list.filter(x=>!syncOpened.has(x.id)).length;
+ if(badge){badge.style.display=n?'':'none';badge.textContent=`📥 فحوصات جديدة (${n})`}
+ box.innerHTML=!syncOn()?'':list.length?`<div class="rp-t" style="margin:6px 0 2px;font-weight:bold;font-size:12px">فحوصات وصلت من الهاتف:</div>`+list.map(x=>{let m=x.meta||{},done=syncOpened.has(x.id);return`<div class="fd-in-row${done?' done':''}"><span class="t"><b>${esc([m.reg,m.make,m.model,m.year].filter(Boolean).join(' · ')||'سيارة')}</b><small>${esc(FD_TYPES.find(t=>t[0]===m.type)?.[1]||'')} · ${m.pics||0} صور${m.priv?' · 📝 ملاحظات':''} · ${esc((x.updated||'').slice(0,16).replace('T',' '))}</small></span>${done?'✓ ':''}<button type="button" class="mini btn-blue" onclick="syncOpenInsp('${esc(x.id)}',this)">فتح في التقرير</button></div>`}).join(''):`<div class="hint" style="margin-top:6px">لا توجد فحوصات جديدة.</div>`;
+ if(syncOn()&&syncPhoneLists.length)box.innerHTML+=`<div class="rp-t" style="margin:10px 0 2px;font-weight:bold;font-size:12px">قوائم سيارات أرسلها الهاتف:</div>`+syncPhoneLists.map(x=>{let m=x.meta||{},done=syncLoadedLists.has(x.id);return`<div class="fd-in-row${done?' done':''}"><span class="t"><b>${esc(m.name||'قائمة')}</b><small>${esc((x.updated||'').slice(0,16).replace('T',' '))}</small></span>${done?'✓ ':''}<button type="button" class="mini" onclick="syncLoadPhoneList('${esc(x.id)}',this)">تحميل في الكمبيوتر</button></div>`}).join('')}
+async function syncLoadPhoneList(id,btn){if(rows.length&&!confirm('سيتم استبدال قائمة السيارات الحالية في الكمبيوتر بهذه القائمة. متابعة؟'))return;let t=btn.textContent;btn.disabled=true;btn.textContent='جارٍ التحميل…';
+ try{let j=await syncGet('list',{id}),cars=j.data.cars||[];if(!cars.length)throw 0;rows=cars.map(r=>({...r}));registerRows(rows);sel=new Set(rows.map((_,i)=>i));cellEdit={};lastExcelName=(j.data.name||'قائمة').replace(/ — .*$/,'');fillRecords();buildList();colSummary();render();syncLoadedLists.add(id);syncDeskStatus(`تم تحميل القائمة من الهاتف (${carsTxt(rows.length)})`);syncDrawInbox();$('#records').scrollIntoView({behavior:'smooth',block:'center'})}
+ catch(e){alert('تعذر تحميل القائمة. تأكد من الإنترنت.')}finally{btn.disabled=false;btn.textContent=t}}
+async function syncOpenInsp(id,btn){if(!confirm('سيتم وضع بيانات هذه السيارة وصورها في التقرير الحالي. متابعة؟'))return;let t=btn.textContent;btn.disabled=true;btn.textContent='جارٍ التحميل…';
+ try{let j=await syncGet('insp',{id});fdApply(j.data);syncOpened.add(id);let c=j.data;
+  $('#fieldMsg').textContent=`تم فتح ${fdCarName(c)}`+((c.pics||[]).length>1?` — اختر الصور للتقرير من قسم «صور المركبة» (${c.pics.length} صورة).`:' — راجع التقرير ثم صدّر PDF.');
+  syncPost({a:'done',id}).then(()=>{syncInboxItems=syncInboxItems.filter(x=>x.id!==id||syncOpened.has(id));}).catch(()=>{});syncDrawInbox()}
+ catch(e){alert('تعذر تحميل الفحص. تأكد من الإنترنت.')}finally{btn.disabled=false;btn.textContent=t}}
+function syncDeskInit(){syncDeskStatus();syncDrawInbox();if(syncOn())syncInboxRefresh(true);clearInterval(syncTimer);syncTimer=setInterval(()=>{if(syncOn()&&!document.hidden&&$('#field').hidden)syncInboxRefresh(true)},60000)}
+window.addEventListener('focus',()=>{if(syncOn()&&$('#field').hidden)syncInboxRefresh(true)});
+
+/* ---------------- phone ---------------- */
+let fdSyncBusy=false;
+async function fdSyncLists(manual){if(!syncOn())return;try{let j=await syncGet('lists');FD.lists=(j.items||[]).slice(0,15);
+  let newest=FD.lists.find(x=>(x.meta||{}).from!=='phone')||null;if(newest&&(!FD.listId||newest.id!==FD.listId)&&!(FD.seenLists||[]).includes(newest.id)){await fdLoadList(newest.id,true)}else if(manual)fdToast('لا توجد قوائم جديدة');
+  fdPersist();if(!$('#field').hidden)fdRedrawKeep()}catch(e){if(manual)fdToast('تعذر التحديث — تحقق من الإنترنت')}}
+async function fdLoadList(id,auto){try{let j=await syncGet('list',{id});FD.rows=j.data.cars||[];registerRows(FD.rows);FD.listId=id;FD.listName=j.data.name||'';FD.q='';
+  FD.seenLists=[...new Set([...(FD.seenLists||[]),id])].slice(-30);fdPersist();fdRedrawKeep();fdToast(auto?`وصلت قائمة جديدة: ${carsTxt(FD.rows.length)}`:`تم فتح القائمة (${FD.rows.length})`)}catch(e){fdToast('تعذر تحميل القائمة')}}
+function fdRedrawKeep(){let sc=$('.fd-scroll'),y=sc?sc.scrollTop:0;fdDraw();if(sc)sc.scrollTop=y}
+/* upload every saved car that hasn't been sent yet, one by one */
+/* a car list imported on the phone waits here until it reaches the office */
+function fdQueueList(name){let cars=FD.rows.map(r=>rowData(r)),id='L'+Date.now(),now=new Date().toISOString(),nm=`${name||'Excel'} — ${carsTxt(cars.length)} (من الهاتف)`;
+ FD.pendingList={id,meta:{name:nm,count:cars.length,created:now,from:'phone'},data:{name:nm,created:now,cars}};FD.listId=id;FD.listName=nm;FD.seenLists=[...new Set([...(FD.seenLists||[]),id])].slice(-30)}
+async function fdSendList(){let L=FD.pendingList;if(!L)return true;try{await syncPost({a:'putList',...L});FD.pendingList=null;fdPersist();fdToast(`وصلت قائمة السيارات للمكتب ✓ (${carsTxt(L.meta.count)})`);return true}catch(e){return e&&e.message==='key'?'key':false}}
+async function fdUpload(){if(!syncOn()||fdSyncBusy)return;if(FD.pendingList){fdSyncBusy=true;let r=await fdSendList();fdSyncBusy=false;if(r!==true){fdCount();fdToast(r==='key'?'رابط المزامنة لم يعد صالحاً — اضغط «تغيير» والصق الرابط الجديد':'لا يوجد اتصال — ستُرسل قائمة السيارات تلقائياً عند توفر الإنترنت');return}}
+ let todo=FD.saved.filter(s=>!s.sent);if(!todo.length){fdCount();return}fdSyncBusy=true;fdCount();let sent=0,fail=false;
+ for(let k=0;k<todo.length;k++){let c=todo[k];$('#fdCount').textContent=`جارٍ الإرسال ${k+1}/${todo.length}…`;
+  try{await syncPost({a:'putInsp',id:c.id,meta:{reg:c.fields.reg||'',make:c.fields.make||'',model:c.fields.model||'',year:c.fields.year||'',type:c.type,pics:c.pics.length,date:c.date,priv:!!(c.priv||'').trim()},data:c});c.sent=true;c.sentAt=new Date().toISOString();sent++;fdPersist()}
+  catch(e){fail=e&&e.message==='key'?'key':true;break}}
+ fdSyncBusy=false;if(!$('#field').hidden)fdRedrawKeep();else fdCount();
+ if(sent)fdToast(sent===1?`تم إرسال ${fdCarName(todo[0])} للمكتب ✓`:`تم إرسال ${carsTxt(sent)} للمكتب ✓`);
+ if(fail==='key')fdToast('رابط المزامنة لم يعد صالحاً — اضغط «تغيير» والصق الرابط الجديد');else if(fail)fdToast('لا يوجد اتصال — ستُرسل السيارات تلقائياً عند توفر الإنترنت')}
+window.addEventListener('online',()=>{fdUpload();if(!$('#field').hidden)fdSyncLists()});
+setInterval(()=>{if(!$('#field').hidden&&syncOn()&&(FD.saved.some(s=>!s.sent)||FD.pendingList))fdUpload()},45000);
+
+
+/* ===== manual car list (no Excel): type a handful of cars, send them to the phone ===== */
+const ML_COLS=[['reg','رقم اللوحة'],['make','الصانع'],['model','الطراز'],['year','السنة'],['color','اللون'],['agreement','رقم الاتفاقية / المعاملة'],['owner','اسم المالك'],['vin','رقم القاعدة VIN']];
+let ML=(()=>{try{return JSON.parse(localStorage.getItem('adnanManualList')||'[]')||[]}catch(e){return[]}})();
+const mlSave=()=>{try{localStorage.setItem('adnanManualList',JSON.stringify(ML))}catch(e){}};
+const mlCars=()=>ML.filter(r=>ML_COLS.some(([k])=>String(r[k]||'').trim())).map(r=>Object.fromEntries(ML_COLS.map(([k])=>[k,String(r[k]||'').trim()])));
+function openManual(){if(!ML.length)ML=[{},{},{}];mlDraw();$('#mlModal').classList.add('open');setTimeout(()=>{let i=$('#mlBody input');if(i)i.focus()},50)}
+function closeManual(){mlSave();$('#mlModal').classList.remove('open')}
+function mlDraw(){$('#mlBody').innerHTML=`<table class="ml-t"><tr><th>#</th>${ML_COLS.map(([,l])=>`<th>${l}</th>`).join('')}<th></th></tr>${ML.map((r,i)=>`<tr><td>${i+1}</td>${ML_COLS.map(([k])=>`<td><input data-ml="${i}|${k}" value="${esc(r[k]||'')}"${k==='vin'?' dir="ltr"':''}${k==='year'?' inputmode="numeric" style="width:70px"':''}></td>`).join('')}<td class="x"><button type="button" onclick="mlDel(${i})">✕</button></td></tr>`).join('')}</table>`;$('#mlSend').disabled=!syncOn();$('#mlSend').title=syncOn()?'':'اربط Google Drive أولاً'}
+function mlAdd(){ML.push({});mlDraw();let ins=$$('#mlBody tr:last-child input');if(ins[0])ins[0].focus()}
+function mlDel(i){ML.splice(i,1);mlSave();mlDraw()}
+function mlClear(){if(!confirm('مسح كل السيارات في القائمة اليدوية؟'))return;ML=[{},{},{}];mlSave();mlDraw()}
+$('#mlBody').addEventListener('input',e=>{let d=e.target.dataset.ml;if(!d)return;let[i,k]=d.split('|');ML[i][k]=e.target.value;mlSave()});
+/* Enter in the last row adds a new row */
+$('#mlBody').addEventListener('keydown',e=>{if(e.key!=='Enter'||!e.target.dataset.ml)return;e.preventDefault();let[i]=e.target.dataset.ml.split('|');if(+i===ML.length-1)mlAdd();else{let n=$(`#mlBody [data-ml="${+i+1}|reg"]`);if(n)n.focus()}});
+async function mlSend(){let cars=mlCars();if(!cars.length)return alert('أضف سيارة واحدة على الأقل.');if(!syncOn())return alert('اربط Google Drive أولاً.');let b=$('#mlSend');b.disabled=true;b.textContent='جارٍ الإرسال…';
+ let name=`قائمة يدوية — ${carsTxt(cars.length)}`,now=new Date().toISOString();
+ try{await syncPost({a:'putList',id:'L'+Date.now(),meta:{name,count:cars.length,created:now,from:'laptop'},data:{name,created:now,cars}});closeManual();syncDeskStatus(`أُرسلت القائمة اليدوية للهاتف (${carsTxt(cars.length)})`)}
+ catch(e){alert('تعذر الإرسال. تأكد من الإنترنت.')}finally{b.disabled=false;b.textContent='📤 إرسال للهاتف'}}
+/* use the same list on the laptop: car picker, multi-vehicle invoices */
+function mlUse(){let cars=mlCars();if(!cars.length)return alert('أضف سيارة واحدة على الأقل.');rows=cars.map(r=>({...r}));registerRows(rows);sel=new Set(rows.map((_,i)=>i));cellEdit={};lastExcelName='قائمة يدوية';fillRecords();buildList();colSummary();closeManual();render();syncDeskStatus()}
+
+syncDeskInit();
+function privMark(){let b=$('#privSec');if(b)b.classList.toggle('has',!!val('privNotes').trim())}
+$('#privNotes').addEventListener('input',privMark);privMark();
+/* phones open straight into field mode; any device reopens it if it was last used there */
+try{if(matchMedia('(max-width:900px) and (pointer:coarse)').matches&&localStorage.getItem('adnanFieldMode')!=='0')fdOpen()}catch(e){}
+
+</script></body></html>
