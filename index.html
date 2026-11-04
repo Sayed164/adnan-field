@@ -204,7 +204,13 @@ h3{margin:8px 0 4px;font-size:14px}
 .btn-green{background:#1d6b35!important;color:#fff!important;border:0!important}
 .badge-over{background:#d00000!important;color:#fff!important;font-weight:bold;animation:pulse 2s infinite}@keyframes pulse{50%{opacity:.75}}
 @media print{.ovr{background:none!important}.ed:hover,.ed:focus{outline:none}}
-@media(max-width:1000px){.main{grid-template-columns:1fr}.form{max-height:none}.panel{position:static}}
+@media(max-width:1000px){.main{grid-template-columns:minmax(0,1fr);padding:0 10px;margin:12px auto;gap:14px}.form{max-height:none}.panel{position:static}
+ .bar{height:auto;flex-wrap:wrap;gap:8px;padding:8px 10px;position:static}.bar b{font-size:15px}.bar .buttons{flex-wrap:wrap;justify-content:flex-start;gap:6px}.bar .buttons button{padding:8px 10px}
+ .preview-wrap{overflow:hidden}}
+.jump{display:none}
+@media(max-width:1000px) and (pointer:coarse){.jump{display:block;position:fixed;bottom:calc(16px + env(safe-area-inset-bottom));left:16px;z-index:20;background:var(--navy);color:#fff;border-radius:980px;padding:12px 18px;font-size:14px;font-weight:bold;box-shadow:0 4px 14px #0004}}
+@media print{#pages{zoom:1!important}.jump{display:none!important}}
+body.pdfmode #pages{zoom:1!important}
 @media print{
 @page{size:A4 portrait;margin:0}
 *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
@@ -469,7 +475,7 @@ Through Bank transfer to: Al Salam Bank / IBAN: BH89ALSA00436034150000</textarea
 <div class="sec" data-for="report facilities court plates"><h2>صور المركبة</h2><div class="grid"><div><label>عدد الصور في الصفحة</label><select id="photoCount"><option value="1">صورة واحدة</option><option value="2">2 صور</option><option value="4">4 صور</option><option value="6">6 صور</option><option value="8" selected>8 صور</option><option value="10">10 صور</option><option value="12">12 صورة</option></select></div></div><label class="check" style="margin-top:8px"><input id="withPhotos" type="checkbox" checked> إضافة صفحة الصور للتقرير</label><label class="upload" style="margin-top:4px">اختر الصور<input id="photosIn" type="file" accept="image/*" multiple></label><div class="hint" id="photoMsg">لم يتم اختيار صور.</div><div id="picPick"></div></div>
 
 <div class="sec"><h2>الختم والتوقيع</h2><label class="check"><input id="showStamp" type="checkbox" checked> إظهار الختم</label><label class="check"><input id="showSignature" type="checkbox" checked> إظهار التوقيع</label><label class="check"><input id="showPaid" type="checkbox"> إظهار ختم PAID / مدفوع</label></div>
-</form></aside><section class="preview-wrap"><div class="bbar" id="bbar" hidden></div><div class="pages" id="pages"></div></section></main>
+</form></aside><section class="preview-wrap" id="previewWrap"><div class="bbar" id="bbar" hidden></div><div class="pages" id="pages"></div></section></main><button type="button" class="jump" id="jumpBtn" onclick="jumpToggle()">⬇ المعاينة</button>
 
 <div class="modal" id="accModal" onclick="if(event.target===this)closeAccounts()"><div class="modal-box acc-box"><div class="modal-head"><h3>الحسابات</h3><button class="mini acc-tab" data-tab="invoice" onclick="ACC.tab='invoice';ACC.period=null;ACC.client='';drawAccounts()">الفواتير I</button><button class="mini acc-tab" data-tab="bulk" onclick="ACC.tab='bulk';ACC.period=null;ACC.client='';drawAccounts()">Invoice التسهيلات TI</button><button class="mini" onclick="closeAccounts()">إغلاق ✕</button></div>
 <div class="modal-body"><div class="acc-filters" id="accFilters"></div><div class="acc-cards" id="accCards"></div><div id="accTable"></div><div class="acc-two"><div><h4>حسب العميل</h4><div id="accClients"></div></div><div><h4>حسب الشهر</h4><div id="accMonths"></div></div></div></div>
@@ -483,7 +489,7 @@ Through Bank transfer to: Al Salam Bank / IBAN: BH89ALSA00436034150000</textarea
 <script>
 const APP_VERSION='2026-11-04';
 /* asset path; while «حفظ الكل» makes PDFs it uses the copies read from the program folder */
-const AS=n=>(window.__pdfAssets&&window.ASSET_URLS&&ASSET_URLS[n])||'vehicle-report-generator-assets/'+n;
+var WEB_ASSETS=null;const AS=n=>(window.__pdfAssets&&window.ASSET_URLS&&ASSET_URLS[n])||(WEB_ASSETS&&WEB_ASSETS[n])||'vehicle-report-generator-assets/'+n;
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const ids=['privNotes','type','reportTitle','invTitleAr','invTitleEn','asp','plateType','plateVeh','pFor','pAgainst','pNotes','plateValue','plateDep','docLetter','docNo','arFeeLabel','arReason','enTo','enFor','enFeeLabel','enReason','date','case','owner','phone','email','execution','fee','reg','make','model','year','km','vin','color','engine','fuel','cyl','trans','body','notes','estimated','salvage','facComment','courtValue','depreciation','courtNotes','lawsuit','photoCount','arTo','arFor','clientCR','clientVat','arAddr','enAddr','arTerms','bTo','bAddr','bEmailDate','bYard','bArea','bFee','bTerms'];
 let pics=[],rows=[],sel=new Set(),created=new Date(),ratings={},conditionNotes={},feeOverride={},cellEdit={},arExtra=[],lastSum={};
@@ -790,7 +796,7 @@ function idb(){return new Promise((res,rej)=>{let r=indexedDB.open('adnanGenerat
 async function idbGet(k){let db=await idb();return new Promise(res=>{let r=db.transaction('kv').objectStore('kv').get(k);r.onsuccess=()=>res(r.result);r.onerror=()=>res(null)})}
 async function idbSet(k,v){let db=await idb();return new Promise(res=>{let t=db.transaction('kv','readwrite');t.objectStore('kv').put(v,k);t.oncomplete=()=>res(true);t.onerror=()=>res(false)})}
 function setLogState(st){logState=st;try{refreshCompanyList()}catch(e){}let el=$('#logStatus'),name=logDir?esc(logDir.name):'';
- let m=cloudOn()&&st!=='loading'&&st!=='na'?{ok:['ok',`✓ مجلد البرنامج «${name}» مربوط — فيه ملفات التعديل والتقارير ونسخة احتياطية من السجل`,'<button type="button" onclick="connectLog(true)">تغيير المجلد</button>'],
+ let m=cloudOn()&&st!=='loading'?{na:['na','هذا الجهاز بدون مجلد البرنامج — الأرقام من Google Drive، وملفات التعديل تُحفظ هناك','<span></span>'],ok:['ok',`✓ مجلد البرنامج «${name}» مربوط — فيه ملفات التعديل والتقارير ونسخة احتياطية من السجل`,'<button type="button" onclick="connectLog(true)">تغيير المجلد</button>'],
   need:['warn','مجلد البرنامج يحتاج إذن الوصول (لحفظ التقارير ونسخة احتياطية)','<button type="button" onclick="connectLog(false)">تفعيل</button>'],
   none:['warn','مجلد البرنامج غير مربوط على هذا الجهاز — الأرقام تعمل من Google Drive، واربطه لحفظ التقارير','<button type="button" onclick="connectLog(true)">ربط المجلد</button>'],
   bad:['bad',`ملف ${LOGFILE} في مجلد البرنامج لا يمكن قراءته`,'<button type="button" onclick="connectLog(true)">اختيار مجلد آخر</button>']}[st]:{ok:['ok',`✓ السجل محفوظ في ${LOGFILE} داخل مجلد «${name}»`,'<button type="button" onclick="connectLog(true)">تغيير المجلد</button>'],
@@ -1010,6 +1016,12 @@ $('#date').value=new Date().toISOString().slice(0,10);
 syncNumber(true);
 render();
 initLog();
+/* phones / Fold: shrink the A4 preview to the screen width (printing and PDF stay full size) */
+function fitPages(){let w=$('#previewWrap'),pg=$('#pages .page');if(!w||!pg)return;let pw=pg.offsetWidth,s=Math.min(1,(w.clientWidth-2)/pw);$('#pages').style.zoom=s<.999?s.toFixed(3):''}
+try{new ResizeObserver(()=>fitPages()).observe($('#previewWrap'));new MutationObserver(()=>fitPages()).observe($('#pages'),{childList:true})}catch(e){}
+window.addEventListener('resize',fitPages);
+function jumpToggle(){let pv=$('#previewWrap'),r=pv.getBoundingClientRect();if(r.top>innerHeight*.4)pv.scrollIntoView({behavior:'smooth'});else window.scrollTo({top:0,behavior:'smooth'})}
+window.addEventListener('scroll',()=>{let b=$('#jumpBtn'),pv=$('#previewWrap');if(b&&pv)b.textContent=pv.getBoundingClientRect().top>innerHeight*.4?'⬇ المعاينة':'⬆ النموذج'},{passive:true});
 
 /* =====================================================================
    FIELD INSPECTION MODE (phone / iPad)
@@ -1040,7 +1052,7 @@ const fdDef=label=>label[0]==='!'?'':'E';
 /* ---------- open / close ---------- */
 async function fdOpen(){if(!FD.loaded){try{let d=await idbGet(FD_KEY);if(d){FD.rows=d.rows||[];registerRows(FD.rows);FD.saved=d.saved||[];FD.type=d.type||'court';FD.cur=d.cur||null;FD.listId=d.listId||'';FD.listName=d.listName||'';FD.lists=d.lists||[];FD.seenLists=d.seenLists||[];FD.pendingList=d.pendingList||null;let old=Date.now()-14*864e5;FD.saved=FD.saved.filter(x=>!(x.sent&&x.sentAt&&Date.parse(x.sentAt)<old))}}catch(e){}FD.loaded=true}
  if(!FD.cur)FD.cur=fdBlank();$('#field').hidden=false;document.body.classList.add('fd-on');try{localStorage.setItem('adnanFieldMode','1')}catch(e){}fdDraw();if(syncOn()){fdSyncLists();fdUpload()}}
-function fdClose(){$('#field').hidden=true;document.body.classList.remove('fd-on');try{localStorage.setItem('adnanFieldMode','0')}catch(e){}}
+function fdClose(){$('#field').hidden=true;document.body.classList.remove('fd-on');try{if(cloudOn())cloudPull(false)}catch(e){}try{localStorage.setItem('adnanFieldMode','0')}catch(e){}}
 
 /* ---------- drawing ---------- */
 function fdDraw(){let c=FD.cur,f=c.fields,q=FD.q.trim().toLowerCase(),doneKeys=new Set(FD.saved.filter(s=>s.pics.length).map(s=>s.rowKey).filter(Boolean)),noPicKeys=new Set(FD.saved.filter(s=>!s.pics.length).map(s=>s.rowKey).filter(Boolean)),rk=d=>(d.reg||'')+'|'+(d.vin||'')+'|'+(d.agreement||''),doneRows={size:FD.rows.filter(r=>doneKeys.has(rk(rowData(r)))).length};
@@ -1161,7 +1173,8 @@ async function syncConnect(onDone){let v=prompt('الصق رابط المزام�
    the two are merged here and sent again. Without internet, changes wait and go up automatically. */
 const CL_KEY='adnanCloudLog';
 let CL={v:0,base:null,state:'off',pending:false,busy:null,at:'',fileLog:null,pulled:false,timer:null};
-function cloudOn(){try{return !!syncParts()&&!matchMedia('(max-width:900px) and (pointer:coarse)').matches}catch(e){return false}}
+function cloudOn(){try{return !!syncParts()}catch(e){return false}}
+const clIdle=()=>document.hidden||document.body.classList.contains('fd-on');  // phone in inspection mode: no need to keep the log fresh
 const clClone=o=>JSON.parse(JSON.stringify(o));
 function clSave(){try{localStorage.setItem(CL_KEY,JSON.stringify({data:LOG,v:CL.v,base:CL.base,pending:CL.pending,at:CL.at}))}catch(e){}}
 function clStatus(){let el=$('#cloudStatus');if(!el){let ls=$('#logStatus');if(!ls)return;el=document.createElement('div');el.id='cloudStatus';ls.before(el)}
@@ -1218,16 +1231,23 @@ async function cloudPull(loud){if(!cloudOn())return;if(CL.busy)await CL.busy;let
   if(CL.fileLog){let f=CL.fileLog;CL.fileLog=null;cloudAbsorb(f)}}
  catch(e){CL.state='bad';clStatus();if(loud)alert('تعذر تحميل سجل الأرقام من Google Drive. تأكد من الإنترنت.')}}
 /* entries that exist only in the hard-drive copy (e.g. logged before switching) are added to the shared log */
-function cloudAbsorb(fileLog){if(!CL.pulled){CL.fileLog=fileLog;
+/* office images: the laptop (program folder) puts them in Drive; the phone page loads them from there */
+async function clUploadAssets(){if(!cloudOn()||logState!=='ok')return;try{let a=await loadAssets(),names=Object.keys(a);if(!names.length)return;
+ let sig=names.sort().map(n=>n+':'+a[n].length+':'+a[n].slice(-24)).join('|');if(localStorage.getItem('adnanAssetSig')===sig)return;
+ for(const n of names){let r=await clFetch({a:'putAsset',name:n,data:a[n]});if(!r.ok)return}localStorage.setItem('adnanAssetSig',sig)}catch(e){console.error(e)}}
+async function webAssetsLoad(){if(location.protocol==='file:'||!cloudOn())return;
+ try{let c=await idbGet('webAssets');if(c&&Object.keys(c).length){WEB_ASSETS=c;render()}}catch(e){}
+ try{let j=await syncGet('assets');if(j.items&&Object.keys(j.items).length&&JSON.stringify(j.items)!==JSON.stringify(WEB_ASSETS)){WEB_ASSETS=j.items;await idbSet('webAssets',j.items);render()}}catch(e){}}
+function cloudAbsorb(fileLog){setTimeout(clUploadAssets,500);if(!CL.pulled){CL.fileLog=fileLog;
   // Drive not reached yet (e.g. no internet): use the hard-drive copy meanwhile so numbering never restarts
   let cur=getLog(),m=mergeLog(normLog(cur),fileLog);if(!clKeyEq(m,cur)){let prev=nextNo(G());LOG=m;clApply(m,prev)}
   if(CL.state==='seed'||CL.state==='bad')cloudPull(false);return}let cur=getLog(),prev=nextNo(G()),m=mergeLog(normLog(cur),fileLog);if(!clKeyEq(m,cur)){putLog(m);clApply(m,prev)}}
 async function cloudInit(){if(!cloudOn()){clStatus();return}
  try{let c=JSON.parse(localStorage.getItem(CL_KEY)||'null');if(c&&c.data){LOG=normLog(c.data);CL.v=c.v||0;CL.base=c.base?normLog(c.base):null;CL.pending=!!c.pending;CL.at=c.at||'';syncNumber(true);render()}}catch(e){}
  CL.state='load';clStatus();await cloudPull(false);
- clearInterval(CL.timer);CL.timer=setInterval(()=>{if(!document.hidden)cloudPull(false)},60000)}
+ clearInterval(CL.timer);CL.timer=setInterval(()=>{if(!clIdle())cloudPull(false)},60000);webAssetsLoad()}
 window.addEventListener('online',()=>{if(cloudOn()&&CL.pending)cloudPush()});
-document.addEventListener('visibilitychange',()=>{if(!document.hidden&&cloudOn())cloudPull(false)});
+document.addEventListener('visibilitychange',()=>{if(!clIdle()&&cloudOn())cloudPull(false)});
 /* edit files → Drive (queued in this browser if offline) */
 async function clEditQ(){return (await idbGet('editQ'))||[]}
 async function cloudPutEdit(path,data){if(!cloudOn())return;
