@@ -324,6 +324,28 @@ body.fd-on>.bar,body.fd-on>.main{display:none}
 .ml-t{width:100%;border-collapse:collapse}.ml-t th{font-size:11.5px;color:#637180;text-align:right;padding:4px;font-weight:bold}
 .ml-t td{padding:3px}.ml-t input{width:100%;font:inherit;font-size:13px;padding:6px;border:1px solid #cbd5df;border-radius:6px}
 .ml-t td.x button{background:#fde8e8;color:#b00;border:0;border-radius:6px;padding:5px 9px;cursor:pointer}
+
+/* in-app camera: shoot many photos without leaving */
+.cam{position:fixed;inset:0;z-index:70;background:#000;display:flex;flex-direction:column;direction:rtl;font-family:-apple-system,BlinkMacSystemFont,"SF Arabic","Segoe UI",system-ui,Tahoma,sans-serif;color:#fff}
+.cam[hidden]{display:none}
+.cam video{flex:1;width:100%;min-height:0;object-fit:cover;background:#000}
+.cam-top{position:absolute;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;padding:calc(12px + env(safe-area-inset-top)) 16px 12px;background:linear-gradient(rgba(0,0,0,.55),transparent)}
+.cam-top button{background:rgba(0,0,0,.45);color:#fff;border:0;border-radius:980px;min-width:44px;height:44px;font-size:18px;padding:0 14px;cursor:pointer}
+.cam-top button.on{background:#ffd60a;color:#000}
+.cam-count{font-weight:700;font-size:15px;background:rgba(0,0,0,.45);border-radius:980px;padding:8px 14px}
+.cam-bar{flex:none;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:18px 22px calc(18px + env(safe-area-inset-bottom));background:#000}
+.cam-thumb{width:56px;height:56px;border-radius:10px;background:#222 center/cover no-repeat;border:2px solid #fff;justify-self:start;position:relative}
+.cam-thumb:empty::after{content:""}
+.cam-shot{width:76px;height:76px;border-radius:50%;border:5px solid #fff;background:#fff;box-shadow:inset 0 0 0 4px #000;cursor:pointer;transition:transform 90ms ease}
+.cam-shot:active{transform:scale(.9)}
+.cam-shot[disabled]{opacity:.35}
+.cam-done{justify-self:end;background:#ffd60a;color:#000;border:0;border-radius:980px;font-size:16px;font-weight:700;padding:12px 20px;cursor:pointer}
+.cam-flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none}
+.cam-flash.go{animation:camflash 220ms ease-out}
+@keyframes camflash{0%{opacity:.85}100%{opacity:0}}
+.cam-msg{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);text-align:center;font-size:15px;max-width:80%;line-height:1.6}
+@media(prefers-reduced-motion:reduce){.cam-flash.go{animation-duration:1ms}}
+@media print{.cam{display:none!important}}
 /* laptop side: list of inspections in a received file */
 .fd-in{margin-top:8px;display:flex;flex-direction:column;gap:6px}
 .fd-in-row{display:flex;align-items:center;gap:8px;border:1px solid #dbe2e9;border-radius:8px;padding:6px 8px;font-size:12px;background:#fafcfe}
@@ -431,7 +453,7 @@ Through Bank transfer to: Al Salam Bank / IBAN: BH89ALSA00436034150000</textarea
 <div class="modal" id="logModal" onclick="if(event.target===this)closeLog()"><div class="modal-box"><div class="modal-head"><h3>سجل الأرقام</h3><select id="logType" onchange="drawLog()"></select><button class="mini" onclick="setNext()">تعديل الرقم التالي</button><button class="mini" onclick="setLetter()">تغيير الحرف الافتراضي</button><button class="mini" onclick="closeLog()">إغلاق ✕</button></div><div class="modal-body" id="logBody"></div><div class="modal-foot"><button class="mini btn-blue" onclick="exportLog()">تصدير السجل Excel (CSV)</button><label class="upload mini">فتح ملف محفوظ<input type="file" accept=".json" onchange="openEditFile(event)"></label><span class="hint" style="margin:0" id="logWhere"></span></div></div></div>
 <div class="modal" id="colModal" style="z-index:50" onclick="if(event.target===this)closeCols()"><div class="modal-box" style="width:min(680px,96vw)"><div class="modal-head"><h3>أعمدة ملف Excel</h3><button class="mini" onclick="closeCols()">إغلاق ✕</button></div><div class="modal-body" id="colBody"></div><div class="modal-foot"><button class="mini btn-blue" onclick="saveCols()">حفظ</button><button class="mini" onclick="autoCols()">إعادة التعرف التلقائي</button></div></div></div>
 <div class="modal" id="mlModal" onclick="if(event.target===this)closeManual()"><div class="modal-box" style="width:min(1100px,96vw)"><div class="modal-head"><h3>قائمة سيارات يدوية (بدون Excel)</h3><button class="mini" onclick="closeManual()">إغلاق ✕</button></div><div class="modal-body" id="mlBody"></div><div class="modal-foot"><button class="mini" onclick="mlAdd()">+ إضافة سيارة</button><button class="mini btn-blue" id="mlSend" onclick="mlSend()">📤 إرسال للهاتف</button><button class="mini" onclick="mlUse()">استخدامها هنا (للتقرير والفاتورة)</button><button class="mini" onclick="mlClear()">مسح القائمة</button><span class="hint" style="margin:0">تُحفظ القائمة على هذا الجهاز تلقائياً.</span></div></div></div>
-<div id="field" class="fd" hidden><header class="fd-bar"><button class="fd-link" onclick="fdClose()">‹ التقرير الكامل</button><b>فحص ميداني</b><span class="fd-count" id="fdCount"></span></header><div class="fd-scroll" id="fdBody"></div><footer class="fd-foot"><button class="fd-btn2" id="fdSendBtn" onclick="fdSecondary()">إرسال</button><button class="fd-btn" id="fdSaveBtn" onclick="fdSaveCar()">حفظ السيارة والتالي</button></footer><input type="file" id="fdCam" accept="image/*" capture="environment" hidden><input type="file" id="fdLib" accept="image/*" multiple hidden><input type="file" id="fdXls" accept=".xlsx,.xls,.csv" hidden></div><div class="fd-toast" id="fdToast" role="status"></div>
+<div id="field" class="fd" hidden><header class="fd-bar"><button class="fd-link" onclick="fdClose()">‹ التقرير الكامل</button><b>فحص ميداني</b><span class="fd-count" id="fdCount"></span></header><div class="fd-scroll" id="fdBody"></div><footer class="fd-foot"><button class="fd-btn2" id="fdSendBtn" onclick="fdSecondary()">إرسال</button><button class="fd-btn" id="fdSaveBtn" onclick="fdSaveCar()">حفظ السيارة والتالي</button></footer><input type="file" id="fdCam" accept="image/*" capture="environment" hidden><div class="cam" id="camUI" hidden><video id="camV" playsinline muted autoplay></video><div class="cam-flash" id="camF"></div><div class="cam-top"><button type="button" id="camX" aria-label="إغلاق">✕</button><span class="cam-count" id="camN"></span><button type="button" id="camT" hidden aria-label="الإضاءة">🔦</button></div><div class="cam-msg" id="camM"></div><div class="cam-bar"><div class="cam-thumb" id="camP"></div><button type="button" class="cam-shot" id="camS" aria-label="التقاط"></button><button type="button" class="cam-done" id="camD">تم ✓</button></div></div><input type="file" id="fdLib" accept="image/*" multiple hidden><input type="file" id="fdXls" accept=".xlsx,.xls,.csv" hidden></div><div class="fd-toast" id="fdToast" role="status"></div>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script>
 const APP_VERSION='2026-11-04';
@@ -1048,7 +1070,7 @@ $('#field').addEventListener('click',e=>{let b=e.target.closest('[data-act]');if
  else if(a==='rate')fdRate(b);
  else if(a==='allE'){fdGroups().forEach(([t,ar])=>ar.forEach((x,j)=>{if(x[0]!=='#'&&x[0]!=='!')c.rate[t+'-'+j]='E'}));let y=$('.fd-scroll').scrollTop;fdDraw();$('.fd-scroll').scrollTop=y;fdPersist();fdToast('تم تعيين الكل ممتاز — غيّر ما يختلف فقط')}
  else if(a==='addnote'){b.outerHTML=`<input class="fd-note" data-note="${b.dataset.k}" placeholder="ملاحظة (تظهر في عمود الملاحظات)">`;let inp=$(`#field [data-note="${b.dataset.k}"]`);if(inp)inp.focus()}
- else if(a==='cam')$('#fdCam').click();
+ else if(a==='cam')camOpen();
  else if(a==='lib')$('#fdLib').click();
  else if(a==='pdel'){c.pics.splice(i,1);fdDrawPics();fdPersist()}
  else if(a==='pmv'){[c.pics[i-1],c.pics[i]]=[c.pics[i],c.pics[i-1]];fdDrawPics();fdPersist()}
@@ -1168,6 +1190,28 @@ async function mlSend(){let cars=mlCars();if(!cars.length)return alert('أضف �
  catch(e){alert('تعذر الإرسال. تأكد من الإنترنت.')}finally{b.disabled=false;b.textContent='📤 إرسال للهاتف'}}
 /* use the same list on the laptop: car picker, multi-vehicle invoices */
 function mlUse(){let cars=mlCars();if(!cars.length)return alert('أضف سيارة واحدة على الأقل.');rows=cars.map(r=>({...r}));registerRows(rows);sel=new Set(rows.map((_,i)=>i));cellEdit={};lastExcelName='قائمة يدوية';fillRecords();buildList();colSummary();closeManual();render();syncDeskStatus()}
+
+
+/* ===== in-app camera: keeps the viewfinder open, every tap saves a photo ===== */
+let camStream=null,camTorch=false,camAdded=0;
+function camCount(){let c=FD.cur;$('#camN').textContent=`📷 ${c.pics.length}/${FD_MAXPICS}`;$('#camS').disabled=c.pics.length>=FD_MAXPICS;let last=c.pics[c.pics.length-1];$('#camP').style.backgroundImage=last?`url("${last}")`:''}
+async function camOpen(){if(!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia))return $('#fdCam').click();
+ if(FD.cur.pics.length>=FD_MAXPICS)return fdToast(`الحد الأقصى ${FD_MAXPICS} صورة`);
+ camAdded=0;$('#camM').textContent='جارٍ تشغيل الكاميرا…';$('#camUI').hidden=false;camCount();
+ try{camStream=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:{ideal:'environment'},width:{ideal:1920},height:{ideal:1440}}});
+  let v=$('#camV');v.srcObject=camStream;await v.play().catch(()=>{});$('#camM').textContent='';
+  let tr=camStream.getVideoTracks()[0],caps=tr&&tr.getCapabilities?tr.getCapabilities():{};camTorch=false;$('#camT').hidden=!caps.torch;$('#camT').classList.remove('on')}
+ catch(e){camClose(true);fdToast('لم يُسمح باستخدام الكاميرا — سيتم فتح كاميرا الهاتف العادية');setTimeout(()=>$('#fdCam').click(),400)}}
+function camClose(silent){if(camStream){camStream.getTracks().forEach(t=>t.stop());camStream=null}$('#camV').srcObject=null;$('#camUI').hidden=true;
+ if(!silent){fdDrawPics();fdPersist();if(camAdded)fdToast(`أُضيفت ${camAdded} ${camAdded===1?'صورة':'صور'}`)}}
+function camShoot(){let v=$('#camV'),c=FD.cur;if(!camStream||!v.videoWidth||c.pics.length>=FD_MAXPICS)return;
+ let M=1400,k=Math.min(1,M/Math.max(v.videoWidth,v.videoHeight)),cv=document.createElement('canvas');cv.width=Math.round(v.videoWidth*k);cv.height=Math.round(v.videoHeight*k);
+ cv.getContext('2d').drawImage(v,0,0,cv.width,cv.height);c.pics.push(cv.toDataURL('image/jpeg',.82));camAdded++;
+ let f=$('#camF');f.classList.remove('go');void f.offsetWidth;f.classList.add('go');if(navigator.vibrate)try{navigator.vibrate(15)}catch(e){}
+ camCount();if(c.pics.length>=FD_MAXPICS)fdToast(`وصلت للحد الأقصى ${FD_MAXPICS} صورة`)}
+$('#camS').onclick=camShoot;$('#camD').onclick=()=>camClose();$('#camX').onclick=()=>camClose();
+$('#camT').onclick=async()=>{let tr=camStream&&camStream.getVideoTracks()[0];if(!tr)return;camTorch=!camTorch;try{await tr.applyConstraints({advanced:[{torch:camTorch}]});$('#camT').classList.toggle('on',camTorch)}catch(e){camTorch=false}};
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&camStream)camClose()});
 
 syncDeskInit();
 function privMark(){let b=$('#privSec');if(b)b.classList.toggle('has',!!val('privNotes').trim())}
