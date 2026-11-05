@@ -211,6 +211,22 @@ h3{margin:8px 0 4px;font-size:14px}
 @media(max-width:1000px) and (pointer:coarse){.jump{display:block;position:fixed;bottom:calc(16px + env(safe-area-inset-bottom));left:16px;z-index:20;background:var(--navy);color:#fff;border-radius:980px;padding:12px 18px;font-size:14px;font-weight:bold;box-shadow:0 4px 14px #0004}}
 @media print{#pages{zoom:1!important}.jump{display:none!important}}
 body.pdfmode #pages{zoom:1!important}
+.rem-n{display:inline-block;min-width:18px;padding:0 5px;margin-right:4px;border-radius:9px;background:#e4eaf0;color:#0c2951;font-size:11px;font-weight:bold;text-align:center}.rem-n:empty{display:none}.rem-n.hot{background:#d70015;color:#fff}
+.fd-remb{font-size:20px;display:flex;align-items:center;gap:2px}
+.rem-modal{z-index:60}.rem-box{width:min(760px,96vw)}
+.rem-tabs{display:flex;gap:4px}.rem-tabs button{border:1px solid #cbd5df;border-radius:980px;padding:5px 11px;font-size:12px;background:#fff}.rem-tabs button.on{background:#0c2951;color:#fff;border-color:#0c2951}
+.rem-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;padding:12px 16px;border-bottom:1px solid #e4eaf0;background:#f7f9fb}
+.rem-form .rem-wide{grid-column:1/-1}.rem-due{display:flex;align-items:center;gap:6px;margin:0;font-weight:normal}.rem-due input{flex:1}
+.rem-btns{display:flex;gap:6px;align-items:center}
+.rem-item{display:flex;gap:10px;align-items:flex-start;padding:10px 4px;border-bottom:1px solid #eef1f4}
+.rem-chk input{width:20px;height:20px;margin-top:2px}
+.rem-main{flex:1;min-width:0}.rem-title{font-weight:bold;font-size:14px;color:#17212d}.rem-meta{font-size:12px;color:#637180;margin-top:3px}.rem-note{font-size:12px;color:#455666;margin-top:4px;white-space:pre-wrap}
+.rem-act{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end}
+.rem-tag{border-radius:6px;padding:1px 6px;font-size:11px}
+.st-late .rem-tag{background:#fde8e8;color:#a40000}.st-late{background:#fff8f8}.st-today .rem-tag{background:#fff4d6;color:#8a5a00}
+.st-done .rem-title{text-decoration:line-through;color:#8a96a3}
+@media(max-width:600px){.rem-item{flex-wrap:wrap}.rem-act{width:100%;justify-content:flex-start;padding-right:30px}.rem-form input,.rem-form button{font-size:16px}}
+@media print{.rem-modal{display:none!important}}
 @media print{
 @page{size:A4 portrait;margin:0}
 *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
@@ -382,7 +398,7 @@ body.pdfmode .page{box-shadow:none!important}
 .fd-in-row .t{flex:1}.fd-in-row small{color:#637180;display:block}
 .fd-in-row.done{background:#eef8f0;border-color:#bfe3c8}
 </style></head><body>
-<header class="bar"><b>مولد تقارير عدنان العلوي <small>ADNAN AL ALAWI · v2026-11-04</small></b><div class="buttons"><button id="inboxBadge" class="btn-inbox" style="display:none" onclick="document.querySelector('#syncInbox').scrollIntoView({behavior:'smooth',block:'center'})"></button><button onclick="fdOpen()">📱 فحص ميداني</button><button onclick="saveDraft()">حفظ مسودة</button><button onclick="loadDraft()">استرجاع مسودة</button><button id="overdueBadge" class="badge-over" style="display:none" onclick="openAccounts('over')"></button><button onclick="openAccounts()">الحسابات</button><button onclick="openLog()">السجل</button><button onclick="printReport()">تصدير PDF</button></div></header>
+<header class="bar"><b>مولد تقارير عدنان العلوي <small>ADNAN AL ALAWI · v2026-11-04</small></b><div class="buttons"><button id="inboxBadge" class="btn-inbox" style="display:none" onclick="document.querySelector('#syncInbox').scrollIntoView({behavior:'smooth',block:'center'})"></button><button onclick="remOpen()">⏰ التذكيرات <span class="rem-n"></span></button><button onclick="fdOpen()">📱 فحص ميداني</button><button onclick="saveDraft()">حفظ مسودة</button><button onclick="loadDraft()">استرجاع مسودة</button><button id="overdueBadge" class="badge-over" style="display:none" onclick="openAccounts('over')"></button><button onclick="openAccounts()">الحسابات</button><button onclick="openLog()">السجل</button><button onclick="printReport()">تصدير PDF</button></div></header>
 <main class="main"><aside class="panel"><h1>تقرير جديد</h1><form class="form" id="f" onsubmit="return false">
 <div class="sec privsec" id="privSec"><h2>📝 ملاحظاتي <small>— للتذكير فقط، لا تظهر في التقرير ولا في PDF</small></h2><textarea id="privNotes" placeholder="ملاحظات تريد تذكّرها أثناء كتابة التقرير (تصل أيضاً من الهاتف)"></textarea></div>
 
@@ -454,6 +470,7 @@ Through Bank transfer to: Al Salam Bank / IBAN: BH89ALSA00436034150000</textarea
 </div><div class="hint">بيانات المركبة ورقم ملف التنفيذ ورقم الدعوى ورقم الاتفاقية تُؤخذ تلقائياً من الحقول أعلاه. المبلغ = رسوم الخبير × عدد المركبات.</div></div>
 
 <div class="sec" data-for="invoiceBulk"><details class="lblsec"><summary>نصوص Invoice التسهيلات (كل نص قابل للتعديل)</summary><div class="grid lblpanel" data-fixed="ti."></div><button type="button" class="mini" onclick="resetLabels(this)">إرجاع النصوص الأصلية</button><div class="hint">يمكنك أيضاً الضغط على أي نص في المعاينة وتعديله مباشرة.</div></details></div>
+<div class="sec" data-for="invoiceBulk"><h2>جدول فارغ (بدون Excel)</h2><div style="display:flex;gap:6px;flex-wrap:wrap"><button type="button" class="mini btn-blue" onclick="tiBlank()">📄 جدول فارغ…</button><button type="button" class="mini" onclick="tiRows(1)">＋ صف</button><button type="button" class="mini" onclick="tiRows(-1)">－ صف</button></div><div class="hint">اختر عدد الصفوف ثم اكتب مباشرة في خانات الجدول على الصفحة. «＋ صف» و«－ صف» تعمل أيضاً مع قائمة Excel مستوردة. احفظه بـ«حفظ مسودة» لتعود إليه لاحقاً.</div></div>
 <div class="sec" data-for="invoiceBulk"><h2>بيانات Invoice التسهيلات</h2><div class="grid">
 <div class="full"><label>To</label><input id="bTo" value="Bahrain Credit"></div>
 <div class="full"><label>Address</label><textarea id="bAddr" style="min-height:56px">BCFC Cares
@@ -480,11 +497,14 @@ Through Bank transfer to: Al Salam Bank / IBAN: BH89ALSA00436034150000</textarea
 <div class="modal" id="accModal" onclick="if(event.target===this)closeAccounts()"><div class="modal-box acc-box"><div class="modal-head"><h3>الحسابات</h3><button class="mini acc-tab" data-tab="invoice" onclick="ACC.tab='invoice';ACC.period=null;ACC.client='';drawAccounts()">الفواتير I</button><button class="mini acc-tab" data-tab="bulk" onclick="ACC.tab='bulk';ACC.period=null;ACC.client='';drawAccounts()">Invoice التسهيلات TI</button><button class="mini" onclick="closeAccounts()">إغلاق ✕</button></div>
 <div class="modal-body"><div class="acc-filters" id="accFilters"></div><div class="acc-cards" id="accCards"></div><div id="accTable"></div><div class="acc-two"><div><h4>حسب العميل</h4><div id="accClients"></div></div><div><h4>حسب الشهر</h4><div id="accMonths"></div></div></div></div>
 <div class="modal-foot"><button class="mini btn-blue" onclick="exportAccExcel()">تصدير Excel</button><button class="mini btn-blue" onclick="exportAccPDF()">تصدير PDF</button><span class="hint" style="margin:0">التسعيرات (Q) لا تُحسب كدخل. التصدير يشمل ما يظهر حسب الاختيارات الحالية.</span></div></div></div>
+<div class="modal rem-modal" id="remModal" onclick="if(event.target===this)remClose()"><div class="modal-box rem-box"><div class="modal-head"><h3>⏰ تقارير مطلوبة</h3><span class="rem-tabs" id="remTabs"><button type="button" data-f="open" onclick="REM.show='open';remDraw()">المطلوبة</button><button type="button" data-f="done" onclick="REM.show='done';remDraw()">المنجزة</button><button type="button" data-f="all" onclick="REM.show='all';remDraw()">الكل</button></span><button class="mini" onclick="remClose()">إغلاق ✕</button></div>
+<div class="rem-form"><input id="rem_title" placeholder="التقرير المطلوب (مثال: تثمين عربي)" class="rem-wide"><input id="rem_client" placeholder="الجهة / العميل"><input id="rem_car" placeholder="رقم السيارة"><label class="rem-due">الموعد<input id="rem_due" type="date"></label><input id="rem_note" placeholder="ملاحظة (اختياري)" class="rem-wide"><div class="rem-btns"><button type="button" class="mini btn-blue" id="remAdd" onclick="remSubmit()">＋ إضافة</button><button type="button" class="mini" id="remCancel" onclick="remCancel()" hidden>إلغاء</button></div></div>
+<div class="modal-body" id="remBody"></div><div class="modal-foot"><span class="hint" id="remWhere" style="margin:0"></span></div></div></div>
 <div class="modal" id="logModal" onclick="if(event.target===this)closeLog()"><div class="modal-box"><div class="modal-head"><h3>سجل الأرقام</h3><select id="logType" onchange="drawLog()"></select><button class="mini" onclick="setNext()">تعديل الرقم التالي</button><button class="mini" onclick="setLetter()">تغيير الحرف الافتراضي</button><button class="mini" onclick="closeLog()">إغلاق ✕</button></div><div class="modal-body" id="logBody"></div><div class="modal-foot"><button class="mini btn-blue" onclick="exportLog()">تصدير السجل Excel (CSV)</button><label class="upload mini">فتح ملف محفوظ<input type="file" accept=".json" onchange="openEditFile(event)"></label><span class="hint" style="margin:0" id="logWhere"></span></div></div></div>
 <div class="modal" id="colModal" style="z-index:50" onclick="if(event.target===this)closeCols()"><div class="modal-box" style="width:min(680px,96vw)"><div class="modal-head"><h3>أعمدة ملف Excel</h3><button class="mini" onclick="closeCols()">إغلاق ✕</button></div><div class="modal-body" id="colBody"></div><div class="modal-foot"><button class="mini btn-blue" onclick="saveCols()">حفظ</button><button class="mini" onclick="autoCols()">إعادة التعرف التلقائي</button></div></div></div>
 <div class="modal bw" id="bw" onclick="if(event.target===this)this.classList.remove('open')"><div class="modal-box bw-box"><div class="modal-head"><h3 id="bwTitle">الدفعة</h3><button class="mini btn-green" onclick="batchSaveAll()">💾 حفظ الكل في مجلد</button><button class="mini" onclick="document.getElementById('bw').classList.remove('open')">إغلاق ✕</button></div><div class="modal-body" id="bwBody"></div></div></div><div class="bprog" id="bprog" hidden></div>
 <div class="modal" id="mlModal" onclick="if(event.target===this)closeManual()"><div class="modal-box" style="width:min(1100px,96vw)"><div class="modal-head"><h3>قائمة سيارات يدوية (بدون Excel)</h3><button class="mini" onclick="closeManual()">إغلاق ✕</button></div><div class="modal-body" id="mlBody"></div><div class="modal-foot"><button class="mini" onclick="mlAdd()">+ إضافة سيارة</button><button class="mini btn-blue" id="mlSend" onclick="mlSend()">📤 إرسال للهاتف</button><button class="mini" onclick="mlUse()">استخدامها هنا (للتقرير والفاتورة)</button><button class="mini" onclick="mlClear()">مسح القائمة</button><span class="hint" style="margin:0">تُحفظ القائمة على هذا الجهاز تلقائياً.</span></div></div></div>
-<div id="field" class="fd" hidden><header class="fd-bar"><button class="fd-link" onclick="fdClose()">‹ التقرير الكامل</button><b>فحص ميداني</b><span class="fd-count" id="fdCount"></span></header><div class="fd-scroll" id="fdBody"></div><footer class="fd-foot"><button class="fd-btn2" id="fdSendBtn" onclick="fdSecondary()">إرسال</button><button class="fd-btn" id="fdSaveBtn" onclick="fdSaveCar()">حفظ السيارة والتالي</button></footer><input type="file" id="fdCam" accept="image/*" capture="environment" hidden><div class="cam" id="camUI" hidden><video id="camV" playsinline muted autoplay></video><div class="cam-flash" id="camF"></div><div class="cam-top"><button type="button" id="camX" aria-label="إغلاق">✕</button><span class="cam-count" id="camN"></span><button type="button" id="camT" hidden aria-label="الإضاءة">🔦</button></div><div class="cam-msg" id="camM"></div><div class="cam-bar"><div class="cam-thumb" id="camP"></div><button type="button" class="cam-shot" id="camS" aria-label="التقاط"></button><button type="button" class="cam-done" id="camD">تم ✓</button></div></div><input type="file" id="fdLib" accept="image/*" multiple hidden><input type="file" id="fdXls" accept=".xlsx,.xls,.csv" hidden></div><div class="fd-toast" id="fdToast" role="status"></div>
+<div id="field" class="fd" hidden><header class="fd-bar"><button class="fd-link" onclick="fdClose()">‹ التقرير الكامل</button><b>فحص ميداني</b><span style="display:flex;align-items:center;gap:6px"><button class="fd-link fd-remb" onclick="remOpen()" aria-label="التذكيرات">⏰<span class="rem-n"></span></button><span class="fd-count" id="fdCount"></span></span></header><div class="fd-scroll" id="fdBody"></div><footer class="fd-foot"><button class="fd-btn2" id="fdSendBtn" onclick="fdSecondary()">إرسال</button><button class="fd-btn" id="fdSaveBtn" onclick="fdSaveCar()">حفظ السيارة والتالي</button></footer><input type="file" id="fdCam" accept="image/*" capture="environment" hidden><div class="cam" id="camUI" hidden><video id="camV" playsinline muted autoplay></video><div class="cam-flash" id="camF"></div><div class="cam-top"><button type="button" id="camX" aria-label="إغلاق">✕</button><span class="cam-count" id="camN"></span><button type="button" id="camT" hidden aria-label="الإضاءة">🔦</button></div><div class="cam-msg" id="camM"></div><div class="cam-bar"><div class="cam-thumb" id="camP"></div><button type="button" class="cam-shot" id="camS" aria-label="التقاط"></button><button type="button" class="cam-done" id="camD">تم ✓</button></div></div><input type="file" id="fdLib" accept="image/*" multiple hidden><input type="file" id="fdXls" accept=".xlsx,.xls,.csv" hidden></div><div class="fd-toast" id="fdToast" role="status"></div>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script>
 const APP_VERSION='2026-11-04';
@@ -778,14 +798,14 @@ const docName=()=>{let t=T();return(t==='invoiceAr'||t==='quoteAr')?TYPE_NAMES[t
    Browsers without folder access (Safari/Firefox) fall back to saving inside the browser. */
 const LOGFILE='numbers-log.json',FS_OK=typeof window.showDirectoryPicker==='function';
 let LOG={counters:{},entries:{},letters:{}},logDir=null,logState=FS_OK?'loading':'na',writeQ=Promise.resolve();
-function normLog(l){l=JSON.parse(JSON.stringify(l&&l.entries?l:{counters:{},entries:{}}));l.counters=l.counters||{};l.letters=l.letters||{};l.companies=Array.isArray(l.companies)?l.companies:[];
+function normLog(l){l=JSON.parse(JSON.stringify(l&&l.entries?l:{counters:{},entries:{}}));l.counters=l.counters||{};l.letters=l.letters||{};l.companies=Array.isArray(l.companies)?l.companies:[];l.reminders=Array.isArray(l.reminders)?l.reminders:[];
 // migrate logs saved by older versions (one log per document type)
 Object.keys(GROUP_OF).forEach(k=>{let g=GROUP_OF[k];if(k===g)return;if(l.entries[k]){l.entries[g]=(l.entries[g]||[]).concat(l.entries[k].map(e=>({doc:TYPE_NAMES[k],...e})));delete l.entries[k]}if(l.counters[k]){l.counters[g]=Math.max(l.counters[g]||0,l.counters[k]);delete l.counters[k]}});return l}
-function mergeLog(base,add){add=normLog(add);Object.entries(add.entries).forEach(([g,list])=>{let t=base.entries[g]=base.entries[g]||[];list.forEach(e=>{if(!t.some(x=>x.no==e.no))t.push(e)})});Object.entries(add.counters).forEach(([g,c])=>base.counters[g]=Math.max(base.counters[g]||0,c));Object.entries(add.letters).forEach(([g,v])=>{if(!base.letters[g])base.letters[g]=v});base.companies=mergeCompanies(base.companies||[],add.companies||[]);return base}
+function mergeLog(base,add){add=normLog(add);Object.entries(add.entries).forEach(([g,list])=>{let t=base.entries[g]=base.entries[g]||[];list.forEach(e=>{if(!t.some(x=>x.no==e.no))t.push(e)})});Object.entries(add.counters).forEach(([g,c])=>base.counters[g]=Math.max(base.counters[g]||0,c));Object.entries(add.letters).forEach(([g,v])=>{if(!base.letters[g])base.letters[g]=v});base.companies=mergeCompanies(base.companies||[],add.companies||[]);base.reminders=base.reminders||[];(add.reminders||[]).forEach(r=>{if(!base.reminders.some(x=>x.id===r.id))base.reminders.push(r)});return base}
 function getLog(){return normLog(LOG)}
 function putLog(l){l=normLog(l);
  if(!FS_OK){try{localStorage.setItem(LOGKEY,JSON.stringify(l));LOG=l;return true}catch(e){alert('تعذر حفظ السجل.');return false}}
- if(cloudOn()){LOG=l;CL.pending=true;clSave();clStatus();cloudPush();
+ if(cloudOn()){LOG=l;CL.edits++;CL.pending=true;clSave();clStatus();cloudPush();
   clBackup();return true}
  if(logState!=='ok'){alert('السجل غير مربوط بمجلد البرنامج.\nاضغط زر «ربط السجل» في قسم رقم المستند أولاً.');return false}
  LOG=l;let data=JSON.stringify(l,null,1);
@@ -899,7 +919,7 @@ function exportAccPDF(){let{rows,S,byC,byM,ti}=ACC.last,title=accTitle(),w=windo
  <h2>الفواتير</h2>${rows.length?main:'لا توجد فواتير.'}<h2>حسب العميل</h2>${sumT(Object.entries(byC),'العميل')}<h2>حسب الشهر</h2>${sumT(Object.keys(byM).sort().reverse().map(k=>[monthName(k),byM[k]]),'الشهر')}
  <script>window.onload=()=>setTimeout(()=>window.print(),200)<\/script></body></html>`);w.document.close()}
 
-function updLogInfo(){updOverdueBadge();let g=G(),le=lastEntry(g);$('#logInfo').innerHTML=`سجل «${GROUPS[g].name}»: آخر رقم مسجل <b>${le?`<bdi dir="ltr">${esc(fmtNo(le))}</bdi>`:'—'}</b> · الرقم التالي <b>${nextNo(g)}</b>`}
+function updLogInfo(){updOverdueBadge();try{remBadge()}catch(e){}let g=G(),le=lastEntry(g);$('#logInfo').innerHTML=`سجل «${GROUPS[g].name}»: آخر رقم مسجل <b>${le?`<bdi dir="ltr">${esc(fmtNo(le))}</bdi>`:'—'}</b> · الرقم التالي <b>${nextNo(g)}</b>`}
 /* ---------- edit files: a copy of everything typed, so a saved document can be reopened and fixed ----------
    saved in  <program folder>/edit files/<letter>/<code>.json   e.g. edit files/E/E - 15.json */
 const EDIT_DIR='edit files';let openedKey=null;
@@ -1172,7 +1192,7 @@ async function syncConnect(onDone){let v=prompt('الصق رابط المزام�
    Every change is sent with the version it was made on; if the other laptop changed the log meanwhile,
    the two are merged here and sent again. Without internet, changes wait and go up automatically. */
 const CL_KEY='adnanCloudLog';
-let CL={v:0,base:null,state:'off',pending:false,busy:null,at:'',fileLog:null,pulled:false,timer:null};
+let CL={v:0,base:null,state:'off',pending:false,busy:null,at:'',fileLog:null,pulled:false,timer:null,edits:0};
 function cloudOn(){try{return !!syncParts()}catch(e){return false}}
 const clIdle=()=>document.hidden||document.body.classList.contains('fd-on');  // phone in inspection mode: no need to keep the log fresh
 const clClone=o=>JSON.parse(JSON.stringify(o));
@@ -1203,10 +1223,13 @@ function clMerge(base,local,server){base=normLog(base||{});local=normLog(local);
  ['letters','settings'].forEach(k=>{let L=local[k]||{},Bb=base[k]||{},Sv=server[k]||{},o={...Sv};
   new Set([...Object.keys(L),...Object.keys(Bb)]).forEach(x=>{if(!clKeyEq(L[x],Bb[x])){if(L[x]===undefined)delete o[x];else o[x]=L[x]}});if(Object.keys(o).length||out[k])out[k]=o});
  out.companies=mergeCompanies(server.companies||[],clKeyEq(local.companies,base.companies)?[]:local.companies||[]);
+ {let B=base.reminders,Lo=local.reminders,S=server.reminders,f=(a,id)=>a.find(x=>x.id===id),res=[];  // reminders: same rule per item
+  S.forEach(s=>{let b=f(B,s.id),l=f(Lo,s.id);if(!l){if(b&&clKeyEq(s,b))return;res.push(s);return}res.push(b&&clKeyEq(l,b)?s:l)});
+  Lo.forEach(l=>{if(f(S,l.id))return;let b=f(B,l.id);if(b&&clKeyEq(l,b))return;res.push(l)});out.reminders=res}
  return{log:normLog(out),clash}}
 async function clFetch(body){let s=syncParts();let r=await fetch(s.base,{method:'POST',body:JSON.stringify({...body,k:s.k}),headers:{'Content-Type':'text/plain;charset=utf-8'}});return r.json()}
 function clBackup(){if(logState!=='ok'||!logDir)return;let data=JSON.stringify(getLog(),null,1);writeQ=writeQ.then(async()=>{let fh=await logDir.getFileHandle(LOGFILE,{create:true}),w=await fh.createWritable();await w.write(data);await w.close()}).catch(e=>console.error(e))}
-function clApply(l,before){let g=G(),typed=val('docNo').trim();if(before===undefined)before=nextNo(g);LOG=normLog(l);clBackup();
+function clApply(l,before){let g=G(),typed=val('docNo').trim();if(before===undefined)before=nextNo(g);LOG=normLog(l);clBackup();try{remBadge();if($('#remModal').classList.contains('open'))remDraw()}catch(e){}
  if(!openedKey&&(!typed||typed===String(before))){$('#docNo').value=nextNo(g)}
  try{updLogInfo()}catch(e){}try{refreshCompanyList()}catch(e){}try{if($('#logModal').classList.contains('open'))drawLog()}catch(e){}render()}
 async function cloudPush(){if(!cloudOn())return;if(CL.busy)return CL.busy;
@@ -1217,10 +1240,11 @@ async function cloudPush(){if(!cloudOn())return;if(CL.busy)return CL.busy;
     if(m.clash.length)setTimeout(()=>alert('تنبيه: نفس الرقم استُخدم على الجهازين لمستندين مختلفين:\n'+m.clash.join('\n')+'\n\nتم الاحتفاظ بالاثنين في السجل (المكرر عليه علامة ⚠️). غيّر رقم أحدهما ثم سجّله من جديد.'),50);continue}
    CL.pending=true;CL.state='bad';clSave();clStatus();return false}
   return false})().finally(()=>{CL.busy=null});return CL.busy}
-async function cloudPull(loud){if(!cloudOn())return;if(CL.busy)await CL.busy;let prev=nextNo(G());
+async function cloudPull(loud){if(!cloudOn())return;if(CL.busy)await CL.busy;let prev=nextNo(G()),edits0=CL.edits;
  if(CL.pending){await cloudPush();if(CL.pending){if(loud)alert('لا يوجد اتصال بالإنترنت — ستُرفع التغييرات عند عودة الاتصال.');return}}
  try{let ctl=new AbortController(),t=setTimeout(()=>ctl.abort(),8000),s=syncParts();
   let r=await fetch(s.base+'?'+new URLSearchParams({k:s.k,a:'log'}),{cache:'no-store',signal:ctl.signal});clearTimeout(t);let j=await r.json();if(!j.ok)throw new Error(j.error);
+  if(CL.edits!==edits0||CL.pending){CL.pulled=CL.pulled||!!j.data;if(CL.busy)await CL.busy;if(CL.pending)await cloudPush();return}  // something changed here while downloading → merge by sending, never overwrite
   if(!j.data&&!CL.fileLog&&FS_OK&&logState!=='ok'&&logState!=='none'&&!Object.values(getLog().entries).some(a=>a.length)){
    CL.state='seed';clStatus();return}  // wait for the program folder so the current log moves to Drive first
   CL.pulled=true;CL.state='ok';CL.at=clTime();
@@ -1258,6 +1282,58 @@ async function clFlushEdits(){if(clFlushing)return;clFlushing=true;try{let q=awa
  while(q.length){let it=q[0];try{let r=await clFetch({a:'putEdit',path:it.path,data:it.data});if(!r.ok)break}catch(e){break}q.shift();await idbSet('editQ',q)}}finally{clFlushing=false}}
 async function cloudGetEdit(path){let q=(await clEditQ()).find(x=>x.path===path);if(q)return JSON.parse(q.data);let j=await syncGet('edit',{path});return j.data}
 setTimeout(cloudInit,0);
+
+/* ===== التسهيلات: blank table you type into directly on the page ===== */
+const TI_BLANK=()=>({agreement:'',vin:'',reg:'',make:'',model:'',year:'',color:'',area:'',fee:''});
+function tiRefresh(){fillRecords();buildList();colSummary();render()}
+function tiBlank(){let v=prompt('عدد الصفوف في الجدول الفارغ:',rows.length||10);if(v===null)return;v=parseInt(v);if(isNaN(v)||v<1||v>500)return alert('اكتب رقماً من 1 إلى 500.');
+ if(rows.length&&!confirm(`سيتم استبدال القائمة الحالية (${rows.length} صف) بجدول فارغ من ${v} صف. متابعة؟`))return;
+ if(T()!=='invoiceBulk'){$('#type').value='invoiceBulk';$('#type').dispatchEvent(new Event('change'))}
+ rows=Array.from({length:v},TI_BLANK);registerRows(rows);sel=new Set(rows.map((_,i)=>i));cellEdit={};Object.keys(feeOverride).forEach(k=>{if(k.startsWith('bulk:'))delete feeOverride[k]});lastExcelName='جدول فارغ';tiRefresh();
+ setTimeout(()=>alert(`تم إنشاء جدول من ${v} صف. اكتب مباشرة في خانات الجدول على الصفحة.\nلإضافة أو حذف صفوف استخدم «＋ صف» و«－ صف».`),50)}
+function tiRows(d){if(d>0){let i=rows.length;rows.push(TI_BLANK());registerRows([rows[i]]);sel.add(i)}
+ else{if(!rows.length)return;let i=rows.length-1,d0=rowData(rows[i]),ce=cellEdit['r'+i]||{};
+  if((Object.values(d0).some(Boolean)||Object.values(ce).some(x=>String(x).trim())||feeOverride['bulk:r'+i]!==undefined)&&!confirm(`الصف ${i+1} فيه بيانات. حذفه؟`))return;
+  rows.pop();sel.delete(i);delete cellEdit['r'+i];delete feeOverride['bulk:r'+i]}
+ tiRefresh()}
+
+/* ===== التذكيرات: reports still to do — saved with the shared numbers log, so the phone and both laptops see the same list ===== */
+let REM={edit:null,show:'open'};
+const remList=()=>getLog().reminders||[];
+const remToday=()=>new Date().toISOString().slice(0,10);
+function remState(r){if(r.done)return'done';if(!r.due)return'open';let t=remToday();return r.due<t?'late':r.due===t?'today':'open'}
+function remBadge(){let open=remList().filter(r=>!r.done),hot=open.filter(r=>['late','today'].includes(remState(r))).length;
+ $$('.rem-n').forEach(b=>{b.textContent=open.length?String(open.length):'';b.classList.toggle('hot',hot>0)})}
+function remSave(fn){let l=getLog();l.reminders=l.reminders||[];fn(l.reminders);if(putLog(l)){remDraw();remBadge();return true}return false}
+function remOpen(){REM.edit=null;remForm();remDraw();$('#remModal').classList.add('open');if(cloudOn())cloudPull(false).then(()=>{remDraw();remBadge()})}
+function remClose(){$('#remModal').classList.remove('open')}
+function remForm(r){r=r||{};['title','client','car','due','note'].forEach(k=>{$('#rem_'+k).value=r[k]||''});$('#remAdd').textContent=REM.edit?'💾 حفظ التعديل':'＋ إضافة';$('#remCancel').hidden=!REM.edit}
+function remSubmit(){let d={};['title','client','car','due','note'].forEach(k=>d[k]=$('#rem_'+k).value.trim());
+ if(!d.title&&!d.car&&!d.client)return alert('اكتب ما هو التقرير المطلوب (أو السيارة / الجهة).');
+ if(!d.title)d.title=d.car?'تقرير سيارة '+d.car:'تقرير لـ '+d.client;
+ let ok=remSave(L=>{if(REM.edit){let r=L.find(x=>x.id===REM.edit);if(r)Object.assign(r,d,{edited:new Date().toISOString()})}
+  else L.push({id:'m'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),...d,done:false,created:new Date().toISOString()})});
+ if(ok){REM.edit=null;remForm()}}
+function remEdit(id){let r=remList().find(x=>x.id===id);if(!r)return;REM.edit=id;remForm(r);$('#rem_title').focus()}
+function remCancel(){REM.edit=null;remForm()}
+function remDone(id,v){remSave(L=>{let r=L.find(x=>x.id===id);if(r){r.done=v;r.doneAt=v?new Date().toISOString():''}})}
+function remDel(id){let r=remList().find(x=>x.id===id);if(!r||!confirm(`حذف التذكير «${r.title}»؟`))return;remSave(L=>{let i=L.findIndex(x=>x.id===id);if(i>=0)L.splice(i,1)})}
+function remStart(id){let r=remList().find(x=>x.id===id);if(!r)return;remClose();
+ if(document.body.classList.contains('fd-on')){FD.cur=fdBlank();if(r.car)FD.cur.fields.reg=r.car;if(r.client)FD.cur.fields.owner=r.client;fdDraw();fdToast('بدأت سيارة جديدة من التذكير');return}
+ if(r.car&&$('#reg'))$('#reg').value=r.car;if(r.client&&$('#owner'))$('#owner').value=r.client;render();alert('تم وضع بيانات التذكير في التقرير. أكمل التقرير ثم علّم التذكير كمنجز.')}
+const remFmtDate=s=>{if(!s)return'';let[y,m,d]=s.split('-');return`${d}/${m}/${y}`};
+function remDraw(){let L=remList().slice(),f=REM.show;
+ let shown=L.filter(r=>f==='all'||(f==='done'?r.done:!r.done));
+ shown.sort((a,b)=>(a.done-b.done)||((a.due||'9999')<(b.due||'9999')?-1:(a.due||'9999')>(b.due||'9999')?1:0)||(a.created<b.created?-1:1));
+ let open=L.filter(r=>!r.done).length,done=L.length-open;
+ $$('#remTabs button').forEach(b=>b.classList.toggle('on',b.dataset.f===f));$('#remTabs [data-f=open]').textContent=`المطلوبة (${open})`;$('#remTabs [data-f=done]').textContent=`المنجزة (${done})`;
+ let lab={late:'متأخر',today:'اليوم',open:'',done:'تم'};
+ $('#remBody').innerHTML=shown.length?shown.map(r=>{let st=remState(r);return`<div class="rem-item st-${st}"><label class="rem-chk"><input type="checkbox" ${r.done?'checked':''} onchange="remDone('${r.id}',this.checked)" aria-label="منجز"></label>
+  <div class="rem-main"><div class="rem-title">${esc(r.title)}</div><div class="rem-meta">${[r.client&&'🏢 '+esc(r.client),r.car&&'🚗 <bdi>'+esc(r.car)+'</bdi>',r.due&&`📅 ${remFmtDate(r.due)}${lab[st]?` <b class="rem-tag">${lab[st]}</b>`:''}`].filter(Boolean).join(' · ')}</div>${r.note?`<div class="rem-note">${esc(r.note)}</div>`:''}</div>
+  <div class="rem-act">${r.done?'':`<button class="mini" onclick="remStart('${r.id}')">ابدأ</button>`}<button class="mini" onclick="remEdit('${r.id}')">تعديل</button><button class="mini" onclick="remDel('${r.id}')" aria-label="حذف">🗑</button></div></div>`}).join('')
+  :`<div class="hint" style="padding:18px;text-align:center">${f==='done'?'لا توجد تقارير منجزة.':'لا توجد تقارير مطلوبة 👍'}</div>`;
+ $('#remWhere').textContent=cloudOn()?'☁️ القائمة مشتركة بين الهاتف وجهازي الكمبيوتر عبر Google Drive':'القائمة محفوظة على هذا الجهاز فقط — اربط Google Drive لتظهر على كل الأجهزة.'}
+setInterval(remBadge,60000);setTimeout(remBadge,800);
 
 /* ---------------- laptop ---------------- */
 let syncPhoneLists=[],syncLoadedLists=new Set(),lastExcelName='',syncInboxItems=[],syncOpened=new Set(),syncTimer=null;
