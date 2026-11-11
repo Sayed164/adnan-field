@@ -438,6 +438,12 @@ body.fd-on #verBar{position:fixed;top:0;left:0;right:0;z-index:50;box-shadow:0 3
 .set-hello[hidden]{display:none!important}.set-hello{background:#eef4ff;border-bottom:1px solid #d5e2f7;padding:12px 16px;font-size:13px;line-height:1.8;color:#0c2951}
 .set-hello b{font-size:15px;display:block}.set-light{display:flex;align-items:center;gap:8px;padding:9px 4px 2px;font-size:13px;font-weight:bold;color:#071f53}
 .set-act{display:flex;align-items:center;gap:10px;padding:10px 4px;border-bottom:1px solid #eef2f6}.set-act .set-ic{background:#e3f1fb;color:#126ca8}
+.undobar{position:fixed;left:50%;bottom:calc(22px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:200;display:flex;align-items:center;gap:12px;background:#1d1d1f;color:#fff;border-radius:12px;padding:9px 10px 9px 16px;font-size:14px;box-shadow:0 6px 24px #0004;max-width:92vw;direction:rtl}
+.undobar[hidden]{display:none!important}body.fd-on .undobar{bottom:calc(96px + env(safe-area-inset-bottom))}
+.undobar button{background:#0a84ff;color:#fff;border:0;border-radius:8px;padding:8px 14px;font-size:14px;font-weight:700;cursor:pointer;min-height:36px;white-space:nowrap}
+@media print{.undobar{display:none!important}}
+.bk-row{display:flex;align-items:center;gap:10px;padding:9px 4px;border-bottom:1px solid #eef2f6}.bk-row .t{flex:1;min-width:0}.bk-row small{display:block;color:#637180;font-size:12px}
+.bk-why{font-size:11px;border-radius:5px;padding:1px 6px;background:#eef2f6;color:#455666;margin-inline-start:6px}.bk-why.before{background:#fff4d6;color:#8a5a00}
 .set-detail summary{cursor:pointer;font-size:12px;color:#455666;padding:10px 4px 4px}.set-detail .logstatus{margin-top:6px}
 .set-note{font-size:12px;color:#8a5a00;background:#fff4d6;border-radius:6px;padding:5px 8px;margin-top:5px}
 .syncmsg{margin-top:6px}.syncmsg:empty{display:none}
@@ -593,13 +599,15 @@ Through Bank transfer to: Al Salam Bank / IBAN: BH89ALSA00436034150000</textarea
 <div class="modal" id="mlModal" onclick="if(event.target===this)closeManual()"><div class="modal-box" style="width:min(1100px,96vw)"><div class="modal-head"><h3>قائمة سيارات يدوية (بدون Excel)</h3><button class="mini" onclick="closeManual()">إغلاق ✕</button></div><div class="modal-body" id="mlBody"></div><div class="modal-foot"><button class="mini" onclick="mlAdd()">+ إضافة سيارة</button><button class="mini btn-blue" id="mlSend" onclick="mlSend()">📤 إرسال للهاتف</button><button class="mini" onclick="mlUse()">استخدامها هنا (للتقرير والفاتورة)</button><button class="mini" onclick="mlClear()">مسح القائمة</button><span class="hint" style="margin:0">تُحفظ القائمة على هذا الجهاز تلقائياً.</span></div></div></div>
 <div class="modal" id="homeModal" style="z-index:30" onclick="if(event.target===this)homeClose()"><div class="modal-box home-box"><div class="modal-head"><h3>🏠 الرئيسية</h3><button class="mini btn-blue" id="homeX" onclick="homeClose()">ابدأ العمل ✕</button></div><div class="modal-body" id="homeBody"></div><div class="modal-foot"><label class="check" style="margin:0"><input type="checkbox" id="homeAuto" onchange="try{localStorage.setItem('adnanHomeAuto',this.checked?'1':'0')}catch(e){}"> عرض هذه الصفحة عند فتح البرنامج على الكمبيوتر</label></div></div></div>
 <div class="modal" id="setModal" style="z-index:70" onclick="if(event.target===this)setClose()"><div class="modal-box set-box"><div class="modal-head"><h3 id="setTitle">⚙️ ربط هذا الجهاز</h3><span class="hint" id="setSum" style="margin:0"></span><button class="mini" id="setX" onclick="setClose()">إغلاق ✕</button></div><div class="set-hello" id="setHello" hidden></div><div class="modal-body"><div id="setBody"></div><details class="set-detail"><summary>التفاصيل</summary><div id="cloudStatus" class="logstatus na"></div><div class="logstatus na" id="logStatus">جارٍ تحميل السجل…</div></details></div></div></div>
+<div class="undobar" id="undoBar" hidden role="status"><span id="undoMsg"></span><button type="button" id="undoBtn" onclick="undoRun()">↩ تراجع</button></div>
+<div class="modal" id="bkModal" style="z-index:76" onclick="if(event.target===this)bkClose()"><div class="modal-box" style="width:min(560px,96vw)"><div class="modal-head"><h3>🗂 النسخ الاحتياطية لسجل الأرقام</h3><button class="mini" onclick="bkClose()">إغلاق ✕</button></div><div class="modal-body" id="bkBody"></div></div></div>
 <div class="modal" id="qrModal" style="z-index:75" onclick="if(event.target===this)qrClose()"><div class="modal-box" style="width:min(460px,96vw)"><div class="modal-head"><h3>📱 ربط هاتف بـ QR</h3><button class="mini" onclick="qrClose()">إغلاق ✕</button></div><div class="qr-body" id="qrBody"></div></div></div>
 <div class="qrs" id="qrsUI" hidden><video id="qrsV" playsinline muted autoplay></video><div class="qrs-frame"></div><div class="qrs-top"><span>مسح رمز المزامنة</span><button type="button" onclick="qrScanStop()" aria-label="إغلاق">✕</button></div><div class="qrs-msg" id="qrsMsg"></div></div>
 <div class="modal" id="shareModal" style="z-index:80" onclick="if(event.target===this)shareClose()"><div class="modal-box share-box"><div class="modal-head"><h3>📤 الـ PDF جاهز</h3><button class="mini" onclick="shareClose()">إغلاق ✕</button></div><div class="share-body"><div class="share-name" id="shareName"></div><button type="button" class="share-go" id="shareGo" onclick="shareGo()">📤 مشاركة — واتساب، البريد…</button><button type="button" class="share-dl" id="shareDl" onclick="shareSave()">⬇ حفظ في الهاتف</button><div class="hint" style="margin:0">هذا الملف صورة من الصفحات (مثل ملفات «حفظ الكل»)، فلا يمكن تحديد النص فيه. للنسخة النصية استخدم «تصدير PDF».</div></div></div></div>
 <div id="field" class="fd" hidden><header class="fd-bar"><button class="fd-link" onclick="fdClose()">‹ التقرير الكامل</button><b>فحص ميداني</b><span style="display:flex;align-items:center;gap:6px"><button class="fd-link fd-setb" onclick="connTap()" aria-label="الإعداد"><span class="cdot"></span>⚙️<span class="cact" hidden>تفعيل</span><span class="set-n"></span></button><button class="fd-link fd-remb" onclick="remOpen()" aria-label="التذكيرات">⏰<span class="rem-n"></span></button><span class="fd-count" id="fdCount"></span></span></header><div class="fd-scroll" id="fdBody"></div><footer class="fd-foot"><button class="fd-btn2" id="fdSendBtn" onclick="fdSecondary()">إرسال</button><button class="fd-btn" id="fdSaveBtn" onclick="fdSaveCar()">حفظ السيارة والتالي</button></footer><input type="file" id="fdCam" accept="image/*" capture="environment" hidden><div class="cam" id="camUI" hidden><video id="camV" playsinline muted autoplay></video><div class="cam-flash" id="camF"></div><div class="cam-top"><button type="button" id="camX" aria-label="إغلاق">✕</button><span class="cam-count" id="camN"></span><button type="button" id="camT" hidden aria-label="الإضاءة">🔦</button></div><div class="cam-msg" id="camM"></div><div class="cam-q" id="camQ" hidden><span><b id="camQt"></b> <small id="camQn"></small></span><button type="button" id="camQs">تخطي</button></div><div class="cam-bar"><div class="cam-l"><div class="cam-thumb" id="camP"></div><button type="button" class="cam-star" id="camStar" aria-label="تمييز آخر صورة للتقرير">☆</button></div><button type="button" class="cam-shot" id="camS" aria-label="التقاط"></button><button type="button" class="cam-done" id="camD">تم ✓</button></div></div><input type="file" id="fdLib" accept="image/*" multiple hidden><input type="file" id="fdXls" accept=".xlsx,.xls,.csv" hidden></div><div class="fd-toast" id="fdToast" role="status"></div>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script>
-var APP_VERSION='2026-11-11.3';  // shown in the top bar; the page compares it with the one online
+var APP_VERSION='2026-11-11.4';  // shown in the top bar; the page compares it with the one online
 /* asset path; while «حفظ الكل» makes PDFs it uses the copies read from the program folder */
 var WEB_ASSETS=null,ONWEB=location.protocol!=='file:';const AS=n=>((window.__pdfAssets||ONWEB)&&window.ASSET_URLS&&ASSET_URLS[n])||(WEB_ASSETS&&WEB_ASSETS[n])||'vehicle-report-generator-assets/'+n;
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
@@ -1047,7 +1055,13 @@ function closeLog(){$('#logModal').classList.remove('open')}
 function drawLog(){{let q=($('#logQ')||{}).value||'';if(q.trim()){$('#logBody').innerHTML=logSearchHTML(q,'log');return}}let g=$('#logType').value,le=lastEntry(g),list=(getLog().entries[g]||[]).map((e,i)=>[e,i]).reverse();
 $('#logBody').innerHTML=`<div class="hint" style="margin:0 0 8px">الحرف الافتراضي: <b style="color:#d00000">${esc(defLetter(g))}</b> · عدد المسجل: ${list.length} · آخر رقم: <b style="color:#d00000">${le?`<bdi dir="ltr">${esc(fmtNo(le))}</bdi>`:'—'}</b> · الرقم التالي: <b>${nextNo(g)}</b></div>`+(list.length?`<table class="logt"><tr><th>الرقم</th><th>المستند</th><th>التاريخ</th><th>المركبة / المرجع</th><th>الاسم</th><th>المبلغ</th><th>مدفوع</th><th>وقت التسجيل</th><th></th></tr>${list.map(([e,i])=>`<tr><td class="num">${e.dup?'⚠️ ':''}<bdi dir="ltr">${esc(fmtNo(e))}</bdi></td><td>${esc(e.doc||'')}</td><td>${esc(e.date)}</td><td dir="auto">${esc(e.ref)}</td><td dir="auto">${esc(e.name)}</td><td>${money(e.amount)}</td><td><input type="checkbox" style="width:auto" ${e.paid?'checked':''} onchange="togglePaid('${g}',${i},this.checked)"></td><td>${esc(e.saved||'')}</td><td style="white-space:nowrap">${e.file?`<button class="mini btn-blue" onclick="openEdit('${g}',${i})">فتح للتعديل</button> `:''}<button class="mini" onclick="delEntry('${g}',${i})">حذف</button></td></tr>`).join('')}</table>`:'<div class="hint">لا توجد أرقام مسجلة لهذا النوع بعد.</div>')}
 function togglePaid(g,i,v){let l=getLog();l.entries[g][i].paid=v;l.entries[g][i].paidDate=v?todayStr():'';putLog(l);updOverdueBadge()}
-function delEntry(g,i){let l=getLog(),e=l.entries[g][i];if(!confirm(`حذف الرقم ${fmtNo(e)} من السجل؟`))return;l.entries[g].splice(i,1);putLog(l);drawLog();updLogInfo()}
+function delEntry(g,i){let l=getLog(),e=l.entries[g][i];if(!confirm(`حذف الرقم ${fmtNo(e)} من السجل؟`))return;l.entries[g].splice(i,1);if(!putLog(l))return;drawLog();updLogInfo();
+ undoOffer(`حُذف ${fmtNo(e)} من السجل`,()=>{let l=getLog(),t=l.entries[g]=l.entries[g]||[];if(t.some(x=>x.no==e.no))return;t.splice(Math.min(i,t.length),0,e);putLog(l);if($('#logModal').classList.contains('open'))drawLog();updLogInfo()})}
+/* ===== Step 4: undo — a bar with «تراجع» for 10 seconds after deleting a log entry, a reminder, a TI row or a saved car on the phone ===== */
+var UNDO={fn:null,t:null};
+function undoOffer(msg,fn){clearTimeout(UNDO.t);UNDO.fn=fn;$('#undoMsg').textContent=msg;$('#undoBar').hidden=false;UNDO.t=setTimeout(undoHide,10000)}
+function undoHide(){clearTimeout(UNDO.t);UNDO.fn=null;$('#undoBar').hidden=true}
+function undoRun(){let f=UNDO.fn;undoHide();if(f)try{f()}catch(e){console.error(e);alert('تعذر التراجع.')}}
 function setNext(){let g=$('#logType').value,v=prompt(`الرقم التالي لسجل ${GROUPS[g].name}:`,nextNo(g));if(v===null)return;v=parseInt(v);if(isNaN(v)||v<1)return alert('رقم غير صحيح.');let l=getLog();l.counters[g]=v;putLog(l);if(g===G())$('#docNo').value=v;drawLog();render()}
 function setLetter(){let g=$('#logType').value,v=prompt(`الحرف الافتراضي لسجل ${GROUPS[g].name} (الأصلي: ${GROUPS[g].letter}).\nتغيير الحرف لا يغير تسلسل الأرقام.`,defLetter(g));if(v===null)return;v=v.trim().toUpperCase();let l=getLog();if(v&&v!==GROUPS[g].letter)l.letters[g]=v;else delete l.letters[g];putLog(l);if(g===G())$('#docLetter').value=defLetter(g);drawLog();render()}
 function download(name,data,type){let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([data],{type}));a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500)}
@@ -1266,7 +1280,7 @@ $('#field').addEventListener('click',e=>{let b=e.target.closest('[data-act]');if
  else if(a==='shotsOn'){try{localStorage.removeItem('adnanShotList')}catch(e){}fdDrawPics()}
  else if(a==='voice')voiceToggle(b)
  else if(a==='edit'){if(fdHas(c)&&!confirm('السيارة الحالية غير محفوظة وسيتم استبدالها. متابعة؟'))return;FD.cur=JSON.parse(JSON.stringify(FD.saved[i]));fdDraw();$('.fd-scroll').scrollTop=0}
- else if(a==='del'){if(confirm(`حذف ${fdCarName(FD.saved[i])}؟`)){FD.saved.splice(i,1);fdPersist();fdDraw()}}
+ else if(a==='del'){if(confirm(`حذف ${fdCarName(FD.saved[i])}؟`)){let car=FD.saved.splice(i,1)[0];fdPersist();fdDraw();undoOffer(`حُذفت ${fdCarName(car)}`,()=>{if(FD.saved.some(x=>x.id===car.id))return;FD.saved.splice(Math.min(i,FD.saved.length),0,car);fdPersist();fdDraw()})}}
  else if(a==='clearSent'){FD.saved=FD.saved.filter(s=>!s.sent);fdPersist();fdDraw()}
  else if(a==='openHere'){if(!fdHas(c))return fdToast('لا توجد بيانات');fdApply(JSON.parse(JSON.stringify(c)));fdClose()}});
 $('#field').addEventListener('input',e=>{let el=e.target,c=FD.cur;
@@ -1334,7 +1348,8 @@ function clStatus(){try{setDraw()}catch(e){}let el=$('#cloudStatus');if(!el)retu
   wait:['warn','⏳ تغييرات لم تُرفع بعد (لا يوجد إنترنت؟) — ستُرفع تلقائياً'],
   load:['na','☁️ جارٍ تحميل سجل الأرقام من Google Drive…'],
   bad:['bad','تعذر الاتصال بـ Google Drive — الأرقام قد لا تكون آخر نسخة'],
-  seed:['warn','☁️ فعّل مجلد البرنامج مرة واحدة لنقل سجل الأرقام الحالي إلى Google Drive']}[CL.pending?'wait':CL.state]||['na',''];
+  seed:['warn','☁️ فعّل مجلد البرنامج مرة واحدة لنقل سجل الأرقام الحالي إلى Google Drive'],
+  key:['bad','🔑 مفتاح المكتب تغيّر — هذا الجهاز يحتاج رابط المزامنة الجديد (من «⚙️ الإعداد»)']}[CL.state==='key'?'key':CL.pending?'wait':CL.state]||['na',''];
  el.className='logstatus '+m[0];el.innerHTML=`<span>${m[1]}</span>`+(CL.state!=='load'?'<button type="button" onclick="cloudPull(true)">تحديث</button>':'')}
 const clTime=()=>new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
 function clKeyEq(a,b){return JSON.stringify(a)===JSON.stringify(b)}
@@ -1366,10 +1381,10 @@ function clApply(l,before){let g=G(),typed=val('docNo').trim();if(before===undef
 async function cloudPush(){if(!cloudOn())return;if(CL.busy)return CL.busy;
  CL.busy=(async()=>{for(let tries=0;tries<4;tries++){let r;
    try{r=await clFetch({a:'putLog',base:CL.v,data:LOG})}catch(e){CL.pending=true;clSave();clStatus();return false}
-   if(r.ok){CL.v=r.v;CL.base=clClone(LOG);CL.pending=false;CL.state='ok';CL.at=clTime();clSave();clStatus();clFlushEdits();return true}
+   if(r.ok){CL.v=r.v;CL.base=clClone(LOG);CL.pending=false;CL.state='ok';CL.at=clTime();clSave();clStatus();clFlushEdits();dropFlush();return true}
    if(r.error==='conflict'){let prev=nextNo(G()),m=clMerge(CL.base,LOG,r.data);CL.v=r.v;CL.base=normLog(r.data||{});clApply(m.log,prev);clSave();
     if(m.clash.length)setTimeout(()=>alert('تنبيه: نفس الرقم استُخدم على الجهازين لمستندين مختلفين:\n'+m.clash.join('\n')+'\n\nتم الاحتفاظ بالاثنين في السجل (المكرر عليه علامة ⚠️). غيّر رقم أحدهما ثم سجّله من جديد.'),50);continue}
-   CL.pending=true;CL.state='bad';clSave();clStatus();return false}
+   CL.pending=true;if(r.error==='key')keyLost();else CL.state='bad';clSave();clStatus();return false}
   return false})().finally(()=>{CL.busy=null});return CL.busy}
 async function cloudPull(loud){if(!cloudOn())return;if(CL.busy)await CL.busy;let prev=nextNo(G()),edits0=CL.edits;
  if(CL.pending){await cloudPush();if(CL.pending){if(loud)alert('لا يوجد اتصال بالإنترنت — ستُرفع التغييرات عند عودة الاتصال.');return}}
@@ -1384,7 +1399,9 @@ async function cloudPull(loud){if(!cloudOn())return;if(CL.busy)await CL.busy;let
   if(j.v!==CL.v||!clKeyEq(normLog(j.data),getLog())){CL.v=j.v;CL.base=normLog(j.data);clApply(j.data,prev)}
   clSave();clStatus();try{stSync()}catch(e){}
   if(CL.fileLog){let f=CL.fileLog;CL.fileLog=null;cloudAbsorb(f)}}
- catch(e){CL.state='bad';clStatus();if(loud)alert('تعذر تحميل سجل الأرقام من Google Drive. تأكد من الإنترنت.')}}
+ catch(e){if(e&&e.message==='key'){keyLost();if(loud)alert('مفتاح المكتب تغيّر — هذا الجهاز يحتاج رابط المزامنة الجديد.\nافتح «⚙️ الإعداد».');return}CL.state='bad';clStatus();if(loud)alert('تعذر تحميل سجل الأرقام من Google Drive. تأكد من الإنترنت.')}}
+/* the office key was changed on another device: say so, and a laptop with the folder picks up the new link from app-settings.json */
+function keyLost(){let first=CL.state!=='key';CL.state='key';try{clStatus()}catch(e){}if(first&&logState==='ok'&&logDir)setTimeout(()=>appSetAfterFolder(),0)}
 /* entries that exist only in the hard-drive copy (e.g. logged before switching) are added to the shared log */
 /* office images: the laptop (program folder) puts them in Drive; the phone page loads them from there */
 async function clUploadAssets(){if(!cloudOn()||logState!=='ok')return;try{let a=await loadAssets(),names=Object.keys(a);if(!names.length)return;
@@ -1425,7 +1442,9 @@ function tiBlank(){let v=prompt('عدد الصفوف في الجدول الفا�
 function tiRows(d){if(d>0){let i=rows.length;rows.push(TI_BLANK());registerRows([rows[i]]);sel.add(i)}
  else{if(!rows.length)return;let i=rows.length-1,d0=rowData(rows[i]),ce=cellEdit['r'+i]||{};
   if((Object.values(d0).some(Boolean)||Object.values(ce).some(x=>String(x).trim())||feeOverride['bulk:r'+i]!==undefined)&&!confirm(`الصف ${i+1} فيه بيانات. حذفه؟`))return;
-  rows.pop();sel.delete(i);delete cellEdit['r'+i];delete feeOverride['bulk:r'+i]}
+  let row=rows[i],wasSel=sel.has(i),fee=feeOverride['bulk:r'+i],ce0=cellEdit['r'+i];
+  rows.pop();sel.delete(i);delete cellEdit['r'+i];delete feeOverride['bulk:r'+i];
+  undoOffer(`حُذف الصف ${i+1}`,()=>{let j=rows.length;rows.push(row);registerRows([row]);if(wasSel)sel.add(j);if(ce0)cellEdit['r'+j]=ce0;if(fee!==undefined)feeOverride['bulk:r'+j]=fee;tiRefresh()})}
  tiRefresh()}
 
 /* ===== التذكيرات: reports still to do — saved with the shared numbers log, so the phone and both laptops see the same list ===== */
@@ -1448,7 +1467,8 @@ function remSubmit(){let d={};['title','client','car','due','note'].forEach(k=>d
 function remEdit(id){let r=remList().find(x=>x.id===id);if(!r)return;REM.edit=id;remForm(r);$('#rem_title').focus()}
 function remCancel(){REM.edit=null;remForm()}
 function remDone(id,v){remSave(L=>{let r=L.find(x=>x.id===id);if(r){r.done=v;r.doneAt=v?new Date().toISOString():''}})}
-function remDel(id){let r=remList().find(x=>x.id===id);if(!r||!confirm(`حذف التذكير «${r.title}»؟`))return;remSave(L=>{let i=L.findIndex(x=>x.id===id);if(i>=0)L.splice(i,1)})}
+function remDel(id){let r=remList().find(x=>x.id===id);if(!r||!confirm(`حذف التذكير «${r.title}»؟`))return;let at=remList().findIndex(x=>x.id===id),keep=JSON.parse(JSON.stringify(r));
+ if(remSave(L=>{let i=L.findIndex(x=>x.id===id);if(i>=0)L.splice(i,1)}))undoOffer(`حُذف التذكير «${r.title}»`,()=>remSave(L=>{if(!L.some(x=>x.id===keep.id))L.splice(Math.min(at,L.length),0,keep)}))}
 function remStart(id){let r=remList().find(x=>x.id===id);if(!r)return;remClose();
  if(document.body.classList.contains('fd-on')){FD.cur=fdBlank();if(r.car)FD.cur.fields.reg=r.car;if(r.client)FD.cur.fields.owner=r.client;fdDraw();fdToast('بدأت سيارة جديدة من التذكير');return}
  if(r.car&&$('#reg'))$('#reg').value=r.car;if(r.client&&$('#owner'))$('#owner').value=r.client;render();alert('تم وضع بيانات التذكير في التقرير. أكمل التقرير ثم علّم التذكير كمنجز.')}
@@ -1509,14 +1529,14 @@ function fdRedrawKeep(){let sc=$('.fd-scroll'),y=sc?sc.scrollTop:0;fdDraw();if(s
 function fdQueueList(name){let cars=FD.rows.map(r=>rowData(r)),id='L'+Date.now(),now=new Date().toISOString(),nm=`${name||'Excel'} — ${carsTxt(cars.length)} (من الهاتف)`;
  FD.pendingList={id,meta:{name:nm,count:cars.length,created:now,from:'phone'},data:{name:nm,created:now,cars}};FD.listId=id;FD.listName=nm;FD.seenLists=[...new Set([...(FD.seenLists||[]),id])].slice(-30)}
 async function fdSendList(){let L=FD.pendingList;if(!L)return true;try{await syncPost({a:'putList',...L});FD.pendingList=null;try{remAutoFromList(L.data.cars,L.meta.name,L.id)}catch(e){}fdPersist();fdToast(`وصلت قائمة السيارات للمكتب ✓ (${carsTxt(L.meta.count)})`);return true}catch(e){return e&&e.message==='key'?'key':false}}
-async function fdUpload(){if(!syncOn()||fdSyncBusy)return;if(FD.pendingList){fdSyncBusy=true;let r=await fdSendList();fdSyncBusy=false;if(r!==true){fdCount();fdToast(r==='key'?'رابط المزامنة لم يعد صالحاً — اضغط «تغيير» والصق الرابط الجديد':'لا يوجد اتصال — ستُرسل قائمة السيارات تلقائياً عند توفر الإنترنت');return}}
+async function fdUpload(){if(!syncOn()||fdSyncBusy)return;if(FD.pendingList){fdSyncBusy=true;let r=await fdSendList();fdSyncBusy=false;if(r!==true){fdCount();if(r==='key')keyLost();fdToast(r==='key'?'مفتاح المكتب تغيّر — اضغط ⚙️ وامسح رمز QR الجديد من الكمبيوتر':'لا يوجد اتصال — ستُرسل قائمة السيارات تلقائياً عند توفر الإنترنت');return}}
  let todo=FD.saved.filter(s=>!s.sent);if(!todo.length){fdCount();return}fdSyncBusy=true;fdCount();let sent=0,fail=false;
  for(let k=0;k<todo.length;k++){let c=todo[k];if(c.pics[0])await fdMakeThumb(c.pics[0]);$('#fdCount').textContent=`جارٍ الإرسال ${k+1}/${todo.length}…`;
   try{await syncPost({a:'putInsp',id:c.id,meta:{reg:c.fields.reg||'',make:c.fields.make||'',model:c.fields.model||'',year:c.fields.year||'',type:c.type,pics:c.pics.length,date:c.date,priv:!!(c.priv||'').trim(),listId:c.listId||'',listName:c.listName||'',listPos:c.listPos||0,listCount:c.listCount||0,thumb:c.pics[0]?fdThumb(c.pics[0]):''},data:c});c.sent=true;c.sentAt=new Date().toISOString();sent++;fdPersist()}
   catch(e){fail=e&&e.message==='key'?'key':true;break}}
  fdSyncBusy=false;if(!$('#field').hidden)fdRedrawKeep();else fdCount();
  if(sent)fdToast(sent===1?`تم إرسال ${fdCarName(todo[0])} للمكتب ✓`:`تم إرسال ${carsTxt(sent)} للمكتب ✓`);
- if(fail==='key')fdToast('رابط المزامنة لم يعد صالحاً — اضغط «تغيير» والصق الرابط الجديد');else if(fail)fdToast('لا يوجد اتصال — ستُرسل السيارات تلقائياً عند توفر الإنترنت')}
+ if(fail==='key'){keyLost();fdToast('مفتاح المكتب تغيّر — اضغط ⚙️ وامسح رمز QR الجديد من الكمبيوتر')}else if(fail)fdToast('لا يوجد اتصال — ستُرسل السيارات تلقائياً عند توفر الإنترنت')}
 window.addEventListener('online',()=>{fdUpload();if(!$('#field').hidden)fdSyncLists()});
 setInterval(()=>{if(!$('#field').hidden&&syncOn()&&(FD.saved.some(s=>!s.sent)||FD.pendingList))fdUpload()},45000);
 
@@ -1673,7 +1693,7 @@ async function batchSaveAll(){if(!BATCH||batchBusy)return;
  let n=BATCH.cars.length,notReady=BATCH.cars.filter(c=>!['ready','saved'].includes(carSt(c))).length;
  if(cloudOn())await cloudPull(false);
  if(!confirm(`حفظ ${n} تقارير في المجلد:\n${logDir.name} / ${BATCH_ROOT} / ${BATCH.name}\n\nكل سيارة في مجلد باسم ملفها، وفيه: PDF + ملف التعديل + كل الصور.${notReady?`\n\nتنبيه: ${notReady} لم تُحدد كجاهزة بعد.`:''}\nالسيارات بدون رقم تأخذ الرقم التالي في السجل وتُسجل تلقائياً.`))return;
- batchBusy=true;batchKeep();let back=batchIdx,ok=0,fail=[];
+ batchBusy=true;batchKeep();let back=batchIdx,ok=0,fail=[],drop=[];
  try{batchProgress('جارٍ تجهيز أداة PDF…');await pdfLibs();await loadAssets();
   let root=await logDir.getDirectoryHandle(BATCH_ROOT,{create:true}),bdir=await root.getDirectoryHandle(clean(BATCH.name)||'دفعة',{create:true});
   for(let i=0;i<n;i++){let car=BATCH.cars[i];batchProgress(`جارٍ حفظ ${i+1} من ${n}: ${carTitle(car)}`);
@@ -1686,12 +1706,67 @@ async function batchSaveAll(){if(!BATCH||batchBusy)return;
     let ipm=Array.isArray(car.insp.pm)?car.insp.pm:[],ipics=car.insp.pics||[];
     for(let k=0;k<picPool.length;k++){let at=picSel.indexOf(k),tg=ipm[k]&&ipm[k].t&&picPool[k]===ipics[k]?clean(fdShotName(ipm[k].t)):'',pn=`صورة ${String(k+1).padStart(2,'0')}${tg?' - '+tg:''}${at>=0?` - في التقرير ${at+1}`:''}.jpg`;await writeFile(cdir,pn,dataURLtoBlob(picPool[k]))}
     let no=val('docNo').trim(),L=val('docLetter').trim().toUpperCase();window.__batchLog=true;logDoc(true);window.__batchLog=false;
-    car.logged={g,no,letter:L};car.saved=true;car.status='saved';car.folder=name;ok++;await batchSaveNow()}
+    car.logged={g,no,letter:L};car.saved=true;car.status='saved';car.folder=name;ok++;
+    if(car.insp.id&&!car.dropped&&await batchFolderComplete(cdir,name,car)){car.dropped=new Date().toISOString();drop.push(car.insp.id)}
+    await batchSaveNow()}
    catch(e){console.error(e);window.__batchLog=false;fail.push(carTitle(car))}}
-  await writeQ.catch(()=>{})}
+  await writeQ.catch(()=>{});if(drop.length)await inspDrop(drop)}
  catch(e){console.error(e);alert('تعذر الحفظ: '+(e&&e.message||e)+(window.html2canvas?'':'\nأداة PDF تحتاج اتصال إنترنت.'))}
  finally{batchBusy=false;batchProgress('');if(back>=0&&BATCH.cars[back]){batchIdx=-1;await batchOpenCar(back)}else{batchIdx=-1;batchBar()}batchDrawSaved();if($('#bw').classList.contains('open'))batchShow()}
- if(ok)alert(`تم حفظ ${ok} من ${n} تقارير في:\n${logDir.name} / ${BATCH_ROOT} / ${BATCH.name}`+(fail.length?`\n\nتعذر حفظ: ${fail.join('، ')}`:'')+'\n\nلإصدار الفاتورة لنفس السيارات اضغط «🧾 Invoice التسهيلات» في شريط الدفعة.')}
+ if(ok)alert(`تم حفظ ${ok} من ${n} تقارير في:\n${logDir.name} / ${BATCH_ROOT} / ${BATCH.name}`+(fail.length?`\n\nتعذر حفظ: ${fail.join('، ')}`:'')+(drop.length?`\n\n🗑 حُذف ${carsTxt(drop.length)} من Google Drive لأن التقرير وكل الصور صارت في المجلد (تبقى في سلة Drive 30 يوماً).`:'')+'\n\nلإصدار الفاتورة لنفس السيارات اضغط «🧾 Invoice التسهيلات» في شريط الدفعة.')}
+
+/* ===== Step 4: an inspection leaves Google Drive only after its folder holds the PDF, the edit file and every photo ===== */
+async function batchFolderComplete(cdir,name,car){try{
+ let pdf=await (await cdir.getFileHandle(name+'.pdf')).getFile(),js=await (await cdir.getFileHandle(name+'.json')).getFile();if(!pdf.size||!js.size)return false;
+ if(!(car.insp.pics||[]).every(p=>picPool.includes(p)))return false;
+ let jpg=0;for await(const [n,h] of cdir.entries())if(h.kind==='file'&&/\.jpg$/i.test(n)&&(await h.getFile()).size)jpg++;
+ return jpg>=picPool.length}catch(e){console.error(e);return false}}
+const DROPQ='adnanDropQ';
+function dropQ(){try{return JSON.parse(localStorage.getItem(DROPQ)||'[]')||[]}catch(e){return[]}}
+function dropQSet(q){try{if(q.length)localStorage.setItem(DROPQ,JSON.stringify(q));else localStorage.removeItem(DROPQ)}catch(e){}}
+async function inspDrop(ids){dropQSet([...new Set([...dropQ(),...ids])]);await dropFlush()}
+var dropBusy=false;
+async function dropFlush(){if(dropBusy||!syncOn())return;let q=dropQ();if(!q.length)return;dropBusy=true;
+ try{while(q.length){try{await syncPost({a:'delInsp',id:q[0]})}catch(e){break}q.shift();dropQSet(q)}}finally{dropBusy=false}}
+window.addEventListener('online',()=>setTimeout(dropFlush,1500));setTimeout(dropFlush,4000);
+
+/* ===== Step 4: backups of the numbers log (one a week in Drive by itself, plus «نسخة الآن»; restore from the list) ===== */
+var BK={items:null,busy:false};
+const BK_WHY={week:'أسبوعية',manual:'يدوية',before:'قبل الاسترجاع'};
+const bkWhen=s=>{let d=new Date(s);return isNaN(d)?'':d.toLocaleDateString('en-GB')+' '+d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})};
+async function bkLoad(){if(!syncOn())return;try{let j=await syncGet('backups');BK.items=j.items||[]}catch(e){}}
+function bkRowHTML(){let it=BK.items,last=it&&it[0];
+ return`<div class="set-act"><span class="set-ic">🗂</span><div class="set-tx"><b>نسخ احتياطية لسجل الأرقام</b><small>${it===null?'نسخة تلقائية كل أسبوع في Google Drive.':last?`نسخة تلقائية كل أسبوع · آخر نسخة: <bdi dir="ltr">${bkWhen(last.at)}</bdi> · عدد النسخ ${it.length}`:'نسخة تلقائية كل أسبوع — لا توجد نسخ بعد (تُحفظ الأولى عند تسجيل أول رقم).'}</small></div><span class="set-btns"><button type="button" class="mini" id="bkNowBtn" onclick="bkNow()">💾 نسخة الآن</button><button type="button" class="mini" id="bkOpenBtn" onclick="bkOpen()">استرجاع…</button></span></div>`}
+async function bkNow(){if(BK.busy)return;BK.busy=true;try{if(CL.pending)await cloudPush();await syncPost({a:'backupNow'});await bkLoad();setDraw();if($('#bkModal').classList.contains('open'))bkDraw();alert('تم حفظ نسخة من سجل الأرقام في Google Drive ✓')}
+ catch(e){alert(e&&e.message==='nolog'?'لا يوجد سجل أرقام في Google Drive بعد.':'تعذر حفظ النسخة. تأكد من الإنترنت.')}finally{BK.busy=false}}
+async function bkOpen(){$('#bkModal').classList.add('open');$('#bkBody').innerHTML='<div class="hint">جارٍ التحميل…</div>';await bkLoad();bkDraw()}
+function bkClose(){$('#bkModal').classList.remove('open')}
+function bkDraw(){let it=BK.items;
+ $('#bkBody').innerHTML=`<div class="hint" style="margin:0 0 8px">تُحفظ نسخة تلقائياً كل أسبوع في Google Drive (مجلد «نسخ احتياطية»)، ويُحتفظ بآخر 30 نسخة. «استرجاع» يعيد سجل الأرقام والتذكيرات والشركات كما كانت وقت النسخة، على كل الأجهزة. قبل الاسترجاع تُحفظ نسخة من السجل الحالي، فيمكنك التراجع عنه.</div>`+
+ (it===null?'<div class="hint">تعذر تحميل القائمة. تأكد من الإنترنت.</div>':!it.length?'<div class="hint">لا توجد نسخ بعد.</div>':
+  it.map(x=>`<div class="bk-row"><span class="t"><b dir="ltr">${esc(bkWhen(x.at))}</b><span class="bk-why ${esc(x.why)}">${esc(BK_WHY[x.why]||'')}</span><small>${x.n} مستند مسجل</small></span><button type="button" class="mini" data-bk="${esc(x.name)}" onclick="bkRestore(this.dataset.bk)">استرجاع</button></div>`).join(''))+
+ `<div style="margin-top:10px"><button type="button" class="mini" onclick="bkNow()">💾 نسخة الآن</button></div>`}
+async function bkRestore(name){let x=(BK.items||[]).find(i=>i.name===name);if(!x)return;
+ if(!confirm(`استرجاع سجل الأرقام كما كان في ${bkWhen(x.at)}؟\n\nالأرقام والتذكيرات المسجلة بعد هذا الوقت ستختفي من السجل على كل الأجهزة.\n(نسخة من السجل الحالي تُحفظ أولاً، فيمكنك التراجع.)`))return;
+ if(!confirm('تأكيد أخير: استرجاع هذه النسخة الآن؟'))return;
+ if(BK.busy)return;BK.busy=true;
+ try{if(CL.pending){await cloudPush();if(CL.pending)throw new Error('offline')}if(CL.busy)await CL.busy;
+  let prev=nextNo(G()),r=await syncPost({a:'restore',name});CL.v=r.v;CL.base=normLog(r.data);CL.pending=false;CL.state='ok';CL.at=clTime();CL.edits++;clApply(r.data,prev);clSave();clStatus();
+  await bkLoad();bkDraw();setDraw();alert(`تم استرجاع سجل الأرقام ✓\nالرقم التالي في «${GROUPS[G()].name}»: ${nextNo(G())}`)}
+ catch(e){alert(e&&e.message==='offline'?'لا يوجد اتصال بالإنترنت — لم يتم الاسترجاع.':'تعذر الاسترجاع. تأكد من الإنترنت.')}finally{BK.busy=false}}
+
+/* ===== Step 4: change the office key (if the sync link leaked). The old link stops at once. ===== */
+async function keyChange(){if(!syncOn())return;
+ if(FS_OK&&logState!=='ok')return alert('اختر مجلد البرنامج أولاً («📁 اختيار مجلد البرنامج») — المفتاح الجديد يُحفظ فيه، فيتصل الكمبيوتر الآخر باختيار المجلد فقط.');
+ if(!confirm('تغيير مفتاح المكتب؟\n\nاستخدمه إذا وصل رابط المزامنة أو صورة رمز QR لشخص آخر.\nبعد التغيير يتوقف الرابط القديم فوراً:\n• هذا الكمبيوتر يتصل بالمفتاح الجديد تلقائياً، ويُحفظ في مجلد البرنامج.\n• الكمبيوتر الآخر: يكفي اختيار مجلد البرنامج.\n• الهاتف: امسح رمز QR الجديد (يظهر بعد التغيير).'))return;
+ if(!confirm('تأكيد: تغيير المفتاح الآن؟'))return;
+ let b=$('#keyBtn');if(b){b.disabled=true;b.textContent='جارٍ التغيير…'}
+ try{try{if(CL.pending)await cloudPush();await clFlushEdits();await dropFlush()}catch(e){}  // send what waits with the old key first
+  let r;try{r=await syncPost({a:'newKey'})}catch(e){return alert('تعذر تغيير المفتاح. تأكد من الإنترنت.')}
+  let s=syncParts(),u=s.base+'?k='+encodeURIComponent(r.k);
+  await syncApply(u,null,{trusted:true});setDraw();
+  alert('تم تغيير مفتاح المكتب ✓\nالرابط القديم لم يعد يعمل.'+(logState==='ok'?'\nالرابط الجديد محفوظ في مجلد البرنامج.':'')+'\n\nالآن امسح رمز QR الجديد من الهاتف.');qrShow()}
+ finally{if(b){b.disabled=false;b.textContent='تغيير المفتاح'}}}
 
 batchDrawSaved();
 syncDeskInit();
@@ -1775,7 +1850,9 @@ function setItems(){let it=[],lg=logState,cs=CL.state,ph=setPhone(),scan=ph&&qrC
   :{ok:false,soft:lg==='need',t:'مجلد البرنامج',d:lg==='need'?'Chrome يطلب الإذن مرة أخرى بعد فتح البرنامج — اضغط «تفعيل».':lg==='bad'?`ملف ${LOGFILE} في المجلد لا يمكن قراءته.`:'اختر مجلد البرنامج على الهارد (الذي فيه vehicle-report-generator.html). إذا كان رابط المزامنة محفوظاً فيه، يتصل Google Drive تلقائياً.',
    fix:lg==='need'?['تفعيل','connectLog(false).then(setDraw)']:['📁 اختيار مجلد البرنامج','connectLog(true).then(setDraw)']});
  let note=window.APPSET&&APPSET.bad?`<div class="set-note">⚠️ رابط المزامنة المحفوظ في مجلد البرنامج لا يعمل (ربما تغيّر المفتاح). الصق الرابط الصحيح${scan?' أو امسح QR':''} — سيُحفظ في المجلد بدلاً منه.</div>`:'';
- it.push(syncOn()?{ok:true,t:'Google Drive',d:'متصل — رابط المزامنة محفوظ على هذا الجهاز'+(!ph&&lg==='ok'?' وفي مجلد البرنامج.':'.')+note,fix2:['تغيير الرابط','syncConnect(setConnected)','syncConnBtn']}
+ if(syncOn()&&CL.state==='key')it.push({ok:false,t:'Google Drive',d:'🔑 مفتاح المكتب تغيّر، فالرابط المحفوظ على هذا الجهاز لم يعد يعمل. '+(ph?'امسح رمز QR الجديد من شاشة الكمبيوتر («⚙️ الإعداد» ← «📱 ربط هاتف بـ QR»).':lg==='ok'?'اختر مجلد البرنامج مرة أخرى (الرابط الجديد يُحفظ فيه عند تغيير المفتاح)، أو الصق الرابط الجديد.':'اختر مجلد البرنامج — الرابط الجديد محفوظ فيه. أو الصق الرابط الجديد.')+note,
+   fix:scan?['📷 مسح QR','qrScan(setConnected)']:!ph?['📁 اختيار مجلد البرنامج','connectLog(true).then(setDraw)']:paste,fix2:scan||!ph?paste:null});
+ else it.push(syncOn()?{ok:true,t:'Google Drive',d:'متصل — رابط المزامنة محفوظ على هذا الجهاز'+(!ph&&lg==='ok'?' وفي مجلد البرنامج.':'.')+note,fix2:['تغيير الرابط','syncConnect(setConnected)','syncConnBtn']}
   :{ok:false,t:'Google Drive',d:(ph?'امسح رمز QR من شاشة الكمبيوتر («⚙️ الإعداد» ← «📱 ربط هاتف بـ QR»).':lg==='ok'?'أول كمبيوتر فقط: الصق رابط المزامنة مرة واحدة — بعدها يُحفظ في مجلد البرنامج، والكمبيوتر الآخر يتصل باختيار المجلد فقط.':'يتصل تلقائياً بعد اختيار مجلد البرنامج. أو الصق رابط المزامنة.')+note,
    fix:scan?['📷 مسح QR','qrScan(setConnected)']:paste,fix2:scan?paste:null});
  if(syncOn()){let ok=cs==='ok'&&!CL.pending;
@@ -1792,6 +1869,7 @@ function setItems(){let it=[],lg=logState,cs=CL.state,ph=setPhone(),scan=ph&&qrC
 /* one status light: g = all connected · y = waiting (offline, not uploaded, folder permission) · r = needs you */
 function connLevel(){let it;try{it=setItems()}catch(e){return['y','']}
  if(!syncOn())return['r','غير مربوط بـ Google Drive — اضغط للربط'];
+ if(CL.state==='key')return['r','مفتاح المكتب تغيّر — اضغط لربط هذا الجهاز من جديد'];
  if(!setPhone()&&FS_OK&&logState==='need')return['y','مجلد البرنامج يحتاج إذن — اضغط «تفعيل»','need'];
  if(!navigator.onLine)return['y','لا يوجد إنترنت — التغييرات تُرفع عند عودته'];
  if(CL.pending)return['y','تغييرات لم تُرفع بعد'];
@@ -1808,6 +1886,7 @@ async function connTap(){let lv=connLevel();if(lv[2]==='need'){await connectLog(
 function setDraw(){setBadge();let m=$('#setModal');if(!m||!m.classList.contains('open'))return;let it=setItems(),ph=setPhone(),lv=connLevel();
  let h=it.map((x,i)=>`<div class="set-item ${x.ok===true?'ok':x.ok===false?'no':'wait'}"><span class="set-ic">${x.ok===true?'✓':x.ok===false?(i+1):'…'}</span><div class="set-tx"><b>${x.t}</b><small>${x.d}</small></div><span class="set-btns">${x.ok!==true?setBtn(x.fix,'btn-blue'):''}${setBtn(x.fix2)}</span></div>`).join('');
  if(!ph&&syncOn())h+=`<div class="set-act"><span class="set-ic">📱</span><div class="set-tx"><b>ربط هاتف</b><small>اعرض رمز QR ثم امسحه من الهاتف — لا حاجة لنسخ أي رابط.</small></div><span class="set-btns"><button type="button" class="mini btn-blue" onclick="qrShow()">📱 ربط هاتف بـ QR</button></span></div>`;
+ if(!ph&&syncOn()&&CL.state!=='key'&&!SET.welcome)h+=bkRowHTML()+`<div class="set-act"><span class="set-ic">🔑</span><div class="set-tx"><b>مفتاح المكتب</b><small>إذا وصل رابط المزامنة أو صورة رمز QR لشخص آخر، غيّر المفتاح. الرابط القديم يتوقف فوراً، والأجهزة الأخرى تُربط من جديد (الكمبيوتر باختيار المجلد، الهاتف بمسح QR).</small></div><span class="set-btns"><button type="button" class="mini" id="keyBtn" onclick="keyChange()">تغيير المفتاح</button></span></div>`;
  h+=`<div class="set-light"><span class="cdot ${lv[0]}"></span>${esc(lv[1])}</div>`;
  h+=`<div class="set-info">📶 العمل بدون إنترنت: ${ONWEB?(navigator.serviceWorker&&navigator.serviceWorker.controller?'جاهز على هذا الجهاز':'يتفعّل بعد فتح الرابط مرة ثانية'):'الملف على الهارد يعمل دائماً بدون إنترنت'} · النسخة <span dir="ltr">v${APP_VERSION}</span>${ONWEB&&!ph?'<br>💡 اقتراح: في Chrome يمكنك تثبيت البرنامج كتطبيق (زر التثبيت في شريط العنوان) ليفتح من سطح المكتب.':''}</div>`;
  $('#setBody').innerHTML=h;
@@ -1820,7 +1899,7 @@ async function setAssetsCheck(force){if(!syncOn()){SET.assets=null;return}
  if(!force&&WEB_ASSETS&&Object.keys(WEB_ASSETS).length){SET.assets=Object.keys(WEB_ASSETS);return}
  if(!force&&SET.assets&&SET_NEED.every(x=>SET.assets.includes(x))&&Date.now()-SET.assetsAt<5*60e3)return;
  try{let j=await syncGet('assets');SET.assets=Object.keys(j.items||{});SET.assetsAt=Date.now()}catch(e){SET.assets=SET.assets||null}}
-async function setOpen(welcome){SET.welcome=!!welcome;$('#setModal').classList.add('open');setDraw();await setAssetsCheck(false);setDraw()}
+async function setOpen(welcome){SET.welcome=!!welcome;$('#setModal').classList.add('open');setDraw();if(!welcome&&!setPhone())bkLoad().then(setDraw);await setAssetsCheck(false);setDraw()}
 /* closing the first-run welcome = «تخطي»: it is not shown again on this device (the light stays red) */
 function setClose(done){if(SET.welcome&&!done){try{localStorage.setItem('adnanWelcomeSkip','1')}catch(e){}}SET.welcome=false;$('#setModal').classList.remove('open');setBadge()}
 function setConnected(){setDraw();try{syncDeskStatus();syncInboxRefresh(true)}catch(e){}setAssetsCheck(true).then(setDraw)}
