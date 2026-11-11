@@ -417,6 +417,19 @@ body.fd-on #verBar{position:fixed;top:0;left:0;right:0;z-index:50;box-shadow:0 3
 .qrs-frame{position:absolute;top:50%;left:50%;width:min(64vw,280px);aspect-ratio:1;transform:translate(-50%,-50%);border:3px solid #fff;border-radius:16px;box-shadow:0 0 0 999px #0006}
 .qrs-msg{position:absolute;bottom:calc(30px + env(safe-area-inset-bottom));left:14px;right:14px;text-align:center;color:#fff;font-size:15px;font-weight:bold;text-shadow:0 1px 3px #000}
 @media print{.verbar,.qrs,#setModal,#qrModal{display:none!important}}
+/* step 2B: home screen, search, auto reminders */
+.home-box{width:min(1100px,96vw)!important}.home-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.home-card{border:1px solid #dbe2e9;border-radius:12px;padding:12px;background:#fafcfe;display:flex;flex-direction:column;gap:6px;min-width:0}
+.home-card h4{margin:0;font-size:14px;color:#071f53;display:flex;align-items:center;gap:6px}.home-card h4 .n{margin-inline-start:auto;font-size:20px}
+.home-card.hot{border-color:#f3b4b4;background:#fff7f7}.home-card.hot h4 .n{color:#c00}
+.home-row{display:flex;align-items:center;gap:6px;font-size:12px;padding:5px 0;border-top:1px solid #eef1f4}.home-row .t{flex:1;min-width:0;overflow-wrap:anywhere;line-height:1.5}
+@media(min-width:1001px){.bar .buttons{gap:6px}.bar .buttons button{white-space:nowrap;padding:9px 10px;font-size:12.5px}.bar b small{display:block;margin:2px 0 0}}
+.home-row small{color:#637180}.home-empty{font-size:12px;color:#8a96a3;padding:4px 0}.home-btns{display:flex;gap:6px;flex-wrap:wrap;margin-top:auto;padding-top:4px}
+.home-light{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:bold;color:#071f53;margin-bottom:10px;flex-wrap:wrap}
+.home-search{margin-top:14px}.home-search input,#logQ{font-size:14px;padding:9px 11px}#logQ{width:min(320px,60vw)}
+.srch-t td.num{color:#d00000;font-weight:bold;white-space:nowrap}.srch-t mark{background:#fff2a8;padding:0}
+.rem-auto{background:#e3f1fb!important;color:#126ca8!important;margin-right:4px}.rem-autodone{color:#1d6b35;font-size:11.5px}
+@media print{#homeModal{display:none!important}}
 /* step 2A: one status light, one connection screen, phone welcome */
 .cdot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-left:6px;vertical-align:middle;background:#9aa5af;box-shadow:0 0 0 2px #fff6}
 .cdot.g{background:#30b552}.cdot.y{background:#f0b400}.cdot.r{background:#e5342a}
@@ -436,7 +449,7 @@ body.fd-on #verBar{position:fixed;top:0;left:0;right:0;z-index:50;box-shadow:0 3
 .fd-wel .fd-btn{width:100%;font-size:18px;padding:17px}.fd-wel .fd-btn2{width:100%;margin-top:10px}
 .fd-wel .fd-link{display:block;margin:16px auto 0;font-size:14px;color:#6e6e73}
 </style></head><body>
-<header class="bar"><b>مولد تقارير عدنان العلوي <small>ADNAN AL ALAWI · <span id="appVer">v2026-11-11</span></small></b><div class="buttons"><button id="connLight" onclick="connTap()" title="ربط هذا الجهاز"><span class="cdot"></span>⚙️ الإعداد<span class="cact" hidden>تفعيل</span><span class="set-n"></span></button><button id="inboxBadge" class="btn-inbox" style="display:none" onclick="document.querySelector('#syncInbox').scrollIntoView({behavior:'smooth',block:'center'})"></button><button onclick="remOpen()">⏰ التذكيرات <span class="rem-n"></span></button><button onclick="fdOpen()">📱 فحص ميداني</button><button onclick="saveDraft()">حفظ مسودة</button><button onclick="loadDraft()">استرجاع مسودة</button><button id="overdueBadge" class="badge-over" style="display:none" onclick="openAccounts('over')"></button><button onclick="openAccounts()">الحسابات</button><button onclick="openLog()">السجل</button><button onclick="printReport()">تصدير PDF</button></div></header>
+<header class="bar"><b>مولد تقارير عدنان العلوي <small>ADNAN AL ALAWI · <span id="appVer">v2026-11-11.2</span></small></b><div class="buttons"><button id="connLight" onclick="connTap()" title="ربط هذا الجهاز"><span class="cdot"></span>⚙️ الإعداد<span class="cact" hidden>تفعيل</span><span class="set-n"></span></button><button id="homeBtn" onclick="homeOpen()">🏠 الرئيسية</button><button id="inboxBadge" class="btn-inbox" style="display:none" onclick="document.querySelector('#syncInbox').scrollIntoView({behavior:'smooth',block:'center'})"></button><button onclick="remOpen()">⏰ التذكيرات <span class="rem-n"></span></button><button onclick="fdOpen()">📱 فحص ميداني</button><button onclick="saveDraft()">حفظ مسودة</button><button onclick="loadDraft()">استرجاع مسودة</button><button id="overdueBadge" class="badge-over" style="display:none" onclick="openAccounts('over')"></button><button onclick="openAccounts()">الحسابات</button><button onclick="openLog()">السجل</button><button onclick="printReport()">تصدير PDF</button></div></header>
 <div id="verBar" class="verbar" hidden></div>
 <main class="main"><aside class="panel"><h1>تقرير جديد</h1><form class="form" id="f" onsubmit="return false">
 <div class="sec privsec" id="privSec"><h2>📝 ملاحظاتي <small>— للتذكير فقط، لا تظهر في التقرير ولا في PDF</small></h2><textarea id="privNotes" placeholder="ملاحظات تريد تذكّرها أثناء كتابة التقرير (تصل أيضاً من الهاتف)"></textarea></div>
@@ -539,17 +552,18 @@ Through Bank transfer to: Al Salam Bank / IBAN: BH89ALSA00436034150000</textarea
 <div class="modal rem-modal" id="remModal" onclick="if(event.target===this)remClose()"><div class="modal-box rem-box"><div class="modal-head"><h3>⏰ تقارير مطلوبة</h3><span class="rem-tabs" id="remTabs"><button type="button" data-f="open" onclick="REM.show='open';remDraw()">المطلوبة</button><button type="button" data-f="done" onclick="REM.show='done';remDraw()">المنجزة</button><button type="button" data-f="all" onclick="REM.show='all';remDraw()">الكل</button></span><button class="mini" onclick="remClose()">إغلاق ✕</button></div>
 <div class="rem-form"><input id="rem_title" placeholder="التقرير المطلوب (مثال: تثمين عربي)" class="rem-wide"><input id="rem_client" placeholder="الجهة / العميل"><input id="rem_car" placeholder="رقم السيارة"><label class="rem-due">الموعد<input id="rem_due" type="date"></label><input id="rem_note" placeholder="ملاحظة (اختياري)" class="rem-wide"><div class="rem-btns"><button type="button" class="mini btn-blue" id="remAdd" onclick="remSubmit()">＋ إضافة</button><button type="button" class="mini" id="remCancel" onclick="remCancel()" hidden>إلغاء</button></div></div>
 <div class="modal-body" id="remBody"></div><div class="modal-foot"><span class="hint" id="remWhere" style="margin:0"></span></div></div></div>
-<div class="modal" id="logModal" onclick="if(event.target===this)closeLog()"><div class="modal-box"><div class="modal-head"><h3>سجل الأرقام</h3><select id="logType" onchange="drawLog()"></select><button class="mini" onclick="setNext()">تعديل الرقم التالي</button><button class="mini" onclick="setLetter()">تغيير الحرف الافتراضي</button><button class="mini" onclick="closeLog()">إغلاق ✕</button></div><div class="modal-body" id="logBody"></div><div class="modal-foot"><button class="mini btn-blue" onclick="exportLog()">تصدير السجل Excel (CSV)</button><label class="upload mini">فتح ملف محفوظ<input type="file" accept=".json" onchange="openEditFile(event)"></label><span class="hint" style="margin:0" id="logWhere"></span></div></div></div>
+<div class="modal" id="logModal" onclick="if(event.target===this)closeLog()"><div class="modal-box"><div class="modal-head"><h3>سجل الأرقام</h3><input id="logQ" type="search" placeholder="🔎 ابحث برقم السيارة أو العميل" oninput="drawLog()"><select id="logType" onchange="drawLog()"></select><button class="mini" onclick="setNext()">تعديل الرقم التالي</button><button class="mini" onclick="setLetter()">تغيير الحرف الافتراضي</button><button class="mini" onclick="closeLog()">إغلاق ✕</button></div><div class="modal-body" id="logBody"></div><div class="modal-foot"><button class="mini btn-blue" onclick="exportLog()">تصدير السجل Excel (CSV)</button><label class="upload mini">فتح ملف محفوظ<input type="file" accept=".json" onchange="openEditFile(event)"></label><span class="hint" style="margin:0" id="logWhere"></span></div></div></div>
 <div class="modal" id="colModal" style="z-index:50" onclick="if(event.target===this)closeCols()"><div class="modal-box" style="width:min(680px,96vw)"><div class="modal-head"><h3>أعمدة ملف Excel</h3><button class="mini" onclick="closeCols()">إغلاق ✕</button></div><div class="modal-body" id="colBody"></div><div class="modal-foot"><button class="mini btn-blue" onclick="saveCols()">حفظ</button><button class="mini" onclick="autoCols()">إعادة التعرف التلقائي</button></div></div></div>
-<div class="modal bw" id="bw" onclick="if(event.target===this)this.classList.remove('open')"><div class="modal-box bw-box"><div class="modal-head"><h3 id="bwTitle">الدفعة</h3><button class="mini btn-green" onclick="batchSaveAll()">💾 حفظ الكل في مجلد</button><button class="mini" onclick="document.getElementById('bw').classList.remove('open')">إغلاق ✕</button></div><div class="modal-body" id="bwBody"></div></div></div><div class="bprog" id="bprog" hidden></div>
+<div class="modal bw" id="bw" onclick="if(event.target===this)this.classList.remove('open')"><div class="modal-box bw-box"><div class="modal-head"><h3 id="bwTitle">الدفعة</h3><button class="mini btn-green" onclick="batchSaveAll()">💾 حفظ الكل في مجلد</button><button class="mini btn-blue" onclick="batchInvoice()">🧾 Invoice التسهيلات لهذه الدفعة</button><button class="mini" onclick="document.getElementById('bw').classList.remove('open')">إغلاق ✕</button></div><div class="modal-body" id="bwBody"></div></div></div><div class="bprog" id="bprog" hidden></div>
 <div class="modal" id="mlModal" onclick="if(event.target===this)closeManual()"><div class="modal-box" style="width:min(1100px,96vw)"><div class="modal-head"><h3>قائمة سيارات يدوية (بدون Excel)</h3><button class="mini" onclick="closeManual()">إغلاق ✕</button></div><div class="modal-body" id="mlBody"></div><div class="modal-foot"><button class="mini" onclick="mlAdd()">+ إضافة سيارة</button><button class="mini btn-blue" id="mlSend" onclick="mlSend()">📤 إرسال للهاتف</button><button class="mini" onclick="mlUse()">استخدامها هنا (للتقرير والفاتورة)</button><button class="mini" onclick="mlClear()">مسح القائمة</button><span class="hint" style="margin:0">تُحفظ القائمة على هذا الجهاز تلقائياً.</span></div></div></div>
+<div class="modal" id="homeModal" style="z-index:30" onclick="if(event.target===this)homeClose()"><div class="modal-box home-box"><div class="modal-head"><h3>🏠 الرئيسية</h3><button class="mini btn-blue" id="homeX" onclick="homeClose()">ابدأ العمل ✕</button></div><div class="modal-body" id="homeBody"></div><div class="modal-foot"><label class="check" style="margin:0"><input type="checkbox" id="homeAuto" onchange="try{localStorage.setItem('adnanHomeAuto',this.checked?'1':'0')}catch(e){}"> عرض هذه الصفحة عند فتح البرنامج على الكمبيوتر</label></div></div></div>
 <div class="modal" id="setModal" style="z-index:70" onclick="if(event.target===this)setClose()"><div class="modal-box set-box"><div class="modal-head"><h3 id="setTitle">⚙️ ربط هذا الجهاز</h3><span class="hint" id="setSum" style="margin:0"></span><button class="mini" id="setX" onclick="setClose()">إغلاق ✕</button></div><div class="set-hello" id="setHello" hidden></div><div class="modal-body"><div id="setBody"></div><details class="set-detail"><summary>التفاصيل</summary><div id="cloudStatus" class="logstatus na"></div><div class="logstatus na" id="logStatus">جارٍ تحميل السجل…</div></details></div></div></div>
 <div class="modal" id="qrModal" style="z-index:75" onclick="if(event.target===this)qrClose()"><div class="modal-box" style="width:min(460px,96vw)"><div class="modal-head"><h3>📱 ربط هاتف بـ QR</h3><button class="mini" onclick="qrClose()">إغلاق ✕</button></div><div class="qr-body" id="qrBody"></div></div></div>
 <div class="qrs" id="qrsUI" hidden><video id="qrsV" playsinline muted autoplay></video><div class="qrs-frame"></div><div class="qrs-top"><span>مسح رمز المزامنة</span><button type="button" onclick="qrScanStop()" aria-label="إغلاق">✕</button></div><div class="qrs-msg" id="qrsMsg"></div></div>
 <div id="field" class="fd" hidden><header class="fd-bar"><button class="fd-link" onclick="fdClose()">‹ التقرير الكامل</button><b>فحص ميداني</b><span style="display:flex;align-items:center;gap:6px"><button class="fd-link fd-setb" onclick="connTap()" aria-label="الإعداد"><span class="cdot"></span>⚙️<span class="cact" hidden>تفعيل</span><span class="set-n"></span></button><button class="fd-link fd-remb" onclick="remOpen()" aria-label="التذكيرات">⏰<span class="rem-n"></span></button><span class="fd-count" id="fdCount"></span></span></header><div class="fd-scroll" id="fdBody"></div><footer class="fd-foot"><button class="fd-btn2" id="fdSendBtn" onclick="fdSecondary()">إرسال</button><button class="fd-btn" id="fdSaveBtn" onclick="fdSaveCar()">حفظ السيارة والتالي</button></footer><input type="file" id="fdCam" accept="image/*" capture="environment" hidden><div class="cam" id="camUI" hidden><video id="camV" playsinline muted autoplay></video><div class="cam-flash" id="camF"></div><div class="cam-top"><button type="button" id="camX" aria-label="إغلاق">✕</button><span class="cam-count" id="camN"></span><button type="button" id="camT" hidden aria-label="الإضاءة">🔦</button></div><div class="cam-msg" id="camM"></div><div class="cam-bar"><div class="cam-thumb" id="camP"></div><button type="button" class="cam-shot" id="camS" aria-label="التقاط"></button><button type="button" class="cam-done" id="camD">تم ✓</button></div></div><input type="file" id="fdLib" accept="image/*" multiple hidden><input type="file" id="fdXls" accept=".xlsx,.xls,.csv" hidden></div><div class="fd-toast" id="fdToast" role="status"></div>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script>
-var APP_VERSION='2026-11-11';  // shown in the top bar; the page compares it with the one online
+var APP_VERSION='2026-11-11.2';  // shown in the top bar; the page compares it with the one online
 /* asset path; while «حفظ الكل» makes PDFs it uses the copies read from the program folder */
 var WEB_ASSETS=null,ONWEB=location.protocol!=='file:';const AS=n=>((window.__pdfAssets||ONWEB)&&window.ASSET_URLS&&ASSET_URLS[n])||(WEB_ASSETS&&WEB_ASSETS[n])||'vehicle-report-generator-assets/'+n;
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
@@ -971,13 +985,14 @@ async function editFolder(sub,create){let root=await logDir.getDirectoryHandle(E
 async function writeEditFile(sub,name,data){let d=await editFolder(sub,true),fh=await d.getFileHandle(name,{create:true}),w=await fh.createWritable();await w.write(data);await w.close()}
 function logDoc(manual){let g=G(),no=val('docNo').trim(),L=val('docLetter').trim().toUpperCase();if(!no)return alert('اكتب رقم المستند أولاً.');let l=getLog(),list=l.entries[g]=l.entries[g]||[],i=list.findIndex(e=>e.no==no),reopened=openedKey===g+'|'+no;
 let sub=GROUPS[g].letter,fname=clean(`${L?L+' - ':''}${no}`)+'.json',state=JSON.stringify(collectState(true));
-let entry={no,letter:L,doc:docName(),date:dateFmt(val('date')),ref:lastSum.ref||'',name:lastSum.name||'',client:lastSum.client||lastSum.name||'',count:lastSum.count||'',amount:lastSum.amount||0,paid:$('#showPaid').checked,saved:new Date().toLocaleString('en-GB'),file:`${sub}/${fname}`};
+let entry={no,letter:L,cars:docCars(),doc:docName(),date:dateFmt(val('date')),ref:lastSum.ref||'',name:lastSum.name||'',client:lastSum.client||lastSum.name||'',count:lastSum.count||'',amount:lastSum.amount||0,paid:$('#showPaid').checked,saved:new Date().toLocaleString('en-GB'),file:`${sub}/${fname}`};
 {let prev=i>=0?list[i]:null;if(prev&&prev.paid&&!entry.paid){entry.paid=true;entry.paidDate=prev.paidDate||''}else if(entry.paid)entry.paidDate=(prev&&prev.paidDate)||todayStr()}
 if(i>=0){if(!reopened&&!confirm(`الرقم ${no} مسجل مسبقاً في سجل ${GROUPS[g].name}. تحديث بياناته؟`))return;list[i]=entry}else list.push(entry);
 if(!FS_OK&&!cloudOn())download(fname,state,'application/json');
 let num=parseInt(no);if(!isNaN(num)&&String(num)===no)l.counters[g]=Math.max(l.counters[g]||1,num+1);
 if(T()==='invoiceAr'||T()==='quoteAr')l.companies=upsertCompany(l.companies);
-if(putLog(l)){refreshCompanyList();if(cloudOn())cloudPutEdit(`${sub}/${fname}`,state);if(FS_OK&&logState==='ok')writeQ=writeQ.then(()=>writeEditFile(sub,fname,state)).catch(e=>{console.error(e);alert('تم تسجيل الرقم، لكن تعذر حفظ ملف التعديل '+fname)});
+let ticked=remAutoTick(l,entry);
+if(putLog(l)){refreshCompanyList();if(ticked)try{remBadge();if($('#remModal').classList.contains('open'))remDraw()}catch(e){}if(cloudOn())cloudPutEdit(`${sub}/${fname}`,state);if(FS_OK&&logState==='ok')writeQ=writeQ.then(()=>writeEditFile(sub,fname,state)).catch(e=>{console.error(e);alert('تم تسجيل الرقم، لكن تعذر حفظ ملف التعديل '+fname)});
  openedKey=null;$('#docNo').value=nextNo(g);$('#docLetter').value=defLetter(g);
  let cur=$('#records').value,nextCar=!window.__batchLog&&!reopened&&T()!=='invoiceBulk'&&rows.length&&cur!==''&&rows[+cur+1]?+cur+1:null;
  if(nextCar!==null){$('#records').value=nextCar;$('#records').onchange({target:$('#records')})}else render();
@@ -993,7 +1008,7 @@ function openEditFile(ev){let f=ev.target.files[0];ev.target.value='';if(!f)retu
  f.text().then(t=>{let d=JSON.parse(t);if(!d.fields)throw 0;applyState(d);openedKey=G()+'|'+val('docNo').trim();closeLog();alert(`تم فتح ${docLabel()}.`)}).catch(()=>alert('ملف غير صالح.'))}
 function openLog(){$('#logType').innerHTML=Object.entries(GROUPS).map(([k,v])=>`<option value="${k}">${v.name}</option>`).join('');$('#logType').value=G();drawLog();$('#logModal').classList.add('open')}
 function closeLog(){$('#logModal').classList.remove('open')}
-function drawLog(){let g=$('#logType').value,le=lastEntry(g),list=(getLog().entries[g]||[]).map((e,i)=>[e,i]).reverse();
+function drawLog(){{let q=($('#logQ')||{}).value||'';if(q.trim()){$('#logBody').innerHTML=logSearchHTML(q,'log');return}}let g=$('#logType').value,le=lastEntry(g),list=(getLog().entries[g]||[]).map((e,i)=>[e,i]).reverse();
 $('#logBody').innerHTML=`<div class="hint" style="margin:0 0 8px">الحرف الافتراضي: <b style="color:#d00000">${esc(defLetter(g))}</b> · عدد المسجل: ${list.length} · آخر رقم: <b style="color:#d00000">${le?`<bdi dir="ltr">${esc(fmtNo(le))}</bdi>`:'—'}</b> · الرقم التالي: <b>${nextNo(g)}</b></div>`+(list.length?`<table class="logt"><tr><th>الرقم</th><th>المستند</th><th>التاريخ</th><th>المركبة / المرجع</th><th>الاسم</th><th>المبلغ</th><th>مدفوع</th><th>وقت التسجيل</th><th></th></tr>${list.map(([e,i])=>`<tr><td class="num">${e.dup?'⚠️ ':''}<bdi dir="ltr">${esc(fmtNo(e))}</bdi></td><td>${esc(e.doc||'')}</td><td>${esc(e.date)}</td><td dir="auto">${esc(e.ref)}</td><td dir="auto">${esc(e.name)}</td><td>${money(e.amount)}</td><td><input type="checkbox" style="width:auto" ${e.paid?'checked':''} onchange="togglePaid('${g}',${i},this.checked)"></td><td>${esc(e.saved||'')}</td><td style="white-space:nowrap">${e.file?`<button class="mini btn-blue" onclick="openEdit('${g}',${i})">فتح للتعديل</button> `:''}<button class="mini" onclick="delEntry('${g}',${i})">حذف</button></td></tr>`).join('')}</table>`:'<div class="hint">لا توجد أرقام مسجلة لهذا النوع بعد.</div>')}
 function togglePaid(g,i,v){let l=getLog();l.entries[g][i].paid=v;l.entries[g][i].paidDate=v?todayStr():'';putLog(l);updOverdueBadge()}
 function delEntry(g,i){let l=getLog(),e=l.entries[g][i];if(!confirm(`حذف الرقم ${fmtNo(e)} من السجل؟`))return;l.entries[g].splice(i,1);putLog(l);drawLog();updLogInfo()}
@@ -1390,7 +1405,7 @@ function remDraw(){let L=remList().slice(),f=REM.show;
  $$('#remTabs button').forEach(b=>b.classList.toggle('on',b.dataset.f===f));$('#remTabs [data-f=open]').textContent=`المطلوبة (${open})`;$('#remTabs [data-f=done]').textContent=`المنجزة (${done})`;
  let lab={late:'متأخر',today:'اليوم',open:'',done:'تم'};
  $('#remBody').innerHTML=shown.length?shown.map(r=>{let st=remState(r);return`<div class="rem-item st-${st}"><label class="rem-chk"><input type="checkbox" ${r.done?'checked':''} onchange="remDone('${r.id}',this.checked)" aria-label="منجز"></label>
-  <div class="rem-main"><div class="rem-title">${esc(r.title)}</div><div class="rem-meta">${[r.client&&'🏢 '+esc(r.client),r.car&&'🚗 <bdi>'+esc(r.car)+'</bdi>',r.due&&`📅 ${remFmtDate(r.due)}${lab[st]?` <b class="rem-tag">${lab[st]}</b>`:''}`].filter(Boolean).join(' · ')}</div>${r.note?`<div class="rem-note">${esc(r.note)}</div>`:''}</div>
+  <div class="rem-main"><div class="rem-title">${r.auto?'<b class="rem-tag rem-auto">تلقائي</b>':''}${esc(r.title)}</div>${r.doneDoc?`<div class="rem-autodone">✓ أُنجز تلقائياً عند تسجيل <bdi dir="ltr">${esc(r.doneDoc)}</bdi></div>`:''}<div class="rem-meta">${[r.client&&'🏢 '+esc(r.client),r.car&&'🚗 <bdi>'+esc(r.car)+'</bdi>',r.due&&`📅 ${remFmtDate(r.due)}${lab[st]?` <b class="rem-tag">${lab[st]}</b>`:''}`].filter(Boolean).join(' · ')}</div>${r.note?`<div class="rem-note">${esc(r.note)}</div>`:''}</div>
   <div class="rem-act">${r.done?'':`<button class="mini" onclick="remStart('${r.id}')">ابدأ</button>`}<button class="mini" onclick="remEdit('${r.id}')">تعديل</button><button class="mini" onclick="remDel('${r.id}')" aria-label="حذف">🗑</button></div></div>`}).join('')
   :`<div class="hint" style="padding:18px;text-align:center">${f==='done'?'لا توجد تقارير منجزة.':'لا توجد تقارير مطلوبة 👍'}</div>`;
  $('#remWhere').textContent=cloudOn()?'☁️ القائمة مشتركة بين الهاتف وجهازي الكمبيوتر عبر Google Drive':'القائمة محفوظة على هذا الجهاز فقط — اربط Google Drive لتظهر على كل الأجهزة.'}
@@ -1405,7 +1420,7 @@ async function sendListToPhone(){if(!syncOn())return alert('اربط Google Driv
  let idx=sel.size?[...sel].sort((a,b)=>a-b):rows.map((_,i)=>i),cars=idx.map(i=>({...rowData(rows[i]),...(cellEdit['r'+i]||{})})),
   name=(lastExcelName||'قائمة')+` — ${carsTxt(cars.length)}`,id='L'+Date.now(),b=$('#syncListBtn');
  b.disabled=true;b.textContent='جارٍ الإرسال…';
- try{await syncPost({a:'putList',id,meta:{name,count:cars.length,created:new Date().toISOString(),from:'laptop'},data:{name,created:new Date().toISOString(),cars}});syncDeskStatus(`أُرسلت القائمة للهاتف (${carsTxt(cars.length)})`)}
+ try{await syncPost({a:'putList',id,meta:{name,count:cars.length,created:new Date().toISOString(),from:'laptop'},data:{name,created:new Date().toISOString(),cars}});let ra=remAutoFromList(cars,name,id);syncDeskStatus(`أُرسلت القائمة للهاتف (${carsTxt(cars.length)})`+(ra?` — أُضيفت ${ra} للتذكيرات`:''))}
  catch(e){alert('تعذر إرسال القائمة. تأكد من الإنترنت.')}finally{b.textContent='📤 إرسال القائمة للهاتف';b.disabled=!syncOn()||!rows.length}}
 async function syncInboxRefresh(quiet){if(!syncOn()){syncDrawInbox();return}let btn=$('#syncRefBtn');if(btn&&!quiet)btn.textContent='جارٍ التحديث…';
  try{let j=await syncGet('inbox');syncInboxItems=j.items||[];let l=await syncGet('lists');syncPhoneLists=(l.items||[]).filter(x=>(x.meta||{}).from==='phone').slice(0,5);syncDeskStatus()}catch(e){if(!quiet)syncDeskStatus('تعذر التحديث — تحقق من الإنترنت')}finally{if(btn)btn.textContent='تحديث'}syncDrawInbox()}
@@ -1438,7 +1453,7 @@ function fdRedrawKeep(){let sc=$('.fd-scroll'),y=sc?sc.scrollTop:0;fdDraw();if(s
 /* a car list imported on the phone waits here until it reaches the office */
 function fdQueueList(name){let cars=FD.rows.map(r=>rowData(r)),id='L'+Date.now(),now=new Date().toISOString(),nm=`${name||'Excel'} — ${carsTxt(cars.length)} (من الهاتف)`;
  FD.pendingList={id,meta:{name:nm,count:cars.length,created:now,from:'phone'},data:{name:nm,created:now,cars}};FD.listId=id;FD.listName=nm;FD.seenLists=[...new Set([...(FD.seenLists||[]),id])].slice(-30)}
-async function fdSendList(){let L=FD.pendingList;if(!L)return true;try{await syncPost({a:'putList',...L});FD.pendingList=null;fdPersist();fdToast(`وصلت قائمة السيارات للمكتب ✓ (${carsTxt(L.meta.count)})`);return true}catch(e){return e&&e.message==='key'?'key':false}}
+async function fdSendList(){let L=FD.pendingList;if(!L)return true;try{await syncPost({a:'putList',...L});FD.pendingList=null;try{remAutoFromList(L.data.cars,L.meta.name,L.id)}catch(e){}fdPersist();fdToast(`وصلت قائمة السيارات للمكتب ✓ (${carsTxt(L.meta.count)})`);return true}catch(e){return e&&e.message==='key'?'key':false}}
 async function fdUpload(){if(!syncOn()||fdSyncBusy)return;if(FD.pendingList){fdSyncBusy=true;let r=await fdSendList();fdSyncBusy=false;if(r!==true){fdCount();fdToast(r==='key'?'رابط المزامنة لم يعد صالحاً — اضغط «تغيير» والصق الرابط الجديد':'لا يوجد اتصال — ستُرسل قائمة السيارات تلقائياً عند توفر الإنترنت');return}}
  let todo=FD.saved.filter(s=>!s.sent);if(!todo.length){fdCount();return}fdSyncBusy=true;fdCount();let sent=0,fail=false;
  for(let k=0;k<todo.length;k++){let c=todo[k];if(c.pics[0])await fdMakeThumb(c.pics[0]);$('#fdCount').textContent=`جارٍ الإرسال ${k+1}/${todo.length}…`;
@@ -1467,7 +1482,7 @@ $('#mlBody').addEventListener('input',e=>{let d=e.target.dataset.ml;if(!d)return
 $('#mlBody').addEventListener('keydown',e=>{if(e.key!=='Enter'||!e.target.dataset.ml)return;e.preventDefault();let[i]=e.target.dataset.ml.split('|');if(+i===ML.length-1)mlAdd();else{let n=$(`#mlBody [data-ml="${+i+1}|reg"]`);if(n)n.focus()}});
 async function mlSend(){let cars=mlCars();if(!cars.length)return alert('أضف سيارة واحدة على الأقل.');if(!syncOn())return alert('اربط Google Drive أولاً.');let b=$('#mlSend');b.disabled=true;b.textContent='جارٍ الإرسال…';
  let name=`قائمة يدوية — ${carsTxt(cars.length)}`,now=new Date().toISOString();
- try{await syncPost({a:'putList',id:'L'+Date.now(),meta:{name,count:cars.length,created:now,from:'laptop'},data:{name,created:now,cars}});closeManual();syncDeskStatus(`أُرسلت القائمة اليدوية للهاتف (${carsTxt(cars.length)})`)}
+ try{let lid='L'+Date.now();await syncPost({a:'putList',id:lid,meta:{name,count:cars.length,created:now,from:'laptop'},data:{name,created:now,cars}});remAutoFromList(cars,name,lid);closeManual();syncDeskStatus(`أُرسلت القائمة اليدوية للهاتف (${carsTxt(cars.length)})`)}
  catch(e){alert('تعذر الإرسال. تأكد من الإنترنت.')}finally{b.disabled=false;b.textContent='📤 إرسال للهاتف'}}
 /* use the same list on the laptop: car picker, multi-vehicle invoices */
 function mlUse(){let cars=mlCars();if(!cars.length)return alert('أضف سيارة واحدة على الأقل.');rows=cars.map(r=>({...r}));registerRows(rows);sel=new Set(rows.map((_,i)=>i));cellEdit={};lastExcelName='قائمة يدوية';fillRecords();buildList();colSummary();closeManual();render();syncDeskStatus()}
@@ -1527,7 +1542,7 @@ function batchBar(){let b=$('#bbar');if(!BATCH){b.hidden=true;return}b.hidden=fa
  b.innerHTML=`<span class="bb-name">📦 ${esc(BATCH.name)}</span><span class="bb-pos">${c?`سيارة ${batchIdx+1} من ${n}: <b>${esc(carTitle(c))}</b>`:`${n} سيارات`}</span>
  <button type="button" onclick="batchStep(-1)" ${batchIdx<=0?'disabled':''}>◀ السابقة</button><button type="button" onclick="batchStep(1)" ${batchIdx>=n-1?'disabled':''}>التالية ▶</button>
  <button type="button" onclick="batchShow()">☰ كل السيارات</button>${c?`<button type="button" class="${carSt(c)==='ready'?'on':''}" onclick="batchToggleReady()">${carSt(c)==='ready'?'✓ جاهزة':'تحديد كجاهزة'}</button>`:''}
- <span class="bb-sp"></span><span class="bb-count">جاهزة ${ready}/${n}</span><button type="button" class="bb-save" onclick="batchSaveAll()">💾 حفظ الكل في مجلد</button><button type="button" class="bb-x" onclick="batchExit()" title="إغلاق الدفعة (تبقى محفوظة)">✕</button>`}
+ <span class="bb-sp"></span><span class="bb-count">جاهزة ${ready}/${n}</span>${BATCH.cars.some(x=>x.saved)?'<button type="button" id="bbInv" onclick="batchInvoice()">🧾 Invoice التسهيلات</button>':''}<button type="button" class="bb-save" onclick="batchSaveAll()">💾 حفظ الكل في مجلد</button><button type="button" class="bb-x" onclick="batchExit()" title="إغلاق الدفعة (تبقى محفوظة)">✕</button>`}
 function batchShow(){if(!BATCH)return;batchKeep();let n=BATCH.cars.length;
  $('#bwBody').innerHTML=`<div class="bw-grid">${BATCH.cars.map((c,i)=>{let f=c.insp.fields||{},st=ST[carSt(c)],thumb=(c.insp.pics||[])[0];
   return`<button type="button" class="bw-card${i===batchIdx?' cur':''}" onclick="batchOpenCar(${i})"><div class="bw-img"${thumb?` style="background-image:url('${thumb}')"`:''}>${thumb?'':'لا صور'}<span class="bw-pos">${c.pos||i+1}</span></div>
@@ -1586,7 +1601,7 @@ async function batchSaveAll(){if(!BATCH||batchBusy)return;
   await writeQ.catch(()=>{})}
  catch(e){console.error(e);alert('تعذر الحفظ: '+(e&&e.message||e)+(window.html2canvas?'':'\nأداة PDF تحتاج اتصال إنترنت.'))}
  finally{batchBusy=false;batchProgress('');if(back>=0&&BATCH.cars[back]){batchIdx=-1;await batchOpenCar(back)}else{batchIdx=-1;batchBar()}batchDrawSaved();if($('#bw').classList.contains('open'))batchShow()}
- if(ok)alert(`تم حفظ ${ok} من ${n} تقارير في:\n${logDir.name} / ${BATCH_ROOT} / ${BATCH.name}`+(fail.length?`\n\nتعذر حفظ: ${fail.join('، ')}`:''))}
+ if(ok)alert(`تم حفظ ${ok} من ${n} تقارير في:\n${logDir.name} / ${BATCH_ROOT} / ${BATCH.name}`+(fail.length?`\n\nتعذر حفظ: ${fail.join('، ')}`:'')+'\n\nلإصدار الفاتورة لنفس السيارات اضغط «🧾 Invoice التسهيلات» في شريط الدفعة.')}
 
 batchDrawSaved();
 syncDeskInit();
@@ -1833,5 +1848,75 @@ function welcomeCheck(){try{if(document.body.classList.contains('fd-on')||syncOn
  if(logState==='loading')return setTimeout(welcomeCheck,400);if(logDir||$('#setModal').classList.contains('open'))return;setOpen(true)}catch(e){}}
 setTimeout(welcomeCheck,500);
 window.addEventListener('online',setBadge);window.addEventListener('offline',setBadge);
+
+/* =====================================================================
+   STEP 2B — daily time-savers: home screen · batch → invoice · reminders that manage themselves · log search
+   ===================================================================== */
+const normCar=s=>String(s||'').replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[^0-9A-Za-zء-ي]/g,'').toUpperCase();
+/* car numbers in the document on screen (one car, several, or a whole Invoice التسهيلات) */
+function docCars(){let t=T(),a=[];try{if(t==='invoiceBulk')a=(sel.size?selectedVehicles():(val('reg')?[formVehicle()]:[])).map(v=>v.reg);
+ else if(isArInv())a=(val('arMulti')&&sel.size?selectedVehicles():[formVehicle()]).map(v=>v.reg).concat(arExtra.filter(x=>x.kind==='veh').map(x=>x.reg));
+ else a=[val('reg')]}catch(e){a=[val('reg')]}return[...new Set(a.map(x=>String(x||'').trim()).filter(Boolean))]}
+/* a logged document ticks off every open reminder for the same car */
+function remAutoTick(l,e){let cs=(e.cars||[]).map(normCar).filter(Boolean),n=0;if(!cs.length)return 0;
+ (l.reminders||[]).forEach(r=>{if(!r.done&&r.car&&cs.includes(normCar(r.car))){r.done=true;r.doneAt=new Date().toISOString();r.doneDoc=fmtNo(e);n++}});return n}
+/* cars sent to the phone become reminders (skipping cars that already have an open one) */
+function remAutoFromList(cars,name,lid){if(!cars||!cars.length)return 0;let l=getLog();l.reminders=l.reminders||[];
+ let open=new Set(l.reminders.filter(r=>!r.done&&r.car).map(r=>normCar(r.car))),now=new Date().toISOString(),n=0;
+ cars.forEach(c=>{let reg=String(c.reg||'').trim(),k=normCar(reg);if(!k||open.has(k))return;open.add(k);n++;
+  l.reminders.push({id:'a'+String(lid||Date.now()).replace(/\W/g,'')+'_'+k,auto:true,title:'تقرير سيارة '+reg+([c.make,c.model,c.year].filter(Boolean).length?' — '+[c.make,c.model,c.year].filter(Boolean).join(' '):''),client:String(c.owner||'').trim(),car:reg,due:'',note:`أُرسلت إلى الهاتف ضمن «${String(name||'').replace(/ — .*$/,'')}»`,done:false,created:now})});
+ if(n&&putLog(l)){try{remBadge();if($('#remModal').classList.contains('open'))remDraw()}catch(e){}}return n}
+
+/* ---------- log search: every past document by car number, client or number ---------- */
+function logSearch(q){let ql=String(q||'').trim().toLowerCase(),qc=normCar(q),out=[];if(!ql)return out;let l=getLog();
+ Object.keys(GROUPS).forEach(g=>(l.entries[g]||[]).forEach((e,i)=>{let cars=(e.cars&&e.cars.length?e.cars:[e.ref]).filter(Boolean),hitCar=qc.length>=2?cars.find(c=>normCar(c).includes(qc)):null;
+  let txt=[fmtNo(e),e.no,e.ref,e.name,e.client,e.doc].join(' ').toLowerCase();if(hitCar||txt.includes(ql))out.push({g,i,e,hitCar})}));
+ const key=e=>{let d=parseD(e.date)||parseD(e.saved);return d?d.getTime():0};return out.sort((a,b)=>key(b.e)-key(a.e)||(parseInt(b.e.no)||0)-(parseInt(a.e.no)||0))}
+function logSearchHTML(q,where){let r=logSearch(q);if(!r.length)return`<div class="hint" style="padding:10px">لا توجد مستندات تطابق «${esc(q)}».</div>`;
+ let more=r.length>60?`<div class="hint">يظهر أحدث 60 من ${r.length} — اكتب أكثر لتضييق البحث.</div>`:'';
+ return more+`<table class="logt srch-t"><tr><th>الرقم</th><th>المستند</th><th>التاريخ</th><th>المركبة / المرجع</th><th>الاسم / العميل</th><th>المبلغ</th><th></th></tr>${r.slice(0,60).map(({g,i,e,hitCar})=>`<tr><td class="num">${e.dup?'⚠️ ':''}<bdi dir="ltr">${esc(fmtNo(e))}</bdi></td><td>${esc(e.doc||GROUPS[g].name)}</td><td>${esc(e.date||'')}</td><td dir="auto">${esc(e.ref||'')}${hitCar&&hitCar!==e.ref?` <small>(فيه ${esc(hitCar)})</small>`:''}</td><td dir="auto">${esc(e.client&&e.client!==e.name?(e.name?e.name+' · ':'')+e.client:(e.name||''))}</td><td>${e.amount?money(e.amount):''}</td><td>${e.file?`<button class="mini btn-blue" onclick="${where==='home'?'homeClose();':''}openEdit('${g}',${i})">فتح</button>`:''}</td></tr>`).join('')}</table>`}
+
+/* ---------- batch → Invoice التسهيلات from the same cars ---------- */
+function batchInvoice(){if(!BATCH)return;let b=BATCH,cars=b.cars.map(c=>{let f=(c.snap&&c.snap.s&&c.snap.s.fields)||(c.insp&&c.insp.fields)||{};
+  return{agreement:f.case||'',vin:f.vin||'',reg:f.reg||'',make:f.make||'',model:f.model||'',year:f.year||'',color:f.color||''}}).filter(x=>Object.values(x).some(Boolean));
+ if(!cars.length)return alert('لا توجد سيارات في هذه الدفعة.');
+ if(!confirm(`إنشاء Invoice التسهيلات لـ ${carsTxt(cars.length)} من دفعة «${b.name}»؟\nستحل هذه السيارات محل قائمة السيارات الحالية في النموذج (الدفعة تبقى محفوظة).`))return;
+ let name=b.name;batchExit();$('#type').value='invoiceBulk';$('#type').dispatchEvent(new Event('change'));
+ rows=cars;registerRows(rows);sel=new Set(rows.map((_,i)=>i));cellEdit={};Object.keys(feeOverride).forEach(k=>{if(k.startsWith('bulk:'))delete feeOverride[k]});lastExcelName=name;
+ $('#date').value=new Date().toISOString().slice(0,10);fillRecords();buildList();colSummary();render();$('.preview-wrap').scrollTop=0;window.scrollTo({top:0});
+ setTimeout(()=>alert(`تم تجهيز Invoice التسهيلات بـ ${carsTxt(cars.length)} من الدفعة.\nراجع «To» والسعر (Fee per vehicle) ثم صدّر PDF.`),50)}
+
+/* ---------- home screen ---------- */
+var HOME={q:''};
+function homeOpen(){$('#homeModal').classList.add('open');try{$('#homeAuto').checked=localStorage.getItem('adnanHomeAuto')!=='0'}catch(e){}homeDraw();
+ if(syncOn())syncInboxRefresh(true).then(homeDraw).catch(()=>{});if(cloudOn())cloudPull(false).then(homeDraw).catch(()=>{})}
+function homeClose(){$('#homeModal').classList.remove('open')}
+const homeOn=()=>$('#homeModal').classList.contains('open');
+function homeSearch(v){HOME.q=v;let b=$('#homeResults');if(b)b.innerHTML=v.trim()?logSearchHTML(v,'home'):''}
+async function homeDraw(){if(!homeOn())return;let lv=connLevel(),on=syncOn(),card=(ic,t,n,hot,body,btns)=>`<div class="home-card${hot?' hot':''}"><h4>${ic} ${t}<span class="n">${n}</span></h4>${body}<div class="home-btns">${btns||''}</div></div>`;
+ // new inspections
+ let items=on?syncInboxItems.filter(x=>!syncOpened.has(x.id)):[],groups={},singles=[];items.forEach(x=>{let id=(x.meta||{}).listId;if(id)(groups[id]=groups[id]||[]).push(x);else singles.push(x)});
+ let inRows=Object.entries(groups).map(([id,a])=>`<div class="home-row"><span class="t">📦 ${esc((a[0].meta||{}).listName||'دفعة')} <small>· ${carsTxt(a.length)}</small></span><button class="mini btn-blue" onclick="homeClose();batchOpenGroup('${esc(id)}',this)">فتح النافذة</button></div>`)
+  .concat(singles.slice(0,5).map(x=>{let m=x.meta||{};return`<div class="home-row"><span class="t">🚗 <b dir="ltr">${esc(m.reg||'—')}</b> <small>${esc([m.make,m.model].filter(Boolean).join(' '))} · ${m.pics||0} صور</small></span><button class="mini btn-blue" onclick="homeClose();syncOpenInsp('${esc(x.id)}',this)">فتح في التقرير</button></div>`})).join('');
+ let c1=card('📥','فحوصات جديدة',items.length,false,!on?'<div class="home-empty">اربط Google Drive لتصل الفحوصات من الهاتف.</div>':inRows||'<div class="home-empty">لا توجد فحوصات جديدة.</div>','');
+ // reminders
+ let open=remList().filter(r=>!r.done).sort((a,b)=>(a.due||'9999')<(b.due||'9999')?-1:(a.due||'9999')>(b.due||'9999')?1:0),hot=open.filter(r=>['late','today'].includes(remState(r)));
+ let lab={late:'متأخر',today:'اليوم'};
+ let c2=card('⏰','تقارير مطلوبة',open.length,hot.length>0,open.length?(hot.length?`<div class="home-empty" style="color:#c00">${hot.length} موعدها اليوم أو متأخرة</div>`:'')+open.slice(0,5).map(r=>`<div class="home-row"><span class="t">${r.auto?'🔄 ':''}${esc(r.title)} ${lab[remState(r)]?`<b class="rem-tag" style="background:#fde8e8;color:#a40000">${lab[remState(r)]}</b>`:''}</span><button class="mini" onclick="homeClose();remStart('${r.id}')">ابدأ</button></div>`).join(''):'<div class="home-empty">لا توجد تقارير مطلوبة 👍</div>',`<button class="mini" onclick="homeClose();remOpen()">كل التذكيرات</button>`);
+ // invoices
+ let inv=['invoice','bulk'].flatMap(g=>accRows(g)),unpaid=inv.filter(r=>!r.paid),over=unpaid.filter(r=>r.over),sum=a=>money(a.reduce((s,r)=>s+r.amount,0));
+ let c3=card('💰','فواتير غير مدفوعة',unpaid.length,over.length>0,unpaid.length?`<div class="home-row"><span class="t">غير مدفوعة: <b>${sum(unpaid)} د.ب</b> <small>(${unpaid.length})</small></span></div><div class="home-row"><span class="t" style="${over.length?'color:#c00':''}">متأخرة: <b>${sum(over)} د.ب</b> <small>(${over.length})</small></span></div>`:'<div class="home-empty">كل الفواتير مدفوعة.</div>',
+  (over.length?`<button class="mini btn-blue" onclick="homeClose();openAccounts('over')">المتأخرة</button>`:'')+(unpaid.length?`<button class="mini" onclick="homeClose();openAccounts('unpaid')">غير المدفوعة</button>`:''));
+ // unfinished batches
+ let bl=[];try{bl=(await batchList()).filter(x=>(x.saved||0)<(x.count||0))}catch(e){}if(!homeOn())return;
+ let c4=card('📦','دفعات لم تُحفظ كاملة',bl.length,false,bl.length?bl.slice(0,5).map(x=>`<div class="home-row"><span class="t">${esc(x.name)} <small>· محفوظ ${x.saved||0} من ${x.count}</small></span><button class="mini btn-blue" onclick="homeClose();batchResume('${esc(x.id)}')">فتح</button></div>`).join(''):'<div class="home-empty">لا توجد دفعات غير منتهية.</div>','');
+ let focus=document.activeElement&&document.activeElement.id==='homeQ',pos=focus?document.activeElement.selectionStart:0;
+ $('#homeBody').innerHTML=`<div class="home-light"><span class="cdot ${lv[0]}"></span>${esc(lv[1])}${lv[0]!=='g'?'<button class="mini" onclick="homeClose();connTap()">⚙️ الإعداد</button>':''}</div><div class="home-grid">${c1}${c2}${c3}${c4}</div>
+  <div class="home-search"><input id="homeQ" type="search" placeholder="🔎 ابحث في كل المستندات السابقة برقم السيارة أو العميل أو رقم المستند" value="${esc(HOME.q)}" oninput="homeSearch(this.value)"><div id="homeResults" style="margin-top:8px"></div></div>`;
+ if(HOME.q.trim())homeSearch(HOME.q);if(focus){let i=$('#homeQ');i.focus();try{i.setSelectionRange(pos,pos)}catch(e){}}}
+/* laptops open on the home screen once per session (not over the first-run welcome, not on phones) */
+function homeAuto(){try{if(document.body.classList.contains('fd-on')||setPhone()||$('#setModal').classList.contains('open')||homeOn())return;
+ if(localStorage.getItem('adnanHomeAuto')==='0'||sessionStorage.getItem('adnanHomeShown'))return;sessionStorage.setItem('adnanHomeShown','1');homeOpen()}catch(e){}}
+setTimeout(homeAuto,1800);
 
 </script></body></html>
