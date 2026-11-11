@@ -417,8 +417,26 @@ body.fd-on #verBar{position:fixed;top:0;left:0;right:0;z-index:50;box-shadow:0 3
 .qrs-frame{position:absolute;top:50%;left:50%;width:min(64vw,280px);aspect-ratio:1;transform:translate(-50%,-50%);border:3px solid #fff;border-radius:16px;box-shadow:0 0 0 999px #0006}
 .qrs-msg{position:absolute;bottom:calc(30px + env(safe-area-inset-bottom));left:14px;right:14px;text-align:center;color:#fff;font-size:15px;font-weight:bold;text-shadow:0 1px 3px #000}
 @media print{.verbar,.qrs,#setModal,#qrModal{display:none!important}}
+/* step 2A: one status light, one connection screen, phone welcome */
+.cdot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-left:6px;vertical-align:middle;background:#9aa5af;box-shadow:0 0 0 2px #fff6}
+.cdot.g{background:#30b552}.cdot.y{background:#f0b400}.cdot.r{background:#e5342a}
+.cact[hidden]{display:none!important}.cact{display:inline-block;margin-right:6px;background:#f0b400;color:#3a2a00;border-radius:6px;padding:1px 7px;font-size:11.5px;font-weight:bold}
+.fd-setb .cdot{width:9px;height:9px;margin-left:3px;box-shadow:none}.fd-setb .cact{font-size:11px;padding:1px 6px}
+.set-hello[hidden]{display:none!important}.set-hello{background:#eef4ff;border-bottom:1px solid #d5e2f7;padding:12px 16px;font-size:13px;line-height:1.8;color:#0c2951}
+.set-hello b{font-size:15px;display:block}.set-light{display:flex;align-items:center;gap:8px;padding:9px 4px 2px;font-size:13px;font-weight:bold;color:#071f53}
+.set-act{display:flex;align-items:center;gap:10px;padding:10px 4px;border-bottom:1px solid #eef2f6}.set-act .set-ic{background:#e3f1fb;color:#126ca8}
+.set-detail summary{cursor:pointer;font-size:12px;color:#455666;padding:10px 4px 4px}.set-detail .logstatus{margin-top:6px}
+.set-note{font-size:12px;color:#8a5a00;background:#fff4d6;border-radius:6px;padding:5px 8px;margin-top:5px}
+.syncmsg{margin-top:6px}.syncmsg:empty{display:none}
+.fd.fd-wel-on .fd-foot{display:none}
+.fd-wel{max-width:460px;margin:6vh auto 0;text-align:center;padding:0 6px}
+.fd-wel .ic{font-size:46px;line-height:1}.fd-wel h2{font-size:21px;margin:12px 0 6px;color:#071f53}
+.fd-wel p{font-size:15px;color:#4a4a50;line-height:1.7;margin:0 0 18px}
+.fd-wel ol{text-align:right;font-size:14px;color:#3a3a3f;line-height:1.9;margin:0 0 20px;padding-right:22px;background:#fff;border-radius:14px;padding:12px 30px 12px 14px}
+.fd-wel .fd-btn{width:100%;font-size:18px;padding:17px}.fd-wel .fd-btn2{width:100%;margin-top:10px}
+.fd-wel .fd-link{display:block;margin:16px auto 0;font-size:14px;color:#6e6e73}
 </style></head><body>
-<header class="bar"><b>مولد تقارير عدنان العلوي <small>ADNAN AL ALAWI · <span id="appVer">v2026-11-10</span></small></b><div class="buttons"><button onclick="setOpen()" title="إعداد هذا الجهاز">⚙️ الإعداد<span class="set-n"></span></button><button id="inboxBadge" class="btn-inbox" style="display:none" onclick="document.querySelector('#syncInbox').scrollIntoView({behavior:'smooth',block:'center'})"></button><button onclick="remOpen()">⏰ التذكيرات <span class="rem-n"></span></button><button onclick="fdOpen()">📱 فحص ميداني</button><button onclick="saveDraft()">حفظ مسودة</button><button onclick="loadDraft()">استرجاع مسودة</button><button id="overdueBadge" class="badge-over" style="display:none" onclick="openAccounts('over')"></button><button onclick="openAccounts()">الحسابات</button><button onclick="openLog()">السجل</button><button onclick="printReport()">تصدير PDF</button></div></header>
+<header class="bar"><b>مولد تقارير عدنان العلوي <small>ADNAN AL ALAWI · <span id="appVer">v2026-11-11</span></small></b><div class="buttons"><button id="connLight" onclick="connTap()" title="ربط هذا الجهاز"><span class="cdot"></span>⚙️ الإعداد<span class="cact" hidden>تفعيل</span><span class="set-n"></span></button><button id="inboxBadge" class="btn-inbox" style="display:none" onclick="document.querySelector('#syncInbox').scrollIntoView({behavior:'smooth',block:'center'})"></button><button onclick="remOpen()">⏰ التذكيرات <span class="rem-n"></span></button><button onclick="fdOpen()">📱 فحص ميداني</button><button onclick="saveDraft()">حفظ مسودة</button><button onclick="loadDraft()">استرجاع مسودة</button><button id="overdueBadge" class="badge-over" style="display:none" onclick="openAccounts('over')"></button><button onclick="openAccounts()">الحسابات</button><button onclick="openLog()">السجل</button><button onclick="printReport()">تصدير PDF</button></div></header>
 <div id="verBar" class="verbar" hidden></div>
 <main class="main"><aside class="panel"><h1>تقرير جديد</h1><form class="form" id="f" onsubmit="return false">
 <div class="sec privsec" id="privSec"><h2>📝 ملاحظاتي <small>— للتذكير فقط، لا تظهر في التقرير ولا في PDF</small></h2><textarea id="privNotes" placeholder="ملاحظات تريد تذكّرها أثناء كتابة التقرير (تصل أيضاً من الهاتف)"></textarea></div>
@@ -437,11 +455,11 @@ body.fd-on #verBar{position:fixed;top:0;left:0;right:0;z-index:50;box-shadow:0 3
 </optgroup>
 </select><div class="hint">نفس البيانات تُستخدم في كل المستندات — املأ مرة واحدة ثم بدّل النوع لإصدار التقرير ثم الفاتورة.</div></div>
 
-<div class="sec"><h2>رقم المستند (يظهر بالأحمر أعلى يسار الصفحة)</h2><div class="grid" style="grid-template-columns:70px 1fr auto"><div><label>الحرف</label><input id="docLetter" class="letterbox" maxlength="4"></div><div><label>الرقم</label><input id="docNo" inputmode="numeric"></div><div style="display:flex;align-items:flex-end;gap:6px"><button type="button" class="mini" onclick="logDoc(true)">تسجيل الآن</button><button type="button" class="mini" onclick="openLog()">عرض السجل</button></div></div><div class="logstatus na" id="logStatus">جارٍ تحميل السجل…</div><div class="lognow" id="logInfo"></div><div class="hint">الحروف: R تقرير · E تثمين (عربي وانجليزي سجل واحد) · P تقييم لوحات · I فاتورة · Q تسعيرة · TI Invoice التسهيلات. يمكنك تغيير الحرف لهذا المستند فقط — تسلسل الأرقام في السجل لا يتغير. بعد تصدير PDF سيسألك البرنامج لتسجيل الرقم، ويُحفظ معه ملف تعديل لتتمكن من فتحه لاحقاً من «السجل» وتصحيحه.</div></div>
+<div class="sec"><h2>رقم المستند (يظهر بالأحمر أعلى يسار الصفحة)</h2><div class="grid" style="grid-template-columns:70px 1fr auto"><div><label>الحرف</label><input id="docLetter" class="letterbox" maxlength="4"></div><div><label>الرقم</label><input id="docNo" inputmode="numeric"></div><div style="display:flex;align-items:flex-end;gap:6px"><button type="button" class="mini" onclick="logDoc(true)">تسجيل الآن</button><button type="button" class="mini" onclick="openLog()">عرض السجل</button></div></div><div class="lognow" id="logInfo"></div><div class="hint">الحروف: R تقرير · E تثمين (عربي وانجليزي سجل واحد) · P تقييم لوحات · I فاتورة · Q تسعيرة · TI Invoice التسهيلات. يمكنك تغيير الحرف لهذا المستند فقط — تسلسل الأرقام في السجل لا يتغير. بعد تصدير PDF سيسألك البرنامج لتسجيل الرقم، ويُحفظ معه ملف تعديل لتتمكن من فتحه لاحقاً من «السجل» وتصحيحه.</div></div>
 
 <div class="sec"><h2>استيراد قائمة الشركة</h2><div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap"><label class="upload">استيراد Excel<input id="excel" type="file" accept=".xlsx,.xls,.csv"></label><label class="check" data-for="court" style="margin:0" title="اسم الملف يصبح 1-REG#XXXXXX"><input id="tasNaming" type="checkbox"> تسهيلات</label></div><div class="hint" id="excelMsg">ارفع ملف الشركة (أي شكل — الأعمدة بالعربي أو الإنجليزي)، ثم اختر السيارة.</div><div id="colInfo"></div><select id="records" disabled style="margin-top:8px" data-for="report facilities court invoiceAr quoteAr plates"><option>لا يوجد ملف مستورد</option></select></div>
 
-<div class="sec"><h2>الفحص الميداني (من الهاتف / الآيباد)</h2><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><label class="upload">فتح ملف فحص<input id="fieldIn" type="file" accept=".json,application/json"></label><button type="button" class="mini" onclick="fdOpen()">وضع الهاتف</button></div><div class="syncbox"><div id="syncStat" class="syncstat off"></div><div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px"><button type="button" class="mini btn-blue" id="syncListBtn" onclick="sendListToPhone()">📤 إرسال القائمة للهاتف</button><button type="button" class="mini" onclick="openManual()">✍️ قائمة يدوية</button><button type="button" class="mini" id="syncRefBtn" onclick="syncInboxRefresh()">تحديث</button><button type="button" class="mini" id="syncConnBtn" onclick="syncConnect(()=>{syncDeskStatus('تم الربط ✓');syncInboxRefresh()})">ربط Google Drive</button></div><div id="syncInbox"></div><div id="batchSaved"></div></div><div class="hint" id="fieldMsg">بدون ربط: افتح الملف المرسل من الهاتف — تُعبأ بيانات السيارة والحالة والملاحظات والصور تلقائياً.</div><div class="fd-in" id="fieldList"></div></div>
+<div class="sec"><h2>الفحص الميداني (من الهاتف / الآيباد)</h2><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><label class="upload">فتح ملف فحص<input id="fieldIn" type="file" accept=".json,application/json"></label><button type="button" class="mini" onclick="fdOpen()">وضع الهاتف</button></div><div class="syncbox"><div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px"><button type="button" class="mini btn-blue" id="syncListBtn" onclick="sendListToPhone()">📤 إرسال القائمة للهاتف</button><button type="button" class="mini" onclick="openManual()">✍️ قائمة يدوية</button><button type="button" class="mini" id="syncRefBtn" onclick="syncInboxRefresh()">تحديث</button></div><div id="syncStat" class="hint syncmsg"></div><div id="syncInbox"></div><div id="batchSaved"></div></div><div class="hint" id="fieldMsg">بدون ربط: افتح الملف المرسل من الهاتف — تُعبأ بيانات السيارة والحالة والملاحظات والصور تلقائياً.</div><div class="fd-in" id="fieldList"></div></div>
 
 <div class="sec"><h2>بيانات عامة</h2><div class="grid"><div><label>التاريخ</label><input id="date" type="date"></div><div data-for="report facilities court invoiceAr quoteAr plates"><label for="case">رقم المعاملة</label><input id="case"></div><div data-for="report facilities court invoiceAr quoteAr"><label for="lawsuit">رقم الدعوى</label><input id="lawsuit"></div><div data-for="report facilities court invoiceAr quoteAr plates"><label for="owner">اسم المالك / مقدم الطلب</label><input id="owner"></div><div data-for="report facilities plates court"><label for="phone">الهاتف / فاكس</label><input id="phone"></div><div data-for="report facilities plates court"><label for="email">البريد الإلكتروني</label><input id="email"></div><div data-for="report invoiceAr quoteAr plates court"><label for="execution">ملف التنفيذ</label><input id="execution"></div><div data-for="report facilities court invoiceAr quoteAr plates"><label for="fee">رسوم الخبير (د.ب)</label><input id="fee" type="number" min="0" step="0.001"></div></div></div>
 
@@ -462,7 +480,7 @@ body.fd-on #verBar{position:fixed;top:0;left:0;right:0;z-index:50;box-shadow:0 3
 <div><label>نسبة الخصم %</label><input id="plateDep" type="number" min="0" max="100" step="0.01"></div>
 </div><div class="hint">السطر الأول من الملاحظات وصورة اللوحة يتم إنشاؤهما تلقائياً من رقم اللوحة ونوعها. القيمة بعد الخصم والمبلغ كتابةً تحسب تلقائياً. الصور اختيارية — تُضاف صفحة الصور فقط إذا اخترت صوراً.</div></div>
 
-<div class="sec" data-for="invoiceAr quoteAr"><details class="lblsec"><summary>نصوص الفاتورة / التسعيرة (كل نص قابل للتعديل)</summary><div class="grid lblpanel"></div><button type="button" class="mini" onclick="resetLabels(this)">إرجاع النصوص الأصلية</button><div class="hint">يمكنك أيضاً الضغط على أي نص في المعاينة وتعديله مباشرة. التعديلات تُحفظ على هذا الجهاز.</div></details></div>
+<div class="sec" data-for="invoiceAr quoteAr"><details class="lblsec"><summary>نصوص الفاتورة / التسعيرة (كل نص قابل للتعديل)</summary><div class="grid lblpanel"></div><button type="button" class="mini" onclick="resetLabels(this)">إرجاع النصوص الأصلية</button><div class="hint">يمكنك أيضاً الضغط على أي نص في المعاينة وتعديله مباشرة. التعديلات تصل لكل الأجهزة المربوطة بـ Google Drive.</div></details></div>
 <div class="sec" data-for="invoiceAr quoteAr"><h2>بيانات الفاتورة / التسعيرة</h2><div class="grid">
 <div class="full"><label>لغة المستند</label><div class="seg"><label><input type="radio" name="invLang" value="ar" checked><span>عربي</span></label><label><input type="radio" name="invLang" value="en"><span>English</span></label></div><div class="hint" style="margin-top:4px">النسختان العربية والإنجليزية تستخدمان نفس السجل ونفس التسلسل.</div></div>
 <div class="full lang-ar"><label>عنوان المستند</label><input id="invTitleAr"><div class="hint" style="margin-top:3px">اتركه فارغاً لاستخدام العنوان الأساسي.</div></div>
@@ -525,13 +543,13 @@ Through Bank transfer to: Al Salam Bank / IBAN: BH89ALSA00436034150000</textarea
 <div class="modal" id="colModal" style="z-index:50" onclick="if(event.target===this)closeCols()"><div class="modal-box" style="width:min(680px,96vw)"><div class="modal-head"><h3>أعمدة ملف Excel</h3><button class="mini" onclick="closeCols()">إغلاق ✕</button></div><div class="modal-body" id="colBody"></div><div class="modal-foot"><button class="mini btn-blue" onclick="saveCols()">حفظ</button><button class="mini" onclick="autoCols()">إعادة التعرف التلقائي</button></div></div></div>
 <div class="modal bw" id="bw" onclick="if(event.target===this)this.classList.remove('open')"><div class="modal-box bw-box"><div class="modal-head"><h3 id="bwTitle">الدفعة</h3><button class="mini btn-green" onclick="batchSaveAll()">💾 حفظ الكل في مجلد</button><button class="mini" onclick="document.getElementById('bw').classList.remove('open')">إغلاق ✕</button></div><div class="modal-body" id="bwBody"></div></div></div><div class="bprog" id="bprog" hidden></div>
 <div class="modal" id="mlModal" onclick="if(event.target===this)closeManual()"><div class="modal-box" style="width:min(1100px,96vw)"><div class="modal-head"><h3>قائمة سيارات يدوية (بدون Excel)</h3><button class="mini" onclick="closeManual()">إغلاق ✕</button></div><div class="modal-body" id="mlBody"></div><div class="modal-foot"><button class="mini" onclick="mlAdd()">+ إضافة سيارة</button><button class="mini btn-blue" id="mlSend" onclick="mlSend()">📤 إرسال للهاتف</button><button class="mini" onclick="mlUse()">استخدامها هنا (للتقرير والفاتورة)</button><button class="mini" onclick="mlClear()">مسح القائمة</button><span class="hint" style="margin:0">تُحفظ القائمة على هذا الجهاز تلقائياً.</span></div></div></div>
-<div class="modal" id="setModal" style="z-index:70" onclick="if(event.target===this)setClose()"><div class="modal-box set-box"><div class="modal-head"><h3>⚙️ إعداد هذا الجهاز</h3><span class="hint" id="setSum" style="margin:0"></span><button class="mini" onclick="setClose()">إغلاق ✕</button></div><div class="modal-body" id="setBody"></div></div></div>
+<div class="modal" id="setModal" style="z-index:70" onclick="if(event.target===this)setClose()"><div class="modal-box set-box"><div class="modal-head"><h3 id="setTitle">⚙️ ربط هذا الجهاز</h3><span class="hint" id="setSum" style="margin:0"></span><button class="mini" id="setX" onclick="setClose()">إغلاق ✕</button></div><div class="set-hello" id="setHello" hidden></div><div class="modal-body"><div id="setBody"></div><details class="set-detail"><summary>التفاصيل</summary><div id="cloudStatus" class="logstatus na"></div><div class="logstatus na" id="logStatus">جارٍ تحميل السجل…</div></details></div></div></div>
 <div class="modal" id="qrModal" style="z-index:75" onclick="if(event.target===this)qrClose()"><div class="modal-box" style="width:min(460px,96vw)"><div class="modal-head"><h3>📱 ربط هاتف بـ QR</h3><button class="mini" onclick="qrClose()">إغلاق ✕</button></div><div class="qr-body" id="qrBody"></div></div></div>
 <div class="qrs" id="qrsUI" hidden><video id="qrsV" playsinline muted autoplay></video><div class="qrs-frame"></div><div class="qrs-top"><span>مسح رمز المزامنة</span><button type="button" onclick="qrScanStop()" aria-label="إغلاق">✕</button></div><div class="qrs-msg" id="qrsMsg"></div></div>
-<div id="field" class="fd" hidden><header class="fd-bar"><button class="fd-link" onclick="fdClose()">‹ التقرير الكامل</button><b>فحص ميداني</b><span style="display:flex;align-items:center;gap:6px"><button class="fd-link fd-setb" onclick="setOpen()" aria-label="الإعداد">⚙️<span class="set-n"></span></button><button class="fd-link fd-remb" onclick="remOpen()" aria-label="التذكيرات">⏰<span class="rem-n"></span></button><span class="fd-count" id="fdCount"></span></span></header><div class="fd-scroll" id="fdBody"></div><footer class="fd-foot"><button class="fd-btn2" id="fdSendBtn" onclick="fdSecondary()">إرسال</button><button class="fd-btn" id="fdSaveBtn" onclick="fdSaveCar()">حفظ السيارة والتالي</button></footer><input type="file" id="fdCam" accept="image/*" capture="environment" hidden><div class="cam" id="camUI" hidden><video id="camV" playsinline muted autoplay></video><div class="cam-flash" id="camF"></div><div class="cam-top"><button type="button" id="camX" aria-label="إغلاق">✕</button><span class="cam-count" id="camN"></span><button type="button" id="camT" hidden aria-label="الإضاءة">🔦</button></div><div class="cam-msg" id="camM"></div><div class="cam-bar"><div class="cam-thumb" id="camP"></div><button type="button" class="cam-shot" id="camS" aria-label="التقاط"></button><button type="button" class="cam-done" id="camD">تم ✓</button></div></div><input type="file" id="fdLib" accept="image/*" multiple hidden><input type="file" id="fdXls" accept=".xlsx,.xls,.csv" hidden></div><div class="fd-toast" id="fdToast" role="status"></div>
+<div id="field" class="fd" hidden><header class="fd-bar"><button class="fd-link" onclick="fdClose()">‹ التقرير الكامل</button><b>فحص ميداني</b><span style="display:flex;align-items:center;gap:6px"><button class="fd-link fd-setb" onclick="connTap()" aria-label="الإعداد"><span class="cdot"></span>⚙️<span class="cact" hidden>تفعيل</span><span class="set-n"></span></button><button class="fd-link fd-remb" onclick="remOpen()" aria-label="التذكيرات">⏰<span class="rem-n"></span></button><span class="fd-count" id="fdCount"></span></span></header><div class="fd-scroll" id="fdBody"></div><footer class="fd-foot"><button class="fd-btn2" id="fdSendBtn" onclick="fdSecondary()">إرسال</button><button class="fd-btn" id="fdSaveBtn" onclick="fdSaveCar()">حفظ السيارة والتالي</button></footer><input type="file" id="fdCam" accept="image/*" capture="environment" hidden><div class="cam" id="camUI" hidden><video id="camV" playsinline muted autoplay></video><div class="cam-flash" id="camF"></div><div class="cam-top"><button type="button" id="camX" aria-label="إغلاق">✕</button><span class="cam-count" id="camN"></span><button type="button" id="camT" hidden aria-label="الإضاءة">🔦</button></div><div class="cam-msg" id="camM"></div><div class="cam-bar"><div class="cam-thumb" id="camP"></div><button type="button" class="cam-shot" id="camS" aria-label="التقاط"></button><button type="button" class="cam-done" id="camD">تم ✓</button></div></div><input type="file" id="fdLib" accept="image/*" multiple hidden><input type="file" id="fdXls" accept=".xlsx,.xls,.csv" hidden></div><div class="fd-toast" id="fdToast" role="status"></div>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script>
-var APP_VERSION='2026-11-10';  // shown in the top bar; the page compares it with the one online
+var APP_VERSION='2026-11-11';  // shown in the top bar; the page compares it with the one online
 /* asset path; while «حفظ الكل» makes PDFs it uses the copies read from the program folder */
 var WEB_ASSETS=null,ONWEB=location.protocol!=='file:';const AS=n=>((window.__pdfAssets||ONWEB)&&window.ASSET_URLS&&ASSET_URLS[n])||(WEB_ASSETS&&WEB_ASSETS[n])||'vehicle-report-generator-assets/'+n;
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
@@ -691,9 +709,9 @@ let COL_CTX=null;
 function openCols(which){let rs=which==='field'?FD.rows:rows;if(!rs.length)return alert('استورد ملف Excel أولاً.');let keys=Object.keys(rs[0]);COL_CTX={which,sig:colSig(keys),keys,rs};drawCols(mapFor(rs[0]));$('#colModal').classList.add('open')}
 function drawCols(m){let {keys,rs}=COL_CTX,sample=h=>{let v=rs.map(r=>String(r[h]??'').trim()).find(Boolean);return v?'  —  '+v.slice(0,24):''};
  $('#colBody').innerHTML=`<div class="hint" style="margin:0 0 10px">تم التعرف على الأعمدة تلقائياً. إذا كان أي اختيار خاطئاً غيّره فقط — يُحفظ لنفس شكل الملف في المرات القادمة.</div><table class="logt colt">${COLF.map(([f,l])=>`<tr><td><b>${l}</b></td><td><select data-colf="${f}"><option value="">— غير موجود —</option>${keys.map(h=>`<option value="${esc(h)}"${m[f]===h?' selected':''}>${esc(h)}${esc(sample(h))}</option>`).join('')}</select></td></tr>`).join('')}</table>`}
-function saveCols(){let m={};$$('#colBody select').forEach(s=>{if(s.value)m[s.dataset.colf]=s.value});COLMAPS[COL_CTX.sig]=m;try{localStorage.setItem('adnanColMaps',JSON.stringify(COLMAPS))}catch(e){}closeCols();
+function saveCols(){let m={};$$('#colBody select').forEach(s=>{if(s.value)m[s.dataset.colf]=s.value});COLMAPS[COL_CTX.sig]=m;try{localStorage.setItem('adnanColMaps',JSON.stringify(COLMAPS))}catch(e){}stSoon();closeCols();
  if(COL_CTX.which==='field'){fdPersist();fdDraw();fdToast('تم حفظ الأعمدة')}else{fillRecords();buildList();colSummary();render()}}
-function autoCols(){delete COLMAPS[COL_CTX.sig];try{localStorage.setItem('adnanColMaps',JSON.stringify(COLMAPS))}catch(e){}AUTOMAPS[COL_CTX.sig]=autoMap(COL_CTX.keys,COL_CTX.rs);drawCols(AUTOMAPS[COL_CTX.sig])}
+function autoCols(){delete COLMAPS[COL_CTX.sig];try{localStorage.setItem('adnanColMaps',JSON.stringify(COLMAPS))}catch(e){}stSoon();AUTOMAPS[COL_CTX.sig]=autoMap(COL_CTX.keys,COL_CTX.rs);drawCols(AUTOMAPS[COL_CTX.sig])}
 function closeCols(){$('#colModal').classList.remove('open')}
 /* extra details a company file may carry (owner, km, engine…) */
 const ROW_EXTRA=['owner','phone','lawsuit','execution','engine','plateType','km'];
@@ -734,7 +752,7 @@ const LBL_DEF={
  'en.date':'Date:','en.to':'To:','en.cr':'C.R. No:','en.addr':'Address:','en.vat':'VAT No:','en.for':'Judgment Creditor:','en.against':'Judgment Debtor:','en.thNotes':'Notes','en.thReason':'Description','en.thAmount':'Amount Due','en.law':'Case file No.','en.agr':'Agreement No.','en.veh1':'Valuation of a','en.veh2':'vehicle, model year','en.veh3':', registration No.','en.cur':'BD','en.total':'Total','en.words':'Bahraini Dinars only','en.close':'Yours faithfully,','en.sign1':'Certified Expert','en.sign2':'Mr. Adnan Al Alawi','en.terms':'Terms & conditions',
  'ti.big':'INVOICE','ti.to':'To:','ti.date':'Date:','ti.sub1':'This is the evaluation of','ti.sub2':'vehicles','ti.p1':'As per your e-mail on','ti.p2':', requesting an evaluation of','ti.p3':'vehicles at','ti.p4':'yard, the total evaluated vehicles is','ti.h1':'No','ti.h2':'Agreement #','ti.h3':'Chassis','ti.h4':'Reg Num','ti.h5':'Vehicle','ti.h6':'Type','ti.h7':'Model','ti.h8':'Color','ti.h9':'Area','ti.h10':'Fee BD','ti.subtotal':'Sub Total','ti.terms':'Terms & conditions','ti.cont':'INVOICE (continued)','ti.contNext':'continued on next page…'};
 let labels={};try{labels=JSON.parse(localStorage.getItem('adnanInvoiceTexts')||'{}')||{}}catch(e){labels={}}
-function saveLabels(){try{localStorage.setItem('adnanInvoiceTexts',JSON.stringify(labels))}catch(e){}}
+function saveLabels(){try{localStorage.setItem('adnanInvoiceTexts',JSON.stringify(labels))}catch(e){}stSoon()}
 const LV=id=>id in labels?labels[id]:(LBL_DEF[id]??'');
 function L(id){return EF(`data-lbl="${id}"`,'l:'+id,LV(id),{})}
 /* left-panel list of the same texts */
@@ -825,15 +843,15 @@ let LOG={counters:{},entries:{},letters:{}},logDir=null,logState=FS_OK?'loading'
 function normLog(l){l=JSON.parse(JSON.stringify(l&&l.entries?l:{counters:{},entries:{}}));l.counters=l.counters||{};l.letters=l.letters||{};l.companies=Array.isArray(l.companies)?l.companies:[];l.reminders=Array.isArray(l.reminders)?l.reminders:[];
 // migrate logs saved by older versions (one log per document type)
 Object.keys(GROUP_OF).forEach(k=>{let g=GROUP_OF[k];if(k===g)return;if(l.entries[k]){l.entries[g]=(l.entries[g]||[]).concat(l.entries[k].map(e=>({doc:TYPE_NAMES[k],...e})));delete l.entries[k]}if(l.counters[k]){l.counters[g]=Math.max(l.counters[g]||0,l.counters[k]);delete l.counters[k]}});return l}
-function mergeLog(base,add){add=normLog(add);Object.entries(add.entries).forEach(([g,list])=>{let t=base.entries[g]=base.entries[g]||[];list.forEach(e=>{if(!t.some(x=>x.no==e.no))t.push(e)})});Object.entries(add.counters).forEach(([g,c])=>base.counters[g]=Math.max(base.counters[g]||0,c));Object.entries(add.letters).forEach(([g,v])=>{if(!base.letters[g])base.letters[g]=v});base.companies=mergeCompanies(base.companies||[],add.companies||[]);base.reminders=base.reminders||[];(add.reminders||[]).forEach(r=>{if(!base.reminders.some(x=>x.id===r.id))base.reminders.push(r)});return base}
+function mergeLog(base,add){add=normLog(add);Object.entries(add.entries).forEach(([g,list])=>{let t=base.entries[g]=base.entries[g]||[];list.forEach(e=>{if(!t.some(x=>x.no==e.no))t.push(e)})});Object.entries(add.counters).forEach(([g,c])=>base.counters[g]=Math.max(base.counters[g]||0,c));Object.entries(add.letters).forEach(([g,v])=>{if(!base.letters[g])base.letters[g]=v});if(add.settings){base.settings=base.settings||{};Object.entries(add.settings).forEach(([k,v])=>{if(!(k in base.settings))base.settings[k]=v})}base.companies=mergeCompanies(base.companies||[],add.companies||[]);base.reminders=base.reminders||[];(add.reminders||[]).forEach(r=>{if(!base.reminders.some(x=>x.id===r.id))base.reminders.push(r)});return base}
 function getLog(){return normLog(LOG)}
 function putLog(l){l=normLog(l);
- if(!FS_OK){try{localStorage.setItem(LOGKEY,JSON.stringify(l));LOG=l;return true}catch(e){alert('تعذر حفظ السجل.');return false}}
  if(cloudOn()){LOG=l;CL.edits++;CL.pending=true;clSave();clStatus();cloudPush();
   clBackup();return true}
- if(logState!=='ok'){alert('السجل غير مربوط بمجلد البرنامج.\nاضغط زر «ربط السجل» في قسم رقم المستند أولاً.');return false}
+ if(!FS_OK){try{localStorage.setItem(LOGKEY,JSON.stringify(l));LOG=l;return true}catch(e){alert('تعذر حفظ السجل.');return false}}
+ if(logState!=='ok'){alert('السجل غير مربوط بمجلد البرنامج.\nاضغط «⚙️ الإعداد» في الأعلى ثم «📁 اختيار مجلد البرنامج».');return false}
  LOG=l;let data=JSON.stringify(l,null,1);
- writeQ=writeQ.then(async()=>{let fh=await logDir.getFileHandle(LOGFILE,{create:true}),w=await fh.createWritable();await w.write(data);await w.close()}).catch(e=>{console.error(e);alert('تعذر حفظ السجل في الملف '+LOGFILE+'.\nتأكد أن الفلاش/الهارد متصل ثم اضغط «ربط السجل».');setLogState('need')});
+ writeQ=writeQ.then(async()=>{let fh=await logDir.getFileHandle(LOGFILE,{create:true}),w=await fh.createWritable();await w.write(data);await w.close()}).catch(e=>{console.error(e);alert('تعذر حفظ السجل في الملف '+LOGFILE+'.\nتأكد أن الفلاش/الهارد متصل ثم اضغط «⚙️ الإعداد» ← «تفعيل».');setLogState('need')});
  return true}
 /* remember the chosen folder on this computer (IndexedDB) */
 function idb(){return new Promise((res,rej)=>{let r=indexedDB.open('adnanGenerator',1);r.onupgradeneeded=()=>r.result.createObjectStore('kv');r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}
@@ -842,10 +860,10 @@ async function idbSet(k,v){let db=await idb();return new Promise(res=>{let t=db.
 function setLogState(st){logState=st;try{refreshCompanyList()}catch(e){}let el=$('#logStatus'),name=logDir?esc(logDir.name):'';
  let m=cloudOn()&&st!=='loading'?{na:['na','هذا الجهاز بدون مجلد البرنامج — الأرقام من Google Drive، وملفات التعديل تُحفظ هناك','<span></span>'],ok:['ok',`✓ مجلد البرنامج «${name}» مربوط — فيه ملفات التعديل والتقارير ونسخة احتياطية من السجل`,'<button type="button" onclick="connectLog(true)">تغيير المجلد</button>'],
   need:['warn','مجلد البرنامج يحتاج إذن الوصول (لحفظ التقارير ونسخة احتياطية)','<button type="button" onclick="connectLog(false)">تفعيل</button>'],
-  none:['warn','مجلد البرنامج غير مربوط على هذا الجهاز — الأرقام تعمل من Google Drive، واربطه لحفظ التقارير','<button type="button" onclick="connectLog(true)">ربط المجلد</button>'],
+  none:['warn','مجلد البرنامج غير مربوط على هذا الجهاز — الأرقام تعمل من Google Drive، واربطه لحفظ التقارير','<button type="button" onclick="connectLog(true)">📁 اختيار مجلد البرنامج</button>'],
   bad:['bad',`ملف ${LOGFILE} في مجلد البرنامج لا يمكن قراءته`,'<button type="button" onclick="connectLog(true)">اختيار مجلد آخر</button>']}[st]:{ok:['ok',`✓ السجل محفوظ في ${LOGFILE} داخل مجلد «${name}»`,'<button type="button" onclick="connectLog(true)">تغيير المجلد</button>'],
   need:['warn','السجل يحتاج إذن للوصول إلى مجلد البرنامج','<button type="button" onclick="connectLog(false)">تفعيل السجل</button>'],
-  none:['bad','السجل غير مربوط — اختر مجلد البرنامج مرة واحدة على هذا الجهاز','<button type="button" onclick="connectLog(true)">ربط السجل</button>'],
+  none:['bad','السجل غير مربوط — اختر مجلد البرنامج مرة واحدة على هذا الجهاز','<button type="button" onclick="connectLog(true)">📁 اختيار مجلد البرنامج</button>'],
   bad:['bad',`ملف ${LOGFILE} لا يمكن قراءته`,'<button type="button" onclick="connectLog(true)">اختيار مجلد آخر</button>'],
   loading:['na','جارٍ تحميل السجل…',''],
   na:['na','هذا المتصفح لا يستطيع حفظ السجل داخل المجلد، لذلك يُحفظ داخل المتصفح فقط. استخدم Chrome أو Edge ليُحفظ مع المجلد.','']}[st];
@@ -857,10 +875,11 @@ async function loadLogFile(){if(ONWEB){try{if(await transferImport())return}catc
  let l;try{l=normLog(await readLogFile())}catch(e){console.error(e);setLogState('bad');return}
  // one-time move of a log that older versions kept inside the browser
  let old=null;try{old=JSON.parse(localStorage.getItem(LOGKEY)||'null')}catch(e){}
+ setTimeout(appSetAfterFolder,0);
  if(cloudOn()){setLogState('ok');cloudAbsorb(old&&old.entries?mergeLog(l,old):l);return}
  LOG=l;setLogState('ok');
  if(old&&old.entries){LOG=mergeLog(l,old);if(putLog(LOG)){try{localStorage.setItem(LOGKEY+'_moved_to_file',JSON.stringify(old));localStorage.removeItem(LOGKEY)}catch(e){}}}
- syncNumber(true);render()}
+ syncNumber(true);stSync();render()}
 async function connectLog(pick){try{
  if(pick||!logDir){let d=await window.showDirectoryPicker({id:'adnan-generator',mode:'readwrite'});
   let isApp=true;try{await d.getFileHandle('vehicle-report-generator.html')}catch(e){isApp=false}
@@ -868,13 +887,13 @@ async function connectLog(pick){try{
   logDir=d;await idbSet('logDir',d)}
  let p=await logDir.requestPermission({mode:'readwrite'});if(p!=='granted'){setLogState('need');return}
  await loadLogFile()}catch(e){if(e&&e.name==='AbortError')return;console.error(e);alert('تعذر ربط السجل: '+(e&&e.message||e))}}
-async function initLog(){if(!FS_OK){try{LOG=normLog(JSON.parse(localStorage.getItem(LOGKEY)||'null'))}catch(e){}setLogState('na');syncNumber(true);render();return}
+async function initLog(){if(!FS_OK){try{LOG=normLog(JSON.parse(localStorage.getItem(LOGKEY)||'null'))}catch(e){}setLogState('na');syncNumber(true);stSync();render();return}
  try{logDir=await idbGet('logDir')}catch(e){logDir=null}
  if(!logDir){setLogState('none');return}
  let p='prompt';try{p=await logDir.queryPermission({mode:'readwrite'})}catch(e){}
  if(p==='granted')await loadLogFile();else setLogState('need')}
 /* pick up changes if the file was edited elsewhere while this window was in the background */
-window.addEventListener('focus',async()=>{if(cloudOn())return cloudPull(false);if(logState!=='ok')return;try{let l=normLog(await readLogFile());await writeQ;if(JSON.stringify(l)!==JSON.stringify(LOG)){LOG=l;render()}}catch(e){setLogState('need')}});
+window.addEventListener('focus',async()=>{if(cloudOn())return cloudPull(false);if(logState!=='ok')return;try{let l=normLog(await readLogFile());await writeQ;if(JSON.stringify(l)!==JSON.stringify(LOG)){LOG=l;stSync();render()}}catch(e){setLogState('need')}});
 function nextNo(g){let l=getLog(),c=l.counters[g];if(c)return c;let nums=(l.entries[g]||[]).map(e=>parseInt(e.no)).filter(x=>!isNaN(x));return nums.length?Math.max(...nums)+1:1}
 function defLetter(g){return getLog().letters[g]||GROUPS[g].letter}
 const fmtNo=e=>`${e.letter?e.letter+' - ':''}${e.no}`;
@@ -965,7 +984,7 @@ if(putLog(l)){refreshCompanyList();if(cloudOn())cloudPutEdit(`${sub}/${fname}`,s
  if(nextCar!==null&&!manual)setTimeout(()=>alert(`تم الحفظ. انتقلنا للمركبة التالية في القائمة: ${nextCar+1}. ${val('reg')}`),50);
  else if(!reopened&&!manual&&T()!=='invoiceBulk'&&rows.length&&cur!==''&&+cur===rows.length-1)setTimeout(()=>alert('تم الحفظ. هذه كانت آخر مركبة في قائمة Excel.'),50);
  if(manual||reopened)alert(`${reopened?'تم تحديث':'تم تسجيل'} ${L?L+' - ':''}${no} وحفظ ملف التعديل.\nالرقم التالي: ${nextNo(g)}`)}}
-async function openEdit(g,i){let e=(getLog().entries[g]||[])[i];if(!e||!e.file)return;if(!cloudOn()&&FS_OK&&logState!=='ok')return alert('اربط السجل أولاً.');
+async function openEdit(g,i){let e=(getLog().entries[g]||[])[i];if(!e||!e.file)return;if(!cloudOn()&&FS_OK&&logState!=='ok')return alert('اربط مجلد البرنامج أولاً من «⚙️ الإعداد».');
  if(!confirm(`فتح ${fmtNo(e)} للتعديل؟\nسيتم استبدال البيانات الموجودة حالياً في النموذج.`))return;
  try{let st;try{if(logState!=='ok')throw 0;let[sub,name]=e.file.split('/'),f=await (await (await editFolder(sub,false)).getFileHandle(name)).getFile();st=JSON.parse(await f.text())}catch(x){if(!cloudOn())throw x;st=await cloudGetEdit(e.file)}applyState(st);openedKey=g+'|'+e.no;closeLog();
   alert(`تم فتح ${fmtNo(e)}. عدّل ما تريد ثم صدّر PDF واحفظه مرة أخرى — سيبقى نفس الرقم.`)}
@@ -983,7 +1002,7 @@ function setLetter(){let g=$('#logType').value,v=prompt(`الحرف الافتر
 function download(name,data,type){let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([data],{type}));a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500)}
 function exportLog(){let l=getLog(),q=x=>'"'+String(x??'').replace(/"/g,'""')+'"',lines=[['Log','No','Document','Date','Vehicle / Ref','Name','Amount BD','Paid','Logged at'].map(q).join(',')];Object.keys(GROUPS).forEach(g=>(l.entries[g]||[]).forEach(e=>lines.push([GROUPS[g].name,fmtNo(e),e.doc||'',e.date,e.ref,e.name,e.amount,e.paid?'Yes':'No',e.saved].map(q).join(','))));download(`Numbers log ${new Date().toISOString().slice(0,10)}.csv`,'﻿'+lines.join('\r\n'),'text/csv;charset=utf-8')}
 
-async function printReport(){if(cloudOn())await cloudPull(false);if(!cloudOn()&&FS_OK&&logState!=='ok'&&!confirm('تنبيه: السجل غير مربوط بمجلد البرنامج، لذلك لن يُسجل رقم هذا المستند.\nاضغط «ربط السجل» أولاً، أو OK للمتابعة بدون تسجيل.'))return;render();alert('عند ظهور نافذة الطباعة، اختر Save as PDF ثم ألغِ “Headers and footers / رؤوس وتذييلات الصفحة”. هذا يمنع ظهور الوقت ومسار الكمبيوتر.');window.print();setTimeout(()=>{let no=val('docNo').trim();if(no&&(cloudOn()||!FS_OK||logState==='ok')&&confirm(`هل تم حفظ المستند؟\nاضغط OK لتسجيل الرقم ${docLabel()} في سجل «${GROUPS[G()].name}» والانتقال للرقم التالي.`))logDoc(false)},300)}
+async function printReport(){if(cloudOn())await cloudPull(false);if(!cloudOn()&&FS_OK&&logState!=='ok'&&!confirm('تنبيه: السجل غير مربوط بمجلد البرنامج، لذلك لن يُسجل رقم هذا المستند.\nاربطه من «⚙️ الإعداد» أولاً، أو OK للمتابعة بدون تسجيل.'))return;render();alert('عند ظهور نافذة الطباعة، اختر Save as PDF ثم ألغِ “Headers and footers / رؤوس وتذييلات الصفحة”. هذا يمنع ظهور الوقت ومسار الكمبيوتر.');window.print();setTimeout(()=>{let no=val('docNo').trim();if(no&&(cloudOn()||!FS_OK||logState==='ok')&&confirm(`هل تم حفظ المستند؟\nاضغط OK لتسجيل الرقم ${docLabel()} في سجل «${GROUPS[G()].name}» والانتقال للرقم التالي.`))logDoc(false)},300)}
 /* ---------- full document state (used by drafts and by edit files) ---------- */
 const CHECKS=['showStamp','showSignature','showPaid','arMulti','withPhotos','tasNaming','showClientInfo'];
 function collectState(withPics){return{v:1,labels,rec:$('#records').value,fields:Object.fromEntries(ids.map(i=>[i,val(i)])),checks:Object.fromEntries(CHECKS.map(c=>[c,$('#'+c).checked])),invLang:lang(),ratings,conditionNotes,feeOverride,cellEdit,arExtra,rows,sel:[...sel],...(withPics?{pics:pics.filter(Boolean)}:{})}}
@@ -1100,9 +1119,16 @@ async function fdOpen(){if(!FD.loaded){try{let d=await idbGet(FD_KEY);if(d){FD.r
 function fdClose(){$('#field').hidden=true;document.body.classList.remove('fd-on');try{if(cloudOn())cloudPull(false)}catch(e){}try{localStorage.setItem('adnanFieldMode','0')}catch(e){}}
 
 /* ---------- drawing ---------- */
-function fdDraw(){let c=FD.cur,f=c.fields,q=FD.q.trim().toLowerCase(),doneKeys=new Set(FD.saved.filter(s=>s.pics.length).map(s=>s.rowKey).filter(Boolean)),noPicKeys=new Set(FD.saved.filter(s=>!s.pics.length).map(s=>s.rowKey).filter(Boolean)),rk=d=>(d.reg||'')+'|'+(d.vin||'')+'|'+(d.agreement||''),doneRows={size:FD.rows.filter(r=>doneKeys.has(rk(rowData(r)))).length};
+function fdWelcomeOn(){try{return !syncOn()&&localStorage.getItem('adnanWelcomeSkip')!=='1'}catch(e){return!syncOn()}}
+/* a phone that is not connected opens to one big «scan» button */
+function fdWelcome(){let scan=qrCanScan();$('#field').classList.add('fd-wel-on');$('#fdCount').textContent='';
+ $('#fdBody').innerHTML=`<div class="fd-wel"><div class="ic">📱</div><h2>ربط الهاتف بالمكتب</h2><p>مرة واحدة فقط. بعدها تصل قوائم السيارات من الكمبيوتر وتُرسل الفحوصات بضغطة.</p>
+ <ol><li>على الكمبيوتر اضغط «⚙️ الإعداد» ثم «📱 ربط هاتف بـ QR».</li><li>${scan?'اضغط الزر بالأسفل ووجّه الكاميرا إلى الرمز.':'امسح الرمز بكاميرا الهاتف، انسخ الرابط، ثم اضغط «لصق الرابط».'}</li></ol>
+ ${scan?'<button class="fd-btn" data-act="qrscan">📷 مسح QR</button><button class="fd-btn2" data-act="connect">لصق الرابط</button>':'<button class="fd-btn" data-act="connect">لصق الرابط</button>'}
+ <button class="fd-link" data-act="skipWelcome">تخطي — استخدام الهاتف بدون ربط</button></div>`}
+function fdDraw(){if(fdWelcomeOn())return fdWelcome();$('#field').classList.remove('fd-wel-on');let c=FD.cur,f=c.fields,q=FD.q.trim().toLowerCase(),doneKeys=new Set(FD.saved.filter(s=>s.pics.length).map(s=>s.rowKey).filter(Boolean)),noPicKeys=new Set(FD.saved.filter(s=>!s.pics.length).map(s=>s.rowKey).filter(Boolean)),rk=d=>(d.reg||'')+'|'+(d.vin||'')+'|'+(d.agreement||''),doneRows={size:FD.rows.filter(r=>doneKeys.has(rk(rowData(r)))).length};
  let list=FD.rows.map((r,i)=>[rowData(r),i]).filter(([d])=>!q||[d.reg,d.make,d.model,d.agreement,d.vin,d.year].join(' ').toLowerCase().includes(q));
- let on=syncOn(),conn=on?`<div class="fd-conn on">☁️ متصل بالمكتب<button class="fd-small" data-act="refresh">تحديث</button><button class="fd-link" data-act="connect" style="font-size:13px">تغيير</button></div>`:`<div class="fd-conn"><div><b>اربط الهاتف بالمكتب (مرة واحدة)</b><div class="fd-sub" style="margin:2px 0 0">بعدها تصل قوائم السيارات من الكمبيوتر تلقائياً، وتُرسل الفحوصات بضغطة واحدة.</div></div><span style="display:flex;flex-direction:column;gap:6px">${qrCanScan()?'<button class="fd-small blue" data-act="qrscan">📷 مسح QR</button><button class="fd-link" data-act="connect" style="font-size:13px">لصق الرابط</button>':'<button class="fd-small blue" data-act="connect">لصق رابط المزامنة</button>'}</span></div>`,lists=on&&(FD.lists||[]).length>1?`<select class="fd-lists" data-in="list">${FD.lists.map(x=>`<option value="${esc(x.id)}"${x.id===FD.listId?' selected':''}>${esc((x.meta||{}).name||'قائمة')}${(x.meta||{}).from==='phone'&&!/(من الهاتف)/.test((x.meta||{}).name||'')?' (من الهاتف)':''} — ${esc((x.updated||'').slice(5,16).replace('T',' '))}</option>`).join('')}</select>`:'';
+ let on=syncOn(),conn=on?`<div class="fd-conn on">☁️ متصل بالمكتب<button class="fd-small" data-act="refresh">تحديث</button></div>`:`<div class="fd-conn"><div><b>غير مربوط بالمكتب</b><div class="fd-sub" style="margin:2px 0 0">الفحوصات تُحفظ على الهاتف وتُشارك كملف.</div></div><button class="fd-small blue" data-act="welcome">ربط الهاتف</button></div>`,lists=on&&(FD.lists||[]).length>1?`<select class="fd-lists" data-in="list">${FD.lists.map(x=>`<option value="${esc(x.id)}"${x.id===FD.listId?' selected':''}>${esc((x.meta||{}).name||'قائمة')}${(x.meta||{}).from==='phone'&&!/(من الهاتف)/.test((x.meta||{}).name||'')?' (من الهاتف)':''} — ${esc((x.updated||'').slice(5,16).replace('T',' '))}</option>`).join('')}</select>`:'';
  let carCard=conn+lists+(FD.rows.length?`<div class="fd-row-tools"><button class="fd-small" data-act="xls">${on?'Excel من الهاتف':'استيراد Excel آخر'}</button><button class="fd-small" data-act="cols">الأعمدة</button><button class="fd-small blue" data-act="newcar">+ سيارة جديدة</button><span class="fd-sub" style="margin:0">${carsTxt(FD.rows.length)} · تم ${doneRows.size}</span></div>
   <input class="fd-search" type="search" placeholder="ابحث برقم اللوحة أو الاتفاقية أو الصانع" value="${esc(FD.q)}" data-in="q">
   <div class="fd-list">${list.length?list.map(([d,i])=>`<button class="fd-row${c.row===i?' on':''}" data-act="pick" data-i="${i}"><span class="t">${esc(d.reg||'—')} — ${esc(d.make)} ${esc(d.model)} ${esc(d.year)}<small>${esc(d.agreement||'')}${d.color?' · '+esc(d.color):''}</small></span>${doneKeys.has(rk(d))?'<span class="ok">✓ تم</span>':noPicKeys.has(rk(d))?'<span class="nopic">بدون صور</span>':''}</button>`).join(''):'<div class="fd-empty">لا توجد نتائج</div>'}</div>`
@@ -1155,6 +1181,8 @@ function fdConnected(){fdToast(syncUrl?'تم الربط بالمكتب ✓':'ت�
 $('#field').addEventListener('click',e=>{let b=e.target.closest('[data-act]');if(!b)return;let a=b.dataset.act,c=FD.cur,i=+b.dataset.i;
  if(a==='xls')$('#fdXls').click();
  else if(a==='connect')syncConnect(fdConnected);
+ else if(a==='skipWelcome'){try{localStorage.setItem('adnanWelcomeSkip','1')}catch(e){}fdDraw();setBadge()}
+ else if(a==='welcome'){try{localStorage.removeItem('adnanWelcomeSkip')}catch(e){}fdDraw();$('.fd-scroll').scrollTop=0}
  else if(a==='qrscan')qrScan(fdConnected);
  else if(a==='refresh'){fdSyncLists(true);fdUpload()}
  else if(a==='cols')openCols('field');
@@ -1209,9 +1237,14 @@ const syncOn=()=>!!syncParts();
 async function syncGet(a,extra={}){let s=syncParts();if(!s)throw new Error('nolink');let r=await fetch(s.base+'?'+new URLSearchParams({k:s.k,a,...extra}),{cache:'no-store'});let j=await r.json();if(!j.ok)throw new Error(j.error||'fail');return j}
 async function syncPost(body){let s=syncParts();if(!s)throw new Error('nolink');let r=await fetch(s.base,{method:'POST',body:JSON.stringify({...body,k:s.k}),headers:{'Content-Type':'text/plain;charset=utf-8'}});let j=await r.json();if(!j.ok)throw new Error(j.error||'fail');return j}
 async function syncConnect(onDone){let v=prompt('الصق رابط المزامنة (يبدأ بـ https://script.google.com/…).\nاتركه فارغاً لإلغاء الربط.',syncUrl);if(v===null)return;return syncApply(v.trim(),onDone)}
-async function syncApply(v,onDone){let old=syncUrl;syncUrl=v;
- if(v&&!syncParts()){syncUrl=old;alert('الرابط غير صحيح — يجب أن ينتهي بـ ?k= ثم المفتاح.');return false}
- try{if(v)await syncGet('ping');localStorage.setItem(SYNC_KEY,v);onDone&&onDone(true);try{cloudInit();setLogState(logState)}catch(e){}try{setDraw()}catch(e){}return true}catch(e){syncUrl=old;alert('تعذر الاتصال بهذا الرابط. تأكد من نسخه كاملاً ومن وجود إنترنت.');return false}}
+async function syncApply(v,onDone,o){o=o||{};let old=syncUrl;syncUrl=v;
+ if(v&&!syncParts()){syncUrl=old;if(!o.auto)alert('الرابط غير صحيح — يجب أن ينتهي بـ ?k= ثم المفتاح.');return false}
+ try{if(v&&!o.trusted)await syncGet('ping');localStorage.setItem(SYNC_KEY,v);
+  if(!o.auto){try{if(v)localStorage.removeItem('adnanSyncOff');else localStorage.setItem('adnanSyncOff','1')}catch(e){}}
+  if(window.APPSET){APPSET.bad=false;if(v&&!o.auto)appSetWrite()}
+  onDone&&onDone(true);try{cloudInit();setLogState(logState)}catch(e){}try{setDraw()}catch(e){}
+  if(v&&logState==='ok')setTimeout(()=>clUploadAssets().then(()=>setAssetsCheck(true)).then(()=>setDraw()).catch(()=>{}),600);  // folder chosen first: office images go to Drive now
+  return true}catch(e){syncUrl=old;if(!o.auto)alert('تعذر الاتصال بهذا الرابط. تأكد من نسخه كاملاً ومن وجود إنترنت.');return false}}
 
 /* ===== shared numbers log in Google Drive =====
    With the sync link on a laptop, the numbers log (R-1, E-1, TI-1 …) lives in Google Drive, so both laptops
@@ -1225,8 +1258,8 @@ function cloudOn(){try{return !!syncParts()}catch(e){return false}}
 const clIdle=()=>document.hidden||document.body.classList.contains('fd-on');  // phone in inspection mode: no need to keep the log fresh
 const clClone=o=>JSON.parse(JSON.stringify(o));
 function clSave(){try{localStorage.setItem(CL_KEY,JSON.stringify({data:LOG,v:CL.v,base:CL.base,pending:CL.pending,at:CL.at}))}catch(e){}}
-function clStatus(){try{setDraw()}catch(e){}let el=$('#cloudStatus');if(!el){let ls=$('#logStatus');if(!ls)return;el=document.createElement('div');el.id='cloudStatus';ls.before(el)}
- if(!cloudOn()){el.className='logstatus na';el.innerHTML='<span>السجل على هذا الجهاز فقط — اربط Google Drive (قسم الهاتف) ليصبح مشتركاً بين الجهازين</span>';return}
+function clStatus(){try{setDraw()}catch(e){}let el=$('#cloudStatus');if(!el)return;
+ if(!cloudOn()){el.className='logstatus na';el.innerHTML='<span>السجل على هذا الجهاز فقط — اربط Google Drive ليصبح مشتركاً بين الأجهزة</span>';return}
  let m={ok:['ok',`☁️ سجل الأرقام مشترك عبر Google Drive${CL.at?' · آخر تحديث '+CL.at:''}`],
   wait:['warn','⏳ تغييرات لم تُرفع بعد (لا يوجد إنترنت؟) — ستُرفع تلقائياً'],
   load:['na','☁️ جارٍ تحميل سجل الأرقام من Google Drive…'],
@@ -1259,7 +1292,7 @@ async function clFetch(body){let s=syncParts();let r=await fetch(s.base,{method:
 function clBackup(){if(logState!=='ok'||!logDir)return;let data=JSON.stringify(getLog(),null,1);writeQ=writeQ.then(async()=>{let fh=await logDir.getFileHandle(LOGFILE,{create:true}),w=await fh.createWritable();await w.write(data);await w.close()}).catch(e=>console.error(e))}
 function clApply(l,before){let g=G(),typed=val('docNo').trim();if(before===undefined)before=nextNo(g);LOG=normLog(l);clBackup();try{remBadge();if($('#remModal').classList.contains('open'))remDraw()}catch(e){}
  if(!openedKey&&(!typed||typed===String(before))){$('#docNo').value=nextNo(g)}
- try{updLogInfo()}catch(e){}try{refreshCompanyList()}catch(e){}try{if($('#logModal').classList.contains('open'))drawLog()}catch(e){}render()}
+ try{updLogInfo()}catch(e){}try{refreshCompanyList()}catch(e){}try{if($('#logModal').classList.contains('open'))drawLog()}catch(e){}try{stSync()}catch(e){}render()}
 async function cloudPush(){if(!cloudOn())return;if(CL.busy)return CL.busy;
  CL.busy=(async()=>{for(let tries=0;tries<4;tries++){let r;
    try{r=await clFetch({a:'putLog',base:CL.v,data:LOG})}catch(e){CL.pending=true;clSave();clStatus();return false}
@@ -1279,14 +1312,14 @@ async function cloudPull(loud){if(!cloudOn())return;if(CL.busy)await CL.busy;let
   if(!j.data){// first time: Drive has no log yet → upload the one we have (hard-drive file + this browser's copy)
    let seed=getLog();if(CL.fileLog)seed=mergeLog(seed,CL.fileLog);CL.fileLog=null;LOG=normLog(seed);CL.v=j.v;CL.base=normLog({});CL.pending=true;clSave();await cloudPush();clApply(LOG,prev);return}
   if(j.v!==CL.v||!clKeyEq(normLog(j.data),getLog())){CL.v=j.v;CL.base=normLog(j.data);clApply(j.data,prev)}
-  clSave();clStatus();
+  clSave();clStatus();try{stSync()}catch(e){}
   if(CL.fileLog){let f=CL.fileLog;CL.fileLog=null;cloudAbsorb(f)}}
  catch(e){CL.state='bad';clStatus();if(loud)alert('تعذر تحميل سجل الأرقام من Google Drive. تأكد من الإنترنت.')}}
 /* entries that exist only in the hard-drive copy (e.g. logged before switching) are added to the shared log */
 /* office images: the laptop (program folder) puts them in Drive; the phone page loads them from there */
 async function clUploadAssets(){if(!cloudOn()||logState!=='ok')return;try{let a=await loadAssets(),names=Object.keys(a);if(!names.length)return;
  let sig=names.sort().map(n=>n+':'+a[n].length+':'+a[n].slice(-24)).join('|');if(localStorage.getItem('adnanAssetSig')===sig)return;
- for(const n of names){let r=await clFetch({a:'putAsset',name:n,data:a[n]});if(!r.ok)return}localStorage.setItem('adnanAssetSig',sig)}catch(e){console.error(e)}}
+ for(const n of names){let r=await clFetch({a:'putAsset',name:n,data:a[n]});if(!r.ok)return}localStorage.setItem('adnanAssetSig',sig);try{SET.assets=null;setBadge()}catch(e){}}catch(e){console.error(e)}}
 async function webAssetsLoad(){if(location.protocol==='file:'||!cloudOn())return;
  try{let c=await idbGet('webAssets');if(c&&Object.keys(c).length){WEB_ASSETS=c;render()}}catch(e){}
  try{let j=await syncGet('assets');if(j.items&&Object.keys(j.items).length&&JSON.stringify(j.items)!==JSON.stringify(WEB_ASSETS)){WEB_ASSETS=j.items;await idbSet('webAssets',j.items);render()}}catch(e){}}
@@ -1366,8 +1399,8 @@ setInterval(remBadge,60000);setTimeout(remBadge,800);
 /* ---------------- laptop ---------------- */
 let syncPhoneLists=[],syncLoadedLists=new Set(),lastExcelName='',syncInboxItems=[],syncOpened=new Set(),syncTimer=null;
 function syncDeskStatus(msg){let s=$('#syncStat');if(!s)return;let on=syncOn();
- s.className='syncstat '+(on?'on':'off');s.innerHTML=on?`☁️ متصل بـ Google Drive${msg?' — '+esc(msg):''}`:'غير مربوط — اضغط «ربط Google Drive» (مرة واحدة فقط).';
- $('#syncConnBtn').textContent=on?'تغيير الرابط':'ربط Google Drive';$('#syncListBtn').disabled=!on||!rows.length;$('#syncListBtn').title=rows.length?'':'استورد ملف Excel أولاً'}
+ s.innerHTML=on?(msg?'☁️ '+esc(msg):''):'للإرسال إلى الهاتف اربط Google Drive من «⚙️ الإعداد» في الأعلى.';
+ $('#syncListBtn').disabled=!on||!rows.length;$('#syncListBtn').title=rows.length?'':'استورد ملف Excel أولاً'}
 async function sendListToPhone(){if(!syncOn())return alert('اربط Google Drive أولاً.');if(!rows.length)return alert('استورد ملف Excel أولاً.');
  let idx=sel.size?[...sel].sort((a,b)=>a-b):rows.map((_,i)=>i),cars=idx.map(i=>({...rowData(rows[i]),...(cellEdit['r'+i]||{})})),
   name=(lastExcelName||'قائمة')+` — ${carsTxt(cars.length)}`,id='L'+Date.now(),b=$('#syncListBtn');
@@ -1532,7 +1565,7 @@ async function writeFile(dir,name,data){let fh=await dir.getFileHandle(name,{cre
 const dataURLtoBlob=u=>{let [h,b]=u.split(','),m=(h.match(/:(.*?);/)||[,'image/jpeg'])[1],s=atob(b),a=new Uint8Array(s.length);for(let i=0;i<s.length;i++)a[i]=s.charCodeAt(i);return new Blob([a],{type:m})};
 function batchProgress(t){let p=$('#bprog');p.hidden=!t;p.textContent=t||''}
 async function batchSaveAll(){if(!BATCH||batchBusy)return;
- if(!FS_OK||logState!=='ok'||!logDir)return alert('اربط السجل (مجلد البرنامج) أولاً من «ربط السجل» — التقارير تُحفظ داخل مجلد البرنامج.');
+ if(!FS_OK||logState!=='ok'||!logDir)return alert('اربط مجلد البرنامج أولاً: «⚙️ الإعداد» ← «📁 اختيار مجلد البرنامج» — التقارير تُحفظ داخل مجلد البرنامج.');
  let n=BATCH.cars.length,notReady=BATCH.cars.filter(c=>!['ready','saved'].includes(carSt(c))).length;
  if(cloudOn())await cloudPull(false);
  if(!confirm(`حفظ ${n} تقارير في المجلد:\n${logDir.name} / ${BATCH_ROOT} / ${BATCH.name}\n\nكل سيارة في مجلد باسم ملفها، وفيه: PDF + ملف التعديل + كل الصور.${notReady?`\n\nتنبيه: ${notReady} لم تُحدد كجاهزة بعد.`:''}\nالسيارات بدون رقم تأخذ الرقم التالي في السجل وتُسجل تلقائياً.`))return;
@@ -1601,8 +1634,8 @@ async function transferWrite(){let ls={},db={};
  let fh=await logDir.getFileHandle(TRANSFER_FILE,{create:true}),w=await fh.createWritable();await w.write(txt);await w.close();return true}
 async function moveToWeb(){let wrote=false;
  if(FS_OK){try{if(!logDir)await connectLog(true);if(logDir){let p=await logDir.requestPermission({mode:'readwrite'});if(p==='granted')wrote=await transferWrite()}}catch(e){console.error(e)}}
- alert(wrote?`تم تجهيز إعدادات هذا الكمبيوتر ✓\n\nستُفتح الآن صفحة البرنامج على الرابط:\n${WEB_URL}\n\nهناك اضغط «ربط السجل» واختر نفس مجلد البرنامج على الهارد — رابط Google Drive والأعمدة والمسودة والشركات والدفعات تنتقل تلقائياً.\n\nأضف الرابط إلى المفضلة (⭐) لتفتحه منها كل مرة.`
-  :`ستُفتح الآن صفحة البرنامج على الرابط:\n${WEB_URL}\n\nهناك: اربط مجلد البرنامج، ثم اربط Google Drive (رابط المزامنة) مرة واحدة.`);
+ alert(wrote?`تم تجهيز إعدادات هذا الكمبيوتر ✓\n\nستُفتح الآن صفحة البرنامج على الرابط:\n${WEB_URL}\n\nهناك اضغط «📁 اختيار مجلد البرنامج» واختر نفس مجلد البرنامج على الهارد — رابط Google Drive والأعمدة والمسودة والشركات والدفعات تنتقل تلقائياً.\n\nأضف الرابط إلى المفضلة (⭐) لتفتحه منها كل مرة.`
+  :`ستُفتح الآن صفحة البرنامج على الرابط:\n${WEB_URL}\n\nهناك اضغط «📁 اختيار مجلد البرنامج» واختر نفس مجلد البرنامج على الهارد.`);
  location.href=WEB_URL}
 /* web page: the first time the program folder is linked, take over the settings written by the hard-drive file */
 async function transferImport(){if(!ONWEB||!logDir)return false;let fh,d;
@@ -1620,7 +1653,7 @@ async function transferImport(){if(!ONWEB||!logDir)return false;let fh,d;
  try{await logDir.removeEntry(TRANSFER_FILE)}catch(e){}
  alert('تم نقل إعدادات هذا الكمبيوتر من ملف الهارد ✓\n(رابط Google Drive، الأعمدة، المسودة، الشركات، الدفعات)\n\nسيُعاد تحميل الصفحة الآن.');
  location.reload();return true}
-function moveBanner(){if(ONWEB||!FS_OK||!navigator.onLine||document.body.classList.contains('fd-on'))return;try{if(sessionStorage.getItem('adnanMoveLater'))return}catch(e){}
+function moveBanner(){if(ONWEB||!FS_OK||!navigator.onLine||document.body.classList.contains('fd-on')||syncOn())return;try{if(sessionStorage.getItem('adnanMoveLater'))return}catch(e){}
  let b=$('#verBar');if(!b.hidden)return;b.className='verbar move';
  b.innerHTML=`<span>🌐 البرنامج صار يفتح من رابط واحد لكل الأجهزة. هذا الملف على الهارد يبقى احتياطاً بدون إنترنت.</span><button type="button" onclick="moveToWeb()">الانتقال للرابط</button><button type="button" class="x" onclick="verHide()">لاحقاً</button>`;b.hidden=false}
 setTimeout(moveBanner,1500);
@@ -1628,35 +1661,63 @@ setTimeout(moveBanner,1500);
 /* ---------- setup checklist ---------- */
 const SET_NEED=['letterhead.png','stamp.png','signature.png'];
 const setPhone=()=>{try{return matchMedia('(max-width:900px) and (pointer:coarse)').matches||!FS_OK}catch(e){return!FS_OK}};
-function setItems(){let it=[],lg=logState,cs=CL.state,ph=setPhone();
- it.push(ONWEB?{ok:true,t:'البرنامج يفتح من الرابط الموحد',d:`<span dir="ltr">${WEB_URL.replace('https://','')}</span>`}
-  :{ok:false,t:'البرنامج يفتح من الرابط الموحد',d:'هذا الجهاز يفتح الملف من الهارد. افتح الرابط بدلاً منه (الملف يبقى احتياطاً بدون إنترنت).',fix:['الانتقال للرابط','moveToWeb()']});
- if(!ph)it.push(lg==='ok'?{ok:true,t:'مجلد البرنامج مربوط',d:`«${esc(logDir.name)}» — للتقارير وملفات التعديل والنسخة الاحتياطية وصور المكتب`}
-  :{ok:false,t:'مجلد البرنامج مربوط',d:lg==='need'?'المجلد يحتاج إذن الوصول بعد فتح البرنامج.':lg==='bad'?`ملف ${LOGFILE} في المجلد لا يمكن قراءته.`:'اختر مجلد البرنامج على الهارد (الذي فيه vehicle-report-generator.html).',fix:[lg==='need'?'تفعيل':'ربط المجلد',lg==='need'?'connectLog(false).then(setDraw)':'connectLog(true).then(setDraw)']});
- it.push(syncOn()?{ok:true,t:'متصل بـ Google Drive',d:'رابط المزامنة محفوظ على هذا الجهاز.',fix2:!ph?['📱 ربط هاتف بـ QR','qrShow()']:null}
-  :{ok:false,t:'متصل بـ Google Drive',d:'الصق رابط المزامنة مرة واحدة'+(qrCanScan()?' أو امسح رمز QR من شاشة الكمبيوتر':'')+'.',fix:qrCanScan()?['📷 مسح QR','qrScan(setConnected)']:['لصق رابط المزامنة','syncConnect(setConnected)'],fix2:qrCanScan()?['لصق الرابط','syncConnect(setConnected)']:null});
+function setBtn(f,cls){return f?`<button type="button" class="mini${cls?' '+cls:''}"${f[2]?` id="${f[2]}"`:''} onclick="${f[1]}">${f[0]}</button>`:''}
+/* the connection screen: ordered steps, one button each (soft = waiting, not a fault on this device) */
+function setItems(){let it=[],lg=logState,cs=CL.state,ph=setPhone(),scan=ph&&qrCanScan(),paste=['لصق الرابط','syncConnect(setConnected)','syncConnBtn'];
+ it.push(ONWEB?{ok:true,t:'يفتح من رابط البرنامج',d:`<span dir="ltr">${WEB_URL.replace('https://','')}</span>`}
+  :{ok:false,soft:true,t:'يفتح من رابط البرنامج',d:'هذا الجهاز يفتح الملف من الهارد. افتح الرابط بدلاً منه (الملف يبقى احتياطاً بدون إنترنت).',fix:['الانتقال للرابط','moveToWeb()']});
+ if(!ph)it.push(lg==='ok'?{ok:true,t:'مجلد البرنامج',d:`«${esc(logDir.name)}» — للتقارير وملفات التعديل والنسخة الاحتياطية وصور المكتب`,fix2:['تغيير المجلد','connectLog(true).then(setDraw)']}
+  :{ok:false,soft:lg==='need',t:'مجلد البرنامج',d:lg==='need'?'Chrome يطلب الإذن مرة أخرى بعد فتح البرنامج — اضغط «تفعيل».':lg==='bad'?`ملف ${LOGFILE} في المجلد لا يمكن قراءته.`:'اختر مجلد البرنامج على الهارد (الذي فيه vehicle-report-generator.html). إذا كان رابط المزامنة محفوظاً فيه، يتصل Google Drive تلقائياً.',
+   fix:lg==='need'?['تفعيل','connectLog(false).then(setDraw)']:['📁 اختيار مجلد البرنامج','connectLog(true).then(setDraw)']});
+ let note=window.APPSET&&APPSET.bad?`<div class="set-note">⚠️ رابط المزامنة المحفوظ في مجلد البرنامج لا يعمل (ربما تغيّر المفتاح). الصق الرابط الصحيح${scan?' أو امسح QR':''} — سيُحفظ في المجلد بدلاً منه.</div>`:'';
+ it.push(syncOn()?{ok:true,t:'Google Drive',d:'متصل — رابط المزامنة محفوظ على هذا الجهاز'+(!ph&&lg==='ok'?' وفي مجلد البرنامج.':'.')+note,fix2:['تغيير الرابط','syncConnect(setConnected)','syncConnBtn']}
+  :{ok:false,t:'Google Drive',d:(ph?'امسح رمز QR من شاشة الكمبيوتر («⚙️ الإعداد» ← «📱 ربط هاتف بـ QR»).':lg==='ok'?'أول كمبيوتر فقط: الصق رابط المزامنة مرة واحدة — بعدها يُحفظ في مجلد البرنامج، والكمبيوتر الآخر يتصل باختيار المجلد فقط.':'يتصل تلقائياً بعد اختيار مجلد البرنامج. أو الصق رابط المزامنة.')+note,
+   fix:scan?['📷 مسح QR','qrScan(setConnected)']:paste,fix2:scan?paste:null});
  if(syncOn()){let ok=cs==='ok'&&!CL.pending;
-  it.push(ok?{ok:true,t:'سجل الأرقام مشترك',d:'☁️ نفس الأرقام على كل الأجهزة'+(CL.at?' · آخر تحديث '+CL.at:'')}
-   :{ok:false,t:'سجل الأرقام مشترك',d:CL.pending?'تغييرات لم تُرفع بعد (لا يوجد إنترنت؟).':cs==='seed'?'فعّل مجلد البرنامج مرة واحدة لنقل السجل الحالي إلى Google Drive.':cs==='load'?'جارٍ التحميل…':'تعذر الوصول إلى السجل في Google Drive.',
-    fix:cs==='seed'?['ربط المجلد','connectLog(!logDir).then(setDraw)']:['إعادة المحاولة','cloudPull(true).then(setDraw)']})}
+  it.push(ok?{ok:true,t:'سجل الأرقام مشترك',d:'☁️ نفس الأرقام على كل الأجهزة'+(CL.at?' · آخر تحديث '+CL.at:''),fix2:['تحديث','cloudPull(true).then(setDraw)']}
+   :{ok:false,soft:CL.pending||cs==='load'||!navigator.onLine,t:'سجل الأرقام مشترك',d:CL.pending?'تغييرات لم تُرفع بعد (لا يوجد إنترنت؟) — تُرفع تلقائياً.':cs==='seed'?'اختر مجلد البرنامج مرة واحدة لنقل السجل الحالي إلى Google Drive.':cs==='load'?'جارٍ التحميل…':'تعذر الوصول إلى السجل في Google Drive.',
+    fix:cs==='seed'?['📁 اختيار مجلد البرنامج','connectLog(!logDir).then(setDraw)']:['إعادة المحاولة','cloudPull(true).then(setDraw)']})}
  else it.push({ok:false,t:'سجل الأرقام مشترك',d:'يعمل بعد الاتصال بـ Google Drive.'});
- let a=SET.assets,miss=a?SET_NEED.filter(x=>!a.includes(x)):null;
+ let a=SET.assets,miss=a?SET_NEED.filter(x=>!a.includes(x)):null,canUp=!ph&&logState==='ok';
  it.push(!syncOn()?{ok:false,t:'صور المكتب في Google Drive',d:'الكليشة والختم والتوقيع — بعد الاتصال بـ Google Drive.'}
   :a===null?{ok:null,t:'صور المكتب في Google Drive',d:'جارٍ الفحص…'}
-  :!miss.length?{ok:true,t:'صور المكتب في Google Drive',d:'الكليشة والختم والتوقيع موجودة — الهاتف يطبع التقارير بها.'}
-  :{ok:false,t:'صور المكتب في Google Drive',d:'ناقص: '+miss.join('، ')+(!ph&&logState==='ok'?'':' — ارفعها من الكمبيوتر الرئيسي بعد ربط مجلد البرنامج.'),fix:!ph&&logState==='ok'?['رفع من مجلد البرنامج','setUploadAssets()']:null});
+  :!miss.length?{ok:true,t:'صور المكتب في Google Drive',d:'الكليشة والختم والتوقيع موجودة — الهاتف يطبع التقارير بها.',fix2:canUp?['رفع من جديد','setUploadAssets()']:null}
+  :{ok:false,soft:!canUp,t:'صور المكتب في Google Drive',d:'ناقص: '+miss.join('، ')+(canUp?'':' — تُرفع من الكمبيوتر الرئيسي بعد اختيار مجلد البرنامج.'),fix:canUp?['رفع من مجلد البرنامج','setUploadAssets()']:null});
  return it}
-function setBadge(){let n=0;try{n=setItems().filter(x=>x.ok===false).length}catch(e){}$$('.set-n').forEach(s=>{s.textContent=n||'';s.classList.toggle('on',!!n)})}
-function setDraw(){setBadge();let m=$('#setModal');if(!m||!m.classList.contains('open'))return;let it=setItems();
- $('#setBody').innerHTML=it.map((x,i)=>`<div class="set-item ${x.ok===true?'ok':x.ok===false?'no':'wait'}"><span class="set-ic">${x.ok===true?'✓':x.ok===false?(i+1):'…'}</span><div class="set-tx"><b>${x.t}</b><small>${x.d}</small></div><span class="set-btns">${x.fix&&x.ok!==true?`<button type="button" class="mini btn-blue" onclick="${x.fix[1]}">${x.fix[0]}</button>`:''}${x.fix2?`<button type="button" class="mini" onclick="${x.fix2[1]}">${x.fix2[0]}</button>`:''}</span></div>`).join('')
-  +`<div class="set-info">📶 العمل بدون إنترنت: ${ONWEB?(navigator.serviceWorker&&navigator.serviceWorker.controller?'جاهز على هذا الجهاز':'يتفعّل بعد فتح الرابط مرة ثانية'):'الملف على الهارد يعمل دائماً بدون إنترنت'} · النسخة <span dir="ltr">v${APP_VERSION}</span></div>`;
- let left=it.filter(x=>x.ok===false).length;$('#setSum').textContent=left?`باقي ${left}`:'كل شيء جاهز ✓'}
+/* one status light: g = all connected · y = waiting (offline, not uploaded, folder permission) · r = needs you */
+function connLevel(){let it;try{it=setItems()}catch(e){return['y','']}
+ if(!syncOn())return['r','غير مربوط بـ Google Drive — اضغط للربط'];
+ if(!setPhone()&&FS_OK&&logState==='need')return['y','مجلد البرنامج يحتاج إذن — اضغط «تفعيل»','need'];
+ if(!navigator.onLine)return['y','لا يوجد إنترنت — التغييرات تُرفع عند عودته'];
+ if(CL.pending)return['y','تغييرات لم تُرفع بعد'];
+ let bad=it.find(x=>x.ok===false&&!x.soft);if(bad)return['r',bad.t+' — يحتاج تدخلك'];
+ let w=it.find(x=>x.ok===false||x.ok===null);if(w)return['y',w.t+(w.ok===null?' — جارٍ الفحص':' — بالانتظار')];
+ return['g','كل شيء متصل ✓']}
+function setBadge(){if(syncOn()&&SET.assets===null&&!SET.checking){SET.checking=true;setAssetsCheck(false).finally(()=>{SET.checking=false;if(SET.assets!==null)setBadge()})}
+ let n=0,lv=['y',''];try{n=setItems().filter(x=>x.ok===false).length;lv=connLevel()}catch(e){}
+ $$('.set-n').forEach(s=>{s.textContent=n||'';s.classList.toggle('on',!!n)});
+ $$('.cdot').forEach(d=>d.className='cdot '+lv[0]);$$('.cact').forEach(c=>c.hidden=lv[2]!=='need');
+ [$('#connLight'),$('.fd-setb')].forEach(b=>{if(b)b.title=lv[1]})}
+/* tapping the light: one-tap folder permission, otherwise the connection screen */
+async function connTap(){let lv=connLevel();if(lv[2]==='need'){await connectLog(false);setBadge();if(logState==='ok')return}setOpen()}
+function setDraw(){setBadge();let m=$('#setModal');if(!m||!m.classList.contains('open'))return;let it=setItems(),ph=setPhone(),lv=connLevel();
+ let h=it.map((x,i)=>`<div class="set-item ${x.ok===true?'ok':x.ok===false?'no':'wait'}"><span class="set-ic">${x.ok===true?'✓':x.ok===false?(i+1):'…'}</span><div class="set-tx"><b>${x.t}</b><small>${x.d}</small></div><span class="set-btns">${x.ok!==true?setBtn(x.fix,'btn-blue'):''}${setBtn(x.fix2)}</span></div>`).join('');
+ if(!ph&&syncOn())h+=`<div class="set-act"><span class="set-ic">📱</span><div class="set-tx"><b>ربط هاتف</b><small>اعرض رمز QR ثم امسحه من الهاتف — لا حاجة لنسخ أي رابط.</small></div><span class="set-btns"><button type="button" class="mini btn-blue" onclick="qrShow()">📱 ربط هاتف بـ QR</button></span></div>`;
+ h+=`<div class="set-light"><span class="cdot ${lv[0]}"></span>${esc(lv[1])}</div>`;
+ h+=`<div class="set-info">📶 العمل بدون إنترنت: ${ONWEB?(navigator.serviceWorker&&navigator.serviceWorker.controller?'جاهز على هذا الجهاز':'يتفعّل بعد فتح الرابط مرة ثانية'):'الملف على الهارد يعمل دائماً بدون إنترنت'} · النسخة <span dir="ltr">v${APP_VERSION}</span>${ONWEB&&!ph?'<br>💡 اقتراح: في Chrome يمكنك تثبيت البرنامج كتطبيق (زر التثبيت في شريط العنوان) ليفتح من سطح المكتب.':''}</div>`;
+ $('#setBody').innerHTML=h;
+ let left=it.filter(x=>x.ok===false).length;$('#setSum').textContent=left?`باقي ${left}`:'كل شيء جاهز ✓';
+ let hi=$('#setHello');hi.hidden=!SET.welcome;$('#setTitle').textContent=SET.welcome?'👋 مرحباً — ربط هذا الجهاز':'⚙️ ربط هذا الجهاز';$('#setX').textContent=SET.welcome?'تخطي':'إغلاق ✕';
+ if(SET.welcome)hi.innerHTML=ph?'<b>اربط هذا الجهاز بالمكتب</b>امسح رمز QR من شاشة الكمبيوتر. يمكنك «تخطي» والعمل بدون ربط.'
+  :'<b>خطوة واحدة: اختر مجلد البرنامج على الهارد</b>إذا كان هذا الكمبيوتر الثاني، يتصل كل شيء تلقائياً من المجلد. الكمبيوتر الأول فقط يحتاج لصق رابط المزامنة مرة واحدة. يمكنك «تخطي» والعمل بدون ربط.';
+ if(SET.welcome&&!left&&!SET.closing){SET.closing=true;setTimeout(()=>{SET.closing=false;if(SET.welcome&&!setItems().some(x=>x.ok===false))setClose(true)},1500)}}
 async function setAssetsCheck(force){if(!syncOn()){SET.assets=null;return}
  if(!force&&WEB_ASSETS&&Object.keys(WEB_ASSETS).length){SET.assets=Object.keys(WEB_ASSETS);return}
- if(!force&&SET.assets&&Date.now()-SET.assetsAt<5*60e3)return;
+ if(!force&&SET.assets&&SET_NEED.every(x=>SET.assets.includes(x))&&Date.now()-SET.assetsAt<5*60e3)return;
  try{let j=await syncGet('assets');SET.assets=Object.keys(j.items||{});SET.assetsAt=Date.now()}catch(e){SET.assets=SET.assets||null}}
-async function setOpen(){$('#setModal').classList.add('open');setDraw();await setAssetsCheck(false);setDraw()}
-function setClose(){$('#setModal').classList.remove('open')}
+async function setOpen(welcome){SET.welcome=!!welcome;$('#setModal').classList.add('open');setDraw();await setAssetsCheck(false);setDraw()}
+/* closing the first-run welcome = «تخطي»: it is not shown again on this device (the light stays red) */
+function setClose(done){if(SET.welcome&&!done){try{localStorage.setItem('adnanWelcomeSkip','1')}catch(e){}}SET.welcome=false;$('#setModal').classList.remove('open');setBadge()}
 function setConnected(){setDraw();try{syncDeskStatus();syncInboxRefresh(true)}catch(e){}setAssetsCheck(true).then(setDraw)}
 async function setUploadAssets(){if(SET.busy)return;SET.busy=true;try{localStorage.removeItem('adnanAssetSig');ASSET_URLS=null;await clUploadAssets()}finally{SET.busy=false}await setAssetsCheck(true);setDraw();
  let a=SET.assets||[];alert(SET_NEED.every(x=>a.includes(x))?'تم رفع صور المكتب إلى Google Drive ✓':'تعذر رفع صور المكتب. تأكد أن مجلد vehicle-report-generator-assets داخل مجلد البرنامج وفيه letterhead.png و stamp.png و signature.png.')}
@@ -1711,8 +1772,66 @@ async function qrScan(onDone){if(!qrCanScan()){alert('هذا المتصفح لا
   $('#qrsMsg').textContent='وجّه الكاميرا إلى رمز QR الظاهر على شاشة الكمبيوتر';let det=new BarcodeDetector({formats:['qr_code']}),busy=false;
   QS.timer=setInterval(async()=>{if(busy||!QS.stream)return;busy=true;try{let r=await det.detect(v);for(const x of r){let t=String(x.rawValue||'').trim();
      if(QR_LINK.test(t)){qrScanStop();let ok=await syncApply(t,QS.done);if(ok&&document.body.classList.contains('fd-on'))fdToast('تم الربط بالمكتب ✓');return}
-     else $('#qrsMsg').textContent='هذا ليس رمز المزامنة — امسح الرمز من نافذة «ربط هاتف بـ QR» على الكمبيوتر'}}catch(e){}busy=false},350)}
+     else $('#qrsMsg').textContent='هذا ليس رمز المزامنة — امسح الرمز من «⚙️ الإعداد» ← «ربط هاتف بـ QR» على الكمبيوتر'}}catch(e){}busy=false},350)}
  catch(e){qrScanStop();alert('لم يُسمح باستخدام الكاميرا. يمكنك لصق الرابط بدلاً من ذلك.');syncConnect(onDone)}}
 function qrScanStop(){clearInterval(QS.timer);QS.timer=null;if(QS.stream){QS.stream.getTracks().forEach(t=>t.stop());QS.stream=null}let v=$('#qrsV');if(v)v.srcObject=null;$('#qrsUI').hidden=true}
+
+/* =====================================================================
+   STEP 2A — connection in one place
+   - app-settings.json in the program folder keeps the sync link, so a laptop connects by choosing the folder.
+     It is private (it holds the office key): it lives only in the program folder, never on GitHub or in Drive.
+   - invoice texts and Excel column fixes live in the shared log (settings), so every device gets them.
+   ===================================================================== */
+const APPSET_FILE='app-settings.json';var APPSET={bad:false,busy:false};
+async function appSetRead(){try{let fh=await logDir.getFileHandle(APPSET_FILE),d=JSON.parse(await (await fh.getFile()).text());return d&&d.kind==='adnan-app-settings'?d:null}catch(e){return null}}
+async function appSetWrite(){if(!logDir||logState!=='ok'||!syncOn())return false;
+ try{let d=(await appSetRead())||{};Object.assign(d,{kind:'adnan-app-settings',v:1,sync:syncUrl,updated:new Date().toISOString(),note:'Private: holds the office sync key. Keep this file only in the program folder.'});
+  await writeFile(logDir,APPSET_FILE,JSON.stringify(d,null,1));APPSET.bad=false;return true}catch(e){console.error(e);return false}}
+/* 'ok' · 'bad' (Drive answered no / not the sync script) · 'off' (no internet) */
+async function pingUrl(u){try{let x=new URL(u),k=x.searchParams.get('k');if(!k)return'bad';x.search='';x.hash='';
+  let ctl=new AbortController(),t=setTimeout(()=>ctl.abort(),9000),r=await fetch(x.toString()+'?'+new URLSearchParams({k,a:'ping'}),{cache:'no-store',signal:ctl.signal});clearTimeout(t);
+  let j=await r.json().catch(()=>null);return j&&j.ok?'ok':'bad'}catch(e){return(!navigator.onLine||(e&&e.name==='AbortError'))?'off':'bad'}}
+async function appSetAfterFolder(){if(APPSET.busy||!logDir||logState!=='ok')return;APPSET.busy=true;
+ try{let f=await appSetRead(),fl=f&&typeof f.sync==='string'?f.sync.trim():'',off=false;try{off=localStorage.getItem('adnanSyncOff')==='1'}catch(e){}
+  if(!syncOn()){if(!fl||off)return;let r=await pingUrl(fl);
+   if(r==='bad'){APPSET.bad=true;setDraw();if(!$('#setModal').classList.contains('open'))setOpen(SET.welcome);return}
+   await syncApply(fl,()=>{let m='تم الاتصال بـ Google Drive تلقائياً من مجلد البرنامج ✓';try{syncDeskStatus(m);syncInboxRefresh(true).then(()=>syncDeskStatus(m))}catch(e){}},{auto:true,trusted:r==='off'});return}
+  APPSET.bad=false;if(fl===syncUrl)return;
+  if(!fl){await appSetWrite();return}
+  /* the folder holds a different link: never replace a working link on this device */
+  let dev=await pingUrl(syncUrl);
+  if(dev==='ok'){if(await pingUrl(fl)==='bad')await appSetWrite();return}
+  if(dev==='bad'&&await pingUrl(fl)==='ok')await syncApply(fl,()=>{try{syncDeskStatus('تم تحديث رابط المزامنة من مجلد البرنامج ✓')}catch(e){}},{auto:true})}
+ catch(e){console.error(e)}finally{APPSET.busy=false;try{setDraw()}catch(e){}}}
+
+/* ---------- settings that follow you (three-way per key, like the other shared settings) ---------- */
+var STG={base:undefined,timer:null};
+const stJ=o=>JSON.stringify(Object.keys(o||{}).sort().map(k=>[k,o[k]]));
+const stOf=S=>Object.fromEntries(Object.entries(S||{}).filter(([k])=>/^(lbl|col):/.test(k)));
+function stBase(){if(STG.base===undefined){try{STG.base=JSON.parse(localStorage.getItem('adnanSettingsBase')||'null')}catch(e){STG.base=null}}return STG.base}
+function stLocal(){let o={};Object.entries(labels||{}).forEach(([k,v])=>o['lbl:'+k]=v);Object.entries(COLMAPS||{}).forEach(([k,v])=>o['col:'+k]=v);return o}
+function stReady(){return cloudOn()?!!CL.pulled:(!FS_OK||logState==='ok')}
+function stSoon(){if(!window.STG)return;clearTimeout(STG.timer);STG.timer=setTimeout(stSync,700)}
+function stSync(){if(!window.STG||!stReady())return;clearTimeout(STG.timer);
+ let l=getLog(),S=l.settings||{},loc=stLocal(),base=stBase(),ch=false;
+ if(base===null)Object.keys(loc).forEach(k=>{if(!(k in S)){S[k]=loc[k];ch=true}});   // first time on this device: bring the values kept here
+ else new Set([...Object.keys(loc),...Object.keys(base)]).forEach(k=>{if(clKeyEq(loc[k],base[k]))return;
+  if(loc[k]===undefined){if(k in S){delete S[k];ch=true}}else if(!clKeyEq(S[k],loc[k])){S[k]=loc[k];ch=true}});
+ if(ch){l.settings=S;putLog(l)}
+ stApply(stOf(getLog().settings))}
+function stApply(flat){let nl={},nc={};Object.entries(flat).forEach(([k,v])=>{if(k.startsWith('lbl:'))nl[k.slice(4)]=v;else nc[k.slice(4)]=v});
+ STG.base=flat;try{localStorage.setItem('adnanSettingsBase',JSON.stringify(flat))}catch(e){}
+ let lc=stJ(nl)!==stJ(labels),cc=stJ(nc)!==stJ(COLMAPS);
+ if(lc){labels=nl;try{localStorage.setItem('adnanInvoiceTexts',JSON.stringify(labels))}catch(e){}$$('.lblpanel').forEach(b=>b.dataset.cur='')}
+ if(cc){COLMAPS=nc;try{localStorage.setItem('adnanColMaps',JSON.stringify(COLMAPS))}catch(e){}
+  if(rows.length){let v=$('#records').value;fillRecords();$('#records').value=v;buildList();colSummary()}
+  if(FD.rows&&FD.rows.length&&!$('#field').hidden)fdRedrawKeep()}
+ if(lc||cc)render()}
+
+/* ---------- first run: a device with nothing connected opens to the connection screen ---------- */
+function welcomeCheck(){try{if(document.body.classList.contains('fd-on')||syncOn()||localStorage.getItem('adnanWelcomeSkip')==='1')return;
+ if(logState==='loading')return setTimeout(welcomeCheck,400);if(logDir||$('#setModal').classList.contains('open'))return;setOpen(true)}catch(e){}}
+setTimeout(welcomeCheck,500);
+window.addEventListener('online',setBadge);window.addEventListener('offline',setBadge);
 
 </script></body></html>
