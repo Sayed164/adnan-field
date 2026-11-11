@@ -448,8 +448,43 @@ body.fd-on #verBar{position:fixed;top:0;left:0;right:0;z-index:50;box-shadow:0 3
 .fd-wel ol{text-align:right;font-size:14px;color:#3a3a3f;line-height:1.9;margin:0 0 20px;padding-right:22px;background:#fff;border-radius:14px;padding:12px 30px 12px 14px}
 .fd-wel .fd-btn{width:100%;font-size:18px;padding:17px}.fd-wel .fd-btn2{width:100%;margin-top:10px}
 .fd-wel .fd-link{display:block;margin:16px auto 0;font-size:14px;color:#6e6e73}
+/* Step 3: photo checklist, stars, share PDF, voice notes */
+.fd-pw{display:flex;flex-direction:column;gap:4px;min-width:0}
+.fd-pic .st{position:absolute;bottom:5px;left:5px;border:0;width:30px;height:30px;border-radius:50%;background:rgba(0,0,0,.55);color:#fff;font-size:16px;display:flex;align-items:center;justify-content:center;padding:0}
+.fd-pic .st.on{background:#ffd60a;color:#000}
+.fd-pic.star{box-shadow:0 0 0 3px #ffd60a}
+.fd-ptag{position:relative;display:block;text-align:center;font-size:12px;color:#6e6e73;background:#f2f2f7;border-radius:8px;padding:4px 2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fd-ptag.on{background:#e7f6ec;color:#1d6b35;font-weight:600}
+.fd-ptag select{position:absolute;inset:0;opacity:0;width:100%;height:100%;font-size:16px}
+.fd-shots-h{display:flex;justify-content:space-between;align-items:center;font-size:13px;font-weight:600;color:#1d1d1f;margin:10px 2px 6px}
+.fd-shots{display:flex;flex-wrap:wrap;gap:6px}
+.fd-shot{border:1px solid #d2d2d7;background:#fff;color:#1d1d1f;border-radius:980px;font-size:13px;font-weight:600;padding:7px 12px}
+.fd-shot.ok{background:#e7f6ec;border-color:#e7f6ec;color:#1d6b35}
+.fd-shot.sk{color:#aeaeb2;text-decoration:line-through}
+.fd-shots-on{font-size:13px;margin-top:10px}
+.fd-voice{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px}
+.fd-small.rec{background:#c00;color:#fff;animation:vpulse 1.2s ease-in-out infinite}
+@keyframes vpulse{50%{opacity:.6}}
+@media(prefers-reduced-motion:reduce){.fd-small.rec{animation:none}}
+.cam-q{position:absolute;top:calc(70px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:10px;background:rgba(0,0,0,.6);border-radius:980px;padding:6px 6px 6px 16px;white-space:nowrap}
+.cam-q[hidden]{display:none!important}
+.cam-q b{font-size:16px}.cam-q small{opacity:.75;font-size:12px}
+.cam-q button{background:rgba(255,255,255,.2);color:#fff;border:0;border-radius:980px;font-size:14px;padding:8px 14px}
+.cam-l{justify-self:start;display:flex;align-items:center;gap:12px}
+.cam-l .cam-thumb{justify-self:auto}
+.cam-star{width:46px;height:46px;border-radius:50%;border:0;background:rgba(255,255,255,.18);color:#fff;font-size:22px;padding:0}
+.cam-star.on{background:#ffd60a;color:#000}
+.cam-star[disabled]{opacity:.3}
+.share-btn{display:none}
+@media(pointer:coarse){.share-btn{display:inline-block}}
+.share-box{width:min(420px,94vw)}
+.share-body{padding:16px;display:flex;flex-direction:column;gap:10px}
+.share-name{font-size:13px;color:#555;word-break:break-all}
+.share-go,.share-dl{border:0;border-radius:12px;font-size:16px;font-weight:bold;padding:14px;cursor:pointer}
+.share-go{background:#071f53;color:#fff}.share-dl{background:#e4e4ea;color:#1d1d1f}
+@media print{.share-btn,#shareModal{display:none!important}}
 </style></head><body>
-<header class="bar"><b>مولد تقارير عدنان العلوي <small>ADNAN AL ALAWI · <span id="appVer">v2026-11-11.2</span></small></b><div class="buttons"><button id="connLight" onclick="connTap()" title="ربط هذا الجهاز"><span class="cdot"></span>⚙️ الإعداد<span class="cact" hidden>تفعيل</span><span class="set-n"></span></button><button id="homeBtn" onclick="homeOpen()">🏠 الرئيسية</button><button id="inboxBadge" class="btn-inbox" style="display:none" onclick="document.querySelector('#syncInbox').scrollIntoView({behavior:'smooth',block:'center'})"></button><button onclick="remOpen()">⏰ التذكيرات <span class="rem-n"></span></button><button onclick="fdOpen()">📱 فحص ميداني</button><button onclick="saveDraft()">حفظ مسودة</button><button onclick="loadDraft()">استرجاع مسودة</button><button id="overdueBadge" class="badge-over" style="display:none" onclick="openAccounts('over')"></button><button onclick="openAccounts()">الحسابات</button><button onclick="openLog()">السجل</button><button onclick="printReport()">تصدير PDF</button></div></header>
+<header class="bar"><b>مولد تقارير عدنان العلوي <small>ADNAN AL ALAWI · <span id="appVer">v2026-11-11.3</span></small></b><div class="buttons"><button id="connLight" onclick="connTap()" title="ربط هذا الجهاز"><span class="cdot"></span>⚙️ الإعداد<span class="cact" hidden>تفعيل</span><span class="set-n"></span></button><button id="homeBtn" onclick="homeOpen()">🏠 الرئيسية</button><button id="inboxBadge" class="btn-inbox" style="display:none" onclick="document.querySelector('#syncInbox').scrollIntoView({behavior:'smooth',block:'center'})"></button><button onclick="remOpen()">⏰ التذكيرات <span class="rem-n"></span></button><button onclick="fdOpen()">📱 فحص ميداني</button><button onclick="saveDraft()">حفظ مسودة</button><button onclick="loadDraft()">استرجاع مسودة</button><button id="overdueBadge" class="badge-over" style="display:none" onclick="openAccounts('over')"></button><button onclick="openAccounts()">الحسابات</button><button onclick="openLog()">السجل</button><button onclick="printReport()">تصدير PDF</button><button id="shareBtn" class="share-btn" onclick="sharePDF()">📤 مشاركة PDF</button></div></header>
 <div id="verBar" class="verbar" hidden></div>
 <main class="main"><aside class="panel"><h1>تقرير جديد</h1><form class="form" id="f" onsubmit="return false">
 <div class="sec privsec" id="privSec"><h2>📝 ملاحظاتي <small>— للتذكير فقط، لا تظهر في التقرير ولا في PDF</small></h2><textarea id="privNotes" placeholder="ملاحظات تريد تذكّرها أثناء كتابة التقرير (تصل أيضاً من الهاتف)"></textarea></div>
@@ -560,10 +595,11 @@ Through Bank transfer to: Al Salam Bank / IBAN: BH89ALSA00436034150000</textarea
 <div class="modal" id="setModal" style="z-index:70" onclick="if(event.target===this)setClose()"><div class="modal-box set-box"><div class="modal-head"><h3 id="setTitle">⚙️ ربط هذا الجهاز</h3><span class="hint" id="setSum" style="margin:0"></span><button class="mini" id="setX" onclick="setClose()">إغلاق ✕</button></div><div class="set-hello" id="setHello" hidden></div><div class="modal-body"><div id="setBody"></div><details class="set-detail"><summary>التفاصيل</summary><div id="cloudStatus" class="logstatus na"></div><div class="logstatus na" id="logStatus">جارٍ تحميل السجل…</div></details></div></div></div>
 <div class="modal" id="qrModal" style="z-index:75" onclick="if(event.target===this)qrClose()"><div class="modal-box" style="width:min(460px,96vw)"><div class="modal-head"><h3>📱 ربط هاتف بـ QR</h3><button class="mini" onclick="qrClose()">إغلاق ✕</button></div><div class="qr-body" id="qrBody"></div></div></div>
 <div class="qrs" id="qrsUI" hidden><video id="qrsV" playsinline muted autoplay></video><div class="qrs-frame"></div><div class="qrs-top"><span>مسح رمز المزامنة</span><button type="button" onclick="qrScanStop()" aria-label="إغلاق">✕</button></div><div class="qrs-msg" id="qrsMsg"></div></div>
-<div id="field" class="fd" hidden><header class="fd-bar"><button class="fd-link" onclick="fdClose()">‹ التقرير الكامل</button><b>فحص ميداني</b><span style="display:flex;align-items:center;gap:6px"><button class="fd-link fd-setb" onclick="connTap()" aria-label="الإعداد"><span class="cdot"></span>⚙️<span class="cact" hidden>تفعيل</span><span class="set-n"></span></button><button class="fd-link fd-remb" onclick="remOpen()" aria-label="التذكيرات">⏰<span class="rem-n"></span></button><span class="fd-count" id="fdCount"></span></span></header><div class="fd-scroll" id="fdBody"></div><footer class="fd-foot"><button class="fd-btn2" id="fdSendBtn" onclick="fdSecondary()">إرسال</button><button class="fd-btn" id="fdSaveBtn" onclick="fdSaveCar()">حفظ السيارة والتالي</button></footer><input type="file" id="fdCam" accept="image/*" capture="environment" hidden><div class="cam" id="camUI" hidden><video id="camV" playsinline muted autoplay></video><div class="cam-flash" id="camF"></div><div class="cam-top"><button type="button" id="camX" aria-label="إغلاق">✕</button><span class="cam-count" id="camN"></span><button type="button" id="camT" hidden aria-label="الإضاءة">🔦</button></div><div class="cam-msg" id="camM"></div><div class="cam-bar"><div class="cam-thumb" id="camP"></div><button type="button" class="cam-shot" id="camS" aria-label="التقاط"></button><button type="button" class="cam-done" id="camD">تم ✓</button></div></div><input type="file" id="fdLib" accept="image/*" multiple hidden><input type="file" id="fdXls" accept=".xlsx,.xls,.csv" hidden></div><div class="fd-toast" id="fdToast" role="status"></div>
+<div class="modal" id="shareModal" style="z-index:80" onclick="if(event.target===this)shareClose()"><div class="modal-box share-box"><div class="modal-head"><h3>📤 الـ PDF جاهز</h3><button class="mini" onclick="shareClose()">إغلاق ✕</button></div><div class="share-body"><div class="share-name" id="shareName"></div><button type="button" class="share-go" id="shareGo" onclick="shareGo()">📤 مشاركة — واتساب، البريد…</button><button type="button" class="share-dl" id="shareDl" onclick="shareSave()">⬇ حفظ في الهاتف</button><div class="hint" style="margin:0">هذا الملف صورة من الصفحات (مثل ملفات «حفظ الكل»)، فلا يمكن تحديد النص فيه. للنسخة النصية استخدم «تصدير PDF».</div></div></div></div>
+<div id="field" class="fd" hidden><header class="fd-bar"><button class="fd-link" onclick="fdClose()">‹ التقرير الكامل</button><b>فحص ميداني</b><span style="display:flex;align-items:center;gap:6px"><button class="fd-link fd-setb" onclick="connTap()" aria-label="الإعداد"><span class="cdot"></span>⚙️<span class="cact" hidden>تفعيل</span><span class="set-n"></span></button><button class="fd-link fd-remb" onclick="remOpen()" aria-label="التذكيرات">⏰<span class="rem-n"></span></button><span class="fd-count" id="fdCount"></span></span></header><div class="fd-scroll" id="fdBody"></div><footer class="fd-foot"><button class="fd-btn2" id="fdSendBtn" onclick="fdSecondary()">إرسال</button><button class="fd-btn" id="fdSaveBtn" onclick="fdSaveCar()">حفظ السيارة والتالي</button></footer><input type="file" id="fdCam" accept="image/*" capture="environment" hidden><div class="cam" id="camUI" hidden><video id="camV" playsinline muted autoplay></video><div class="cam-flash" id="camF"></div><div class="cam-top"><button type="button" id="camX" aria-label="إغلاق">✕</button><span class="cam-count" id="camN"></span><button type="button" id="camT" hidden aria-label="الإضاءة">🔦</button></div><div class="cam-msg" id="camM"></div><div class="cam-q" id="camQ" hidden><span><b id="camQt"></b> <small id="camQn"></small></span><button type="button" id="camQs">تخطي</button></div><div class="cam-bar"><div class="cam-l"><div class="cam-thumb" id="camP"></div><button type="button" class="cam-star" id="camStar" aria-label="تمييز آخر صورة للتقرير">☆</button></div><button type="button" class="cam-shot" id="camS" aria-label="التقاط"></button><button type="button" class="cam-done" id="camD">تم ✓</button></div></div><input type="file" id="fdLib" accept="image/*" multiple hidden><input type="file" id="fdXls" accept=".xlsx,.xls,.csv" hidden></div><div class="fd-toast" id="fdToast" role="status"></div>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script>
-var APP_VERSION='2026-11-11.2';  // shown in the top bar; the page compares it with the one online
+var APP_VERSION='2026-11-11.3';  // shown in the top bar; the page compares it with the one online
 /* asset path; while «حفظ الكل» makes PDFs it uses the copies read from the program folder */
 var WEB_ASSETS=null,ONWEB=location.protocol!=='file:';const AS=n=>((window.__pdfAssets||ONWEB)&&window.ASSET_URLS&&ASSET_URLS[n])||(WEB_ASSETS&&WEB_ASSETS[n])||'vehicle-report-generator-assets/'+n;
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
@@ -1115,12 +1151,23 @@ const FD_SPECS=[['fuel','الوقود',['Petrol','Diesel']],['asp','نوع ال�
 const FD_FIELDS=[['reg','رقم التسجيل',''],['plateType','نوع اللوحة',''],['make','الصانع',''],['model','الطراز',''],['year','سنة الصنع','num'],['km','الكيلومترات','num'],['color','اللون',''],['engine','حجم المحرك',''],['vin','رقم القاعدة VIN','ltr'],['case','رقم المعاملة / الاتفاقية',''],['owner','اسم المالك / مقدم الطلب','full']];
 const FD_RATE=[['E','م','ممتاز'],['G','ج','جيد'],['A','و','وسط'],['R','ت','عناية'],['P','ض','ضعيف']];
 const FD_MAXPICS=40,FD_KEY='fieldState';
+/* Step 3: photos the checklist asks for; each photo has an entry in c.pm (same order as c.pics): {t:shot, s:1 = starred} */
+const FD_SHOTS=[['front','الأمام'],['back','الخلف'],['right','الجانب الأيمن'],['left','الجانب الأيسر'],['inside','الداخل'],['odo','العداد'],['vin','رقم القاعدة']];
+function fdPM(c){if(!Array.isArray(c.pm))c.pm=[];while(c.pm.length<c.pics.length)c.pm.push({});if(c.pm.length>c.pics.length)c.pm.length=c.pics.length;c.pm=c.pm.map(m=>m&&typeof m==='object'?m:{});return c.pm}
+const fdShotDone=(c,t)=>fdPM(c).some(m=>m.t===t);
+const fdShotName=t=>(FD_SHOTS.find(x=>x[0]===t)||[])[1]||'';
+function fdNextShot(c){let sk=c.ckSkip||[];return FD_SHOTS.find(([t])=>!fdShotDone(c,t)&&!sk.includes(t))||null}
+function fdShotsOn(){try{return localStorage.getItem('adnanShotList')!=='0'}catch(e){return true}}
+function fdTagPic(c,i,t){let pm=fdPM(c);if(t)pm.forEach((m,j)=>{if(j!==i&&m.t===t)delete m.t});if(pm[i]){if(t)pm[i].t=t;else delete pm[i].t}}
+function fdShotsHTML(c){if(!fdShotsOn())return`<button class="fd-link fd-shots-on" data-act="shotsOn">📋 إظهار قائمة الصور المطلوبة</button>`;
+ let sk=c.ckSkip||[],done=FD_SHOTS.filter(([t])=>fdShotDone(c,t)).length;
+ return`<div class="fd-shots-h"><span>📋 الصور المطلوبة ${done}/${FD_SHOTS.length}</span><button class="fd-link" data-act="shotsOff" style="font-size:13px">إخفاء القائمة</button></div><div class="fd-shots">${FD_SHOTS.map(([t,l])=>{let d=fdShotDone(c,t),x=!d&&sk.includes(t);return`<button class="fd-shot${d?' ok':x?' sk':''}" data-act="shot" data-t="${t}">${d?'✓ ':''}${l}</button>`}).join('')}</div>`}
 let FD={rows:[],cur:null,saved:[],type:'court',q:'',loaded:false},fdTimer=null;
 
 const fdThumbCache={};function fdThumb(src){if(fdThumbCache[src.length+src.slice(-40)])return fdThumbCache[src.length+src.slice(-40)];return''}
 async function fdMakeThumb(src){return new Promise(r=>{let im=new Image;im.onload=()=>{let k=160/Math.max(im.width,im.height),c=document.createElement('canvas');c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext('2d').drawImage(im,0,0,c.width,c.height);let u=c.toDataURL('image/jpeg',.6);fdThumbCache[src.length+src.slice(-40)]=u;r(u)};im.onerror=()=>r('');im.src=src})}
 function fdBlank(){return{id:'c'+Date.now(),row:null,type:FD.type,date:new Date().toISOString().slice(0,10),
- fields:{plateType:'خصوصي',fuel:'Petrol',asp:'NA',cyl:'4',trans:'Auto',body:'صالون'},rate:{},note:{},notes:'',pics:[]}}
+ fields:{plateType:'خصوصي',fuel:'Petrol',asp:'NA',cyl:'4',trans:'Auto',body:'صالون'},rate:{},note:{},notes:'',pics:[],pm:[]}}
 const fdHas=c=>!!(c&&(Object.entries(c.fields).some(([k,v])=>!['plateType','fuel','asp','cyl','trans','body'].includes(k)&&String(v).trim())||c.pics.length||c.notes.trim()||(c.priv||'').trim()||Object.keys(c.rate).length));
 const fdCarName=c=>[c.fields.reg,c.fields.make,c.fields.model,c.fields.year].filter(Boolean).join(' · ')||'سيارة بدون رقم';
 function fdToast(msg){let t=$('#fdToast');t.textContent=msg;t.classList.add('show');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('show'),2200)}
@@ -1131,7 +1178,7 @@ const fdDef=label=>label[0]==='!'?'':'E';
 /* ---------- open / close ---------- */
 async function fdOpen(){if(!FD.loaded){try{let d=await idbGet(FD_KEY);if(d){FD.rows=d.rows||[];registerRows(FD.rows);FD.saved=d.saved||[];FD.type=d.type||'court';FD.cur=d.cur||null;FD.listId=d.listId||'';FD.listName=d.listName||'';FD.lists=d.lists||[];FD.seenLists=d.seenLists||[];FD.pendingList=d.pendingList||null;let old=Date.now()-14*864e5;FD.saved=FD.saved.filter(x=>!(x.sent&&x.sentAt&&Date.parse(x.sentAt)<old))}}catch(e){}FD.loaded=true}
  if(!FD.cur)FD.cur=fdBlank();$('#field').hidden=false;document.body.classList.add('fd-on');try{localStorage.setItem('adnanFieldMode','1')}catch(e){}fdDraw();if(syncOn()){fdSyncLists();fdUpload()}}
-function fdClose(){$('#field').hidden=true;document.body.classList.remove('fd-on');try{if(cloudOn())cloudPull(false)}catch(e){}try{localStorage.setItem('adnanFieldMode','0')}catch(e){}}
+function fdClose(){voiceStop();$('#field').hidden=true;document.body.classList.remove('fd-on');try{if(cloudOn())cloudPull(false)}catch(e){}try{localStorage.setItem('adnanFieldMode','0')}catch(e){}}
 
 /* ---------- drawing ---------- */
 function fdWelcomeOn(){try{return !syncOn()&&localStorage.getItem('adnanWelcomeSkip')!=='1'}catch(e){return!syncOn()}}
@@ -1150,7 +1197,7 @@ function fdDraw(){if(fdWelcomeOn())return fdWelcome();$('#field').classList.remo
   :on?`<div class="fd-empty">لا توجد قائمة بعد — أرسلها من الكمبيوتر بزر «إرسال القائمة للهاتف»، أو <button class="fd-link" data-act="xls" style="font-size:14px">استورد Excel من الهاتف</button>.</div>`:`<button class="fd-btn" style="width:100%" data-act="xls">استيراد ملف Excel من الشركة</button><div class="fd-sub">أو اترك الملف وأدخل بيانات السيارة يدوياً بالأسفل.</div>`);
  $('#fdBody').innerHTML=`
  <div class="fd-h">١. اختر السيارة</div><div class="fd-card">${carCard}${c.row!=null||f.reg?`<div class="fd-sel">🚗 <div>${esc(fdCarName(c))}<small>${f.case?'اتفاقية / معاملة: '+esc(f.case):''}</small></div></div>`:''}</div>
- <div class="fd-h">٢. الصور <span id="fdPicN">${c.pics.length}/${FD_MAXPICS}</span></div><div class="fd-card"><div class="fd-row-tools"><button class="fd-small blue" data-act="cam">📷 التقاط صورة</button><button class="fd-small" data-act="lib">🖼 من الألبوم</button></div><div class="fd-pics" id="fdPics"></div></div>
+ <div class="fd-h">٢. الصور <span id="fdPicN">${c.pics.length}/${FD_MAXPICS}</span></div><div class="fd-card"><div class="fd-row-tools"><button class="fd-small blue" data-act="cam">📷 التقاط صورة</button><button class="fd-small" data-act="lib">🖼 من الألبوم</button></div><div id="fdShots"></div><div class="fd-pics" id="fdPics"></div><div class="fd-sub" id="fdStarHint" style="margin:8px 2px 0" hidden>⭐ اضغط النجمة على أفضل الصور — تُختار للتقرير تلقائياً على الكمبيوتر.</div></div>
  <div class="fd-h">٣. نوع التقرير</div><div class="fd-seg" data-seg="type">${FD_TYPES.map(([v,l])=>`<button class="${c.type===v?'on':''}" data-act="type" data-v="${v}">${l}</button>`).join('')}</div>
  <div class="fd-h">٤. بيانات المركبة</div><div class="fd-card"><div class="fd-grid">${FD_FIELDS.map(([k,l,o])=>`<div class="${o==='full'?'full':''}"><label class="fd-l">${l}</label><input data-f="${k}" value="${esc(f[k]||'')}"${o==='num'?' inputmode="numeric"':''}${o==='ltr'?' dir="ltr" autocapitalize="characters"':''}${k==='plateType'?' list="plateTypes"':''}></div>`).join('')}</div></div>
  <div class="fd-h">٥. المواصفات</div><div class="fd-card">${FD_SPECS.map(([k,l,a])=>`<div class="fd-spec"><label class="fd-l">${l}</label><div class="fd-chips">${a.map(v=>`<button class="fd-chip${f[k]===v?' on':''}" data-act="spec" data-k="${k}" data-v="${esc(v)}">${esc(v)}</button>`).join('')}</div></div>`).join('')}</div>
@@ -1158,13 +1205,14 @@ function fdDraw(){if(fdWelcomeOn())return fdWelcome();$('#field').classList.remo
  <div class="fd-legend">م ممتاز · ج جيد · و وسط · ت تحتاج عناية · ض ضعيف — اضغط مرة ثانية لإزالة العلامة.</div>
  <div class="fd-card">${fdGroups().map(([t,ar,en])=>ar.map((x,i)=>{if(x[0]==='#')return`<div class="fd-group">${esc(x.slice(1))}</div>`;let k=t+'-'+i,s=k in c.rate?c.rate[k]:fdDef(x),note=c.note[k]||'',show=note||s==='R'||s==='P';
    return`<div class="fd-cond" data-k="${k}"><div class="fd-cond-top"><div class="fd-cond-name">${esc(x.replace(/^!/,''))}<small>${esc(en[i].replace(/^!/,''))}</small></div><div class="fd-rates">${FD_RATE.map(([r,a,lb])=>`<button class="fd-rate ${r}${s===r?' on':''}" data-act="rate" data-k="${k}" data-r="${r}" data-def="${fdDef(x)}" aria-label="${lb}">${a}<small>${r}</small></button>`).join('')}</div></div>${show?`<input class="fd-note" data-note="${k}" placeholder="ملاحظة (تظهر في عمود الملاحظات)" value="${esc(note)}">`:`<button class="fd-addnote" data-act="addnote" data-k="${k}">+ ملاحظة</button>`}</div>`}).join('')).join('')}</div>
- <div class="fd-h">٧. الملاحظات</div><div class="fd-card"><textarea data-f="__notes" placeholder="اكتب كل ملاحظة في سطر. ابدأ السطر بعلامة ! ليظهر باللون الأحمر.">${esc(c.notes)}</textarea></div>
- <div class="fd-h">📝 ملاحظات لي <span style="font-weight:400;font-size:12px">لا تظهر في التقرير</span></div><div class="fd-card fd-priv"><textarea data-f="__priv" placeholder="ملاحظات للتذكير عند كتابة التقرير في المكتب">${esc(c.priv||'')}</textarea></div>
+ <div class="fd-h">٧. الملاحظات</div><div class="fd-card"><textarea data-f="__notes" placeholder="اكتب كل ملاحظة في سطر. ابدأ السطر بعلامة ! ليظهر باللون الأحمر.">${esc(c.notes)}</textarea><div class="fd-voice-w" data-f="__notes">${voiceBtns('__notes')}</div></div>
+ <div class="fd-h">📝 ملاحظات لي <span style="font-weight:400;font-size:12px">لا تظهر في التقرير</span></div><div class="fd-card fd-priv"><textarea data-f="__priv" placeholder="ملاحظات للتذكير عند كتابة التقرير في المكتب">${esc(c.priv||'')}</textarea><div class="fd-voice-w" data-f="__priv">${voiceBtns('__priv')}</div></div>
  <div class="fd-h">السيارات المحفوظة (${FD.saved.length})${FD.saved.some(s=>s.sent)?'<button class="fd-small" data-act="clearSent">مسح المرسلة</button>':''}</div>
  <div class="fd-card fd-saved">${FD.saved.length?FD.saved.map((s,i)=>`<div class="fd-row"><span class="t">${esc(fdCarName(s))}<small>${s.pics.length} صور · ${esc(FD_TYPES.find(t=>t[0]===s.type)?.[1]||'')}${s.sent?' · أُرسلت':''}</small></span><button class="fd-small" data-act="edit" data-i="${i}">تعديل</button><button class="fd-small" data-act="del" data-i="${i}">حذف</button></div>`).join(''):'<div class="fd-empty">لم تُحفظ أي سيارة بعد.</div>'}</div>
  <div class="fd-row-tools" style="justify-content:center;margin-top:18px"><button class="fd-small" data-act="openHere">فتح هذه السيارة في التقرير على هذا الجهاز</button></div>`;
  fdDrawPics();fdCount()}
-function fdDrawPics(){let c=FD.cur;$('#fdPics').innerHTML=c.pics.map((p,i)=>`<div class="fd-pic"><img src="${p}" alt=""><span class="no">${i+1}</span><button class="x" data-act="pdel" data-i="${i}" aria-label="حذف">✕</button>${i?`<button class="mv" data-act="pmv" data-i="${i}" aria-label="تقديم">‹</button>`:''}</div>`).join('');$('#fdPicN').textContent=`${c.pics.length}/${FD_MAXPICS}`}
+function fdDrawPics(){let c=FD.cur,pm=fdPM(c),stars=pm.filter(m=>m.s).length;$('#fdPics').innerHTML=c.pics.map((p,i)=>{let m=pm[i],tl=fdShotName(m.t);return`<div class="fd-pw"><div class="fd-pic${m.s?' star':''}"><img src="${p}" alt=""><span class="no">${i+1}</span><button class="x" data-act="pdel" data-i="${i}" aria-label="حذف">✕</button>${i?`<button class="mv" data-act="pmv" data-i="${i}" aria-label="تقديم">‹</button>`:''}<button class="st${m.s?' on':''}" data-act="pstar" data-i="${i}" aria-label="${m.s?'إلغاء التمييز':'تمييز للتقرير'}">${m.s?'★':'☆'}</button></div><label class="fd-ptag${tl?' on':''}"><span>${tl?esc(tl):'🏷 ما هذه؟'}</span><select data-tag="${i}" aria-label="نوع الصورة"><option value="">—</option>${FD_SHOTS.map(([t,l])=>`<option value="${t}"${m.t===t?' selected':''}>${l}</option>`).join('')}</select></label></div>`}).join('');
+ $('#fdPicN').textContent=`${c.pics.length}/${FD_MAXPICS}${stars?' · ⭐ '+stars:''}`;let sh=$('#fdShots');if(sh)sh.innerHTML=fdShotsHTML(c);let h=$('#fdStarHint');if(h)h.hidden=!c.pics.length||stars>0}
 function fdCount(){let n=FD.saved.filter(s=>!s.sent).length+(FD.pendingList&&syncOn()?1:0),on=syncOn(),b=$('#fdSendBtn');$('#fdSaveBtn').textContent=on?'حفظ وإرسال ✓':'حفظ السيارة والتالي';
  if(on){$('#fdCount').textContent=fdSyncBusy?'جارٍ الإرسال…':n?`${n} بانتظار الإرسال`:'';b.textContent=fdSyncBusy?'جارٍ الإرسال…':n?`⏳ إرسال الآن (${n})`:'✓ كل شيء أُرسل';b.disabled=fdSyncBusy||!n}
  else{$('#fdCount').textContent=n?`${n} للإرسال`:'';b.textContent=n?`مشاركة ملف (${n})`:'مشاركة ملف';b.disabled=false}}
@@ -1175,7 +1223,7 @@ function fdPick(i){let c=FD.cur;if(c.row!==i&&fdHas(c)&&c.row!=null){if(confirm(
  if(FD.cur.row!==i&&FD.cur.row!=null&&!fdHas(FD.cur))FD.cur.row=null;
  c=FD.cur;let d=rowData(FD.rows[i]);c.row=i;c.rowKey=(d.reg||'')+'|'+(d.vin||'')+'|'+(d.agreement||'');c.listId=FD.listId||'';c.listName=FD.listName||'';c.listPos=i+1;c.listCount=FD.rows.length;Object.assign(c.fields,{case:d.agreement,vin:d.vin,reg:d.reg,make:d.make,model:d.model,year:d.year,color:d.color});ROW_EXTRA.forEach(k=>{if(d[k])c.fields[k]=d[k]});fdPersist();fdDraw();
  setTimeout(()=>{let k=$('#field [data-f="km"]');if(k)k.scrollIntoView({block:'center',behavior:'smooth'})},50)}
-function fdSaveCar(silent){let c=FD.cur;if(!fdHas(c)){if(!silent)fdToast('لا توجد بيانات لحفظها');return false}
+function fdSaveCar(silent){let c=FD.cur;if(!fdHas(c)){if(!silent)fdToast('لا توجد بيانات لحفظها');return false}voiceStop();
  c.sent=false;if(!c.listId&&FD.listId){c.listId=FD.listId;c.listName=FD.listName||''}let i=FD.saved.findIndex(s=>s.id===c.id);if(i<0)FD.saved.push(c);else FD.saved[i]=c;
  FD.cur=fdBlank();FD.cur.type=c.type;FD.q='';fdPersist();fdDraw();$('#fdBody').scrollTop=0;$('.fd-scroll').scrollTop=0;if(!silent)fdToast(syncOn()?`تم حفظ ${fdCarName(c)} — جارٍ الإرسال…`:`تم حفظ ${fdCarName(c)} ✓`);if(syncOn())setTimeout(fdUpload,300);return true}
 async function fdSend(){if(fdHas(FD.cur))fdSaveCar(true);let list=FD.saved.filter(s=>!s.sent);if(!list.length)list=FD.saved;if(!list.length)return fdToast('احفظ سيارة واحدة على الأقل');
@@ -1184,8 +1232,8 @@ async function fdSend(){if(fdHas(FD.cur))fdSaveCar(true);let list=FD.saved.filte
  try{let file=new File([data],name,{type:'application/json'});if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:name});ok=true}}catch(e){if(e&&e.name==='AbortError')return}
  if(!ok){download(name,data,'application/json');ok=true}
  list.forEach(s=>s.sent=true);fdPersist();fdDraw();fdToast(`تم تجهيز ملف ${list.length===1?'سيارة واحدة':list.length+' سيارات'} ✓`)}
-async function fdAddPics(files){let c=FD.cur,room=FD_MAXPICS-c.pics.length;files=[...files];if(!files.length)return;if(room<=0)return fdToast(`الحد الأقصى ${FD_MAXPICS} صورة`);
- fdToast('جارٍ تجهيز الصور…');let add=await Promise.all(files.slice(0,room).map(shrinkPhoto));c.pics.push(...add);fdDrawPics();fdPersist();
+async function fdAddPics(files,tag){let c=FD.cur,room=FD_MAXPICS-c.pics.length;files=[...files];if(!files.length)return;if(room<=0)return fdToast(`الحد الأقصى ${FD_MAXPICS} صورة`);
+ fdToast('جارٍ تجهيز الصور…');let add=await Promise.all(files.slice(0,room).map(shrinkPhoto));fdPM(c);c.pics.push(...add);c.pm.push(...add.map(()=>({})));if(tag&&add.length===1)fdTagPic(c,c.pics.length-1,tag);fdDrawPics();fdPersist();
  fdToast(files.length>room?`أُضيفت ${room} فقط — الحد ${FD_MAXPICS}`:`أُضيفت ${add.length} ${add.length===1?'صورة':'صور'}`)}
 function fdRate(btn){let c=FD.cur,k=btn.dataset.k,r=btn.dataset.r,cur=k in c.rate?c.rate[k]:btn.dataset.def,nv=cur===r?'':r;c.rate[k]=nv;
  let row=btn.closest('.fd-cond');row.querySelectorAll('.fd-rate').forEach(b=>b.classList.toggle('on',b.dataset.r===nv));
@@ -1208,19 +1256,25 @@ $('#field').addEventListener('click',e=>{let b=e.target.closest('[data-act]');if
  else if(a==='rate')fdRate(b);
  else if(a==='allE'){fdGroups().forEach(([t,ar])=>ar.forEach((x,j)=>{if(x[0]!=='#'&&x[0]!=='!')c.rate[t+'-'+j]='E'}));let y=$('.fd-scroll').scrollTop;fdDraw();$('.fd-scroll').scrollTop=y;fdPersist();fdToast('تم تعيين الكل ممتاز — غيّر ما يختلف فقط')}
  else if(a==='addnote'){b.outerHTML=`<input class="fd-note" data-note="${b.dataset.k}" placeholder="ملاحظة (تظهر في عمود الملاحظات)">`;let inp=$(`#field [data-note="${b.dataset.k}"]`);if(inp)inp.focus()}
- else if(a==='cam')camOpen();
+ else if(a==='cam'){camWant=null;camOpen()}
  else if(a==='lib')$('#fdLib').click();
- else if(a==='pdel'){c.pics.splice(i,1);fdDrawPics();fdPersist()}
- else if(a==='pmv'){[c.pics[i-1],c.pics[i]]=[c.pics[i],c.pics[i-1]];fdDrawPics();fdPersist()}
+ else if(a==='pdel'){fdPM(c);c.pics.splice(i,1);c.pm.splice(i,1);fdDrawPics();fdPersist()}
+ else if(a==='pmv'){let pm=fdPM(c);[c.pics[i-1],c.pics[i]]=[c.pics[i],c.pics[i-1]];[pm[i-1],pm[i]]=[pm[i],pm[i-1]];fdDrawPics();fdPersist()}
+ else if(a==='pstar'){let pm=fdPM(c);pm[i].s=pm[i].s?0:1;if(!pm[i].s)delete pm[i].s;fdDrawPics();fdPersist();if(navigator.vibrate)try{navigator.vibrate(8)}catch(e){}}
+ else if(a==='shot'){let t=b.dataset.t;c.ckSkip=(c.ckSkip||[]).filter(x=>x!==t);camWant=t;camOpen()}
+ else if(a==='shotsOff'){try{localStorage.setItem('adnanShotList','0')}catch(e){}fdDrawPics()}
+ else if(a==='shotsOn'){try{localStorage.removeItem('adnanShotList')}catch(e){}fdDrawPics()}
+ else if(a==='voice')voiceToggle(b)
  else if(a==='edit'){if(fdHas(c)&&!confirm('السيارة الحالية غير محفوظة وسيتم استبدالها. متابعة؟'))return;FD.cur=JSON.parse(JSON.stringify(FD.saved[i]));fdDraw();$('.fd-scroll').scrollTop=0}
  else if(a==='del'){if(confirm(`حذف ${fdCarName(FD.saved[i])}؟`)){FD.saved.splice(i,1);fdPersist();fdDraw()}}
  else if(a==='clearSent'){FD.saved=FD.saved.filter(s=>!s.sent);fdPersist();fdDraw()}
  else if(a==='openHere'){if(!fdHas(c))return fdToast('لا توجد بيانات');fdApply(JSON.parse(JSON.stringify(c)));fdClose()}});
 $('#field').addEventListener('input',e=>{let el=e.target,c=FD.cur;
+ if(el.dataset.tag!=null){fdTagPic(c,+el.dataset.tag,el.value);fdDrawPics();fdPersist();return}
  if(el.dataset.in==='list'){fdLoadList(el.value);return}
  if(el.dataset.in==='q'){FD.q=el.value;let pos=el.selectionStart;fdDraw();let s=$('#field [data-in="q"]');s.focus();try{s.setSelectionRange(pos,pos)}catch(x){}return}
  if(el.dataset.f==='__notes')c.notes=el.value;else if(el.dataset.f==='__priv')c.priv=el.value;else if(el.dataset.f)c.fields[el.dataset.f]=el.value;else if(el.dataset.note)c.note[el.dataset.note]=el.value;fdPersist()});
-$('#fdCam').onchange=e=>{fdAddPics(e.target.files);e.target.value=''};
+$('#fdCam').onchange=e=>{let t=camWant||((fdShotsOn()&&fdNextShot(FD.cur))||[])[0];camWant=null;fdAddPics(e.target.files,t);e.target.value=''};
 $('#fdLib').onchange=e=>{fdAddPics(e.target.files);e.target.value=''};
 $('#fdXls').onchange=e=>{let file=e.target.files[0];e.target.value='';if(!file)return;if(!window.XLSX)return fdToast('قارئ Excel يحتاج اتصال إنترنت');
  let rd=new FileReader;rd.onload=x=>{try{let wb=readWorkbook(x.target.result,file.name),got=readSheetRows(wb);if(!got.length)throw 0;FD.rows=got;registerRows(FD.rows);FD.listId='';FD.q='';fdQueueList(file.name.replace(/\.[^.]+$/,''));fdPersist();fdDraw();fdToast(`تم استيراد ${carsTxt(FD.rows.length)}`+(syncOn()?' — جارٍ إرسالها للمكتب':''));if(syncOn())setTimeout(fdUpload,300);if(FD.rows.length){let m=mapFor(FD.rows[0]);if(!m.reg&&!m.vin)openCols('field')}}catch(err){fdToast('تعذر قراءة ملف Excel أو الملف فارغ')}};rd.readAsArrayBuffer(file)};
@@ -1230,11 +1284,12 @@ function fdApply(c){$('#type').value=c.type||'court';$('#type').dispatchEvent(ne
  Object.entries(c.fields||{}).forEach(([k,v])=>{let el=$('#'+k);if(el)el.value=v});if(c.date)$('#date').value=c.date;
  ['notes','courtNotes','facComment'].forEach(id=>$('#'+id).value=c.notes||'');
  ratings={};conditionNotes={};Object.entries(c.rate||{}).forEach(([k,v])=>{ratings['g-en-'+k]=v;ratings['g-ar-'+k]=v});Object.entries(c.note||{}).forEach(([k,v])=>{if(v){conditionNotes['g-en-'+k]=v;conditionNotes['g-ar-'+k]=v}});
- {let all=(c.pics||[]).slice();if(all.length)$('#withPhotos').checked=true;setPool(all,all.length>12?8:all.length)}
+ {let all=(c.pics||[]).slice(),pm=Array.isArray(c.pm)?c.pm:[],st=all.map((_,i)=>i).filter(i=>pm[i]&&pm[i].s).slice(0,12);if(all.length)$('#withPhotos').checked=true;if(st.length){picPool=all;picSel=st;fitLayout();syncPics()}else setPool(all,all.length>12?8:all.length)}
  drawRedPick();render()}
 let FD_IN=[],fdOpened=new Set();
 function fdDrawIn(){$('#fieldList').innerHTML=FD_IN.map((c,i)=>`<div class="fd-in-row${fdOpened.has(c.id)?' done':''}"><span class="t"><b>${esc(fdCarName(c))}</b><small>${esc(FD_TYPES.find(t=>t[0]===c.type)?.[1]||'')} · ${(c.pics||[]).length} صور · ${esc(c.date||'')}</small></span>${fdOpened.has(c.id)?'✓ ':''}<button type="button" class="mini btn-blue" onclick="fdOpenIn(${i})">فتح في التقرير</button></div>`).join('')}
-function fdOpenIn(i){if(!confirm('سيتم وضع بيانات هذه السيارة وصورها في التقرير الحالي. متابعة؟'))return;fdApply(FD_IN[i]);fdOpened.add(FD_IN[i].id);fdDrawIn();$('#fieldMsg').textContent=`تم فتح ${fdCarName(FD_IN[i])}`+((FD_IN[i].pics||[]).length>1?` — اختر الصور للتقرير من قسم «صور المركبة» بالأسفل (${FD_IN[i].pics.length} صورة).`:' — راجع التقرير ثم صدّر PDF.')}
+function fdOpenIn(i){if(!confirm('سيتم وضع بيانات هذه السيارة وصورها في التقرير الحالي. متابعة؟'))return;fdApply(FD_IN[i]);fdOpened.add(FD_IN[i].id);fdDrawIn();$('#fieldMsg').textContent=`تم فتح ${fdCarName(FD_IN[i])}`+((FD_IN[i].pics||[]).length>1?` — اختر الصور للتقرير من قسم «صور المركبة» بالأسفل (${FD_IN[i].pics.length} صورة${fdStars(FD_IN[i])?`، ⭐ ${fdStars(FD_IN[i])} مميزة ومحددة مسبقاً`:''}).`:' — راجع التقرير ثم صدّر PDF.')}
+const fdStars=c=>(Array.isArray(c.pm)?c.pm:[]).slice(0,(c.pics||[]).length).filter(m=>m&&m.s).length;
 $('#fieldIn').onchange=e=>{let f=e.target.files[0];e.target.value='';if(!f)return;f.text().then(t=>{let d=JSON.parse(t);if(d.kind!=='adnan-field'||!Array.isArray(d.inspections))throw 0;FD_IN=d.inspections;fdOpened=new Set();fdDrawIn();
  $('#fieldMsg').textContent=`في الملف ${carsTxt(FD_IN.length)}. اختر السيارة لفتحها.`;if(FD_IN.length===1)fdOpenIn(0)}).catch(()=>{$('#fieldMsg').textContent='هذا ليس ملف فحص ميداني.'})};
 
@@ -1488,24 +1543,45 @@ async function mlSend(){let cars=mlCars();if(!cars.length)return alert('أضف �
 function mlUse(){let cars=mlCars();if(!cars.length)return alert('أضف سيارة واحدة على الأقل.');rows=cars.map(r=>({...r}));registerRows(rows);sel=new Set(rows.map((_,i)=>i));cellEdit={};lastExcelName='قائمة يدوية';fillRecords();buildList();colSummary();closeManual();render();syncDeskStatus()}
 
 
+/* ===== Step 3: voice notes — dictation into the notes boxes (Chrome sends the audio to Google's speech service; needs internet) ===== */
+var VO=null;const SRec=()=>window.SpeechRecognition||window.webkitSpeechRecognition;
+function voiceBtns(f){if(!SRec())return'';if(VO&&VO.f===f)return`<div class="fd-voice"><button class="fd-small rec" data-act="voice" data-f="${f}">⏹ إيقاف الإملاء</button><span class="fd-sub" style="margin:0">تكلّم الآن…</span></div>`;
+ return`<div class="fd-voice"><button class="fd-small" data-act="voice" data-f="${f}" data-l="ar-BH">🎤 إملاء عربي</button><button class="fd-small" data-act="voice" data-f="${f}" data-l="en-US">🎤 English</button></div>`}
+function voiceRedraw(){$$('#field .fd-voice-w').forEach(w=>w.innerHTML=voiceBtns(w.dataset.f))}
+function voiceStop(){if(!VO)return;let r=VO.r;VO.stopping=true;try{r.stop()}catch(e){}}
+function voiceToggle(b){if(VO){voiceStop();return}let S=SRec();if(!S)return;let f=b.dataset.f,c=FD.cur,key=f==='__notes'?'notes':'priv',base=c[key]||'';if(base&&!/\n$/.test(base))base+='\n';
+ let r;try{r=new S()}catch(e){return fdToast('تعذر تشغيل الإملاء')}r.lang=b.dataset.l||'ar-BH';r.continuous=true;r.interimResults=true;let me={r,f,c,key};VO=me;
+ r.onresult=e=>{if(VO!==me)return;if(FD.cur!==c){voiceStop();return}let t=[...e.results].map(x=>(x[0]&&x[0].transcript||'').trim()).filter(Boolean).join(' ');if(!t)return;c[key]=base+t;let ta=$(`#field textarea[data-f="${f}"]`);if(ta){ta.value=c[key];ta.scrollTop=ta.scrollHeight}fdPersist()};
+ r.onerror=e=>{let m={'not-allowed':'لم يُسمح باستخدام الميكروفون — اسمح به من إعدادات المتصفح','service-not-allowed':'الإملاء الصوتي غير متاح في هذا المتصفح','network':'الإملاء الصوتي يحتاج اتصال إنترنت','no-speech':'لم يُسمع صوت — حاول مرة أخرى','audio-capture':'لم يُعثر على ميكروفون','language-not-supported':'هذه اللغة غير متاحة للإملاء'}[e.error];if(m)fdToast(m)};
+ r.onend=()=>{if(VO===me){VO=null;voiceRedraw();fdPersist()}};
+ try{r.start()}catch(e){VO=null;return fdToast('تعذر تشغيل الإملاء')}voiceRedraw();if(navigator.vibrate)try{navigator.vibrate(10)}catch(e){}}
+document.addEventListener('visibilitychange',()=>{if(document.hidden)voiceStop()});
+
 /* ===== in-app camera: keeps the viewfinder open, every tap saves a photo ===== */
-let camStream=null,camTorch=false,camAdded=0;
-function camCount(){let c=FD.cur;$('#camN').textContent=`📷 ${c.pics.length}/${FD_MAXPICS}`;$('#camS').disabled=c.pics.length>=FD_MAXPICS;let last=c.pics[c.pics.length-1];$('#camP').style.backgroundImage=last?`url("${last}")`:''}
+let camStream=null,camTorch=false,camAdded=0;var camWant=null;
+/* the shot the checklist asks for next (or the one chosen from the list) */
+function camShot(){if(camWant)return FD_SHOTS.find(x=>x[0]===camWant)||null;return fdShotsOn()?fdNextShot(FD.cur):null}
+function camPrompt(){let s=camShot(),q=$('#camQ');q.hidden=!s;if(s){$('#camQt').textContent=`صوّر: ${s[1]}`;$('#camQn').textContent=`${FD_SHOTS.indexOf(s)+1}/${FD_SHOTS.length}`}}
+function camCount(){let c=FD.cur,pm=fdPM(c),i=c.pics.length-1;$('#camN').textContent=`📷 ${c.pics.length}/${FD_MAXPICS}`;$('#camS').disabled=c.pics.length>=FD_MAXPICS;let last=c.pics[i];$('#camP').style.backgroundImage=last?`url("${last}")`:'';
+ let st=$('#camStar'),on=!!(last&&pm[i].s);st.disabled=!last;st.classList.toggle('on',on);st.textContent=on?'★':'☆';camPrompt()}
 async function camOpen(){if(!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia))return $('#fdCam').click();
  if(FD.cur.pics.length>=FD_MAXPICS)return fdToast(`الحد الأقصى ${FD_MAXPICS} صورة`);
- camAdded=0;$('#camM').textContent='جارٍ تشغيل الكاميرا…';$('#camUI').hidden=false;camCount();
+ camAdded=0;$('#camM').textContent='جارٍ تشغيل الكاميرا…';fdPM(FD.cur);$('#camUI').hidden=false;camCount();
  try{camStream=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:{ideal:'environment'},width:{ideal:1920},height:{ideal:1440}}});
   let v=$('#camV');v.srcObject=camStream;await v.play().catch(()=>{});$('#camM').textContent='';
   let tr=camStream.getVideoTracks()[0],caps=tr&&tr.getCapabilities?tr.getCapabilities():{};camTorch=false;$('#camT').hidden=!caps.torch;$('#camT').classList.remove('on')}
  catch(e){camClose(true);fdToast('لم يُسمح باستخدام الكاميرا — سيتم فتح كاميرا الهاتف العادية');setTimeout(()=>$('#fdCam').click(),400)}}
-function camClose(silent){if(camStream){camStream.getTracks().forEach(t=>t.stop());camStream=null}$('#camV').srcObject=null;$('#camUI').hidden=true;
+function camClose(silent){if(!silent)camWant=null;if(camStream){camStream.getTracks().forEach(t=>t.stop());camStream=null}$('#camV').srcObject=null;$('#camUI').hidden=true;
  if(!silent){fdDrawPics();fdPersist();if(camAdded)fdToast(`أُضيفت ${camAdded} ${camAdded===1?'صورة':'صور'}`)}}
 function camShoot(){let v=$('#camV'),c=FD.cur;if(!camStream||!v.videoWidth||c.pics.length>=FD_MAXPICS)return;
  let M=1400,k=Math.min(1,M/Math.max(v.videoWidth,v.videoHeight)),cv=document.createElement('canvas');cv.width=Math.round(v.videoWidth*k);cv.height=Math.round(v.videoHeight*k);
- cv.getContext('2d').drawImage(v,0,0,cv.width,cv.height);c.pics.push(cv.toDataURL('image/jpeg',.82));camAdded++;
+ cv.getContext('2d').drawImage(v,0,0,cv.width,cv.height);let s=camShot();fdPM(c);c.pics.push(cv.toDataURL('image/jpeg',.82));c.pm.push({});if(s)fdTagPic(c,c.pics.length-1,s[0]);camWant=null;camAdded++;
+ if(s&&!camShot()){$('#camM').textContent='اكتملت قائمة الصور ✓';clearTimeout(camShoot._m);camShoot._m=setTimeout(()=>{if($('#camM').textContent==='اكتملت قائمة الصور ✓')$('#camM').textContent=''},1600)}
  let f=$('#camF');f.classList.remove('go');void f.offsetWidth;f.classList.add('go');if(navigator.vibrate)try{navigator.vibrate(15)}catch(e){}
  camCount();if(c.pics.length>=FD_MAXPICS)fdToast(`وصلت للحد الأقصى ${FD_MAXPICS} صورة`)}
-$('#camS').onclick=camShoot;$('#camD').onclick=()=>camClose();$('#camX').onclick=()=>camClose();
+$('#camS').onclick=camShoot;
+$('#camStar').onclick=()=>{let c=FD.cur,pm=fdPM(c),i=c.pics.length-1;if(i<0)return;pm[i].s=pm[i].s?0:1;if(!pm[i].s)delete pm[i].s;camCount();fdPersist();if(navigator.vibrate)try{navigator.vibrate(10)}catch(e){}};
+$('#camQs').onclick=()=>{let c=FD.cur,s=camShot();if(!s)return;c.ckSkip=[...new Set([...(c.ckSkip||[]),s[0]])];camWant=null;camPrompt();fdPersist();if(!camShot()){$('#camM').textContent='انتهت قائمة الصور — صوّر ما تريد';setTimeout(()=>{if(/^انتهت/.test($('#camM').textContent))$('#camM').textContent=''},1600)}};$('#camD').onclick=()=>camClose();$('#camX').onclick=()=>camClose();
 $('#camT').onclick=async()=>{let tr=camStream&&camStream.getVideoTracks()[0];if(!tr)return;camTorch=!camTorch;try{await tr.applyConstraints({advanced:[{torch:camTorch}]});$('#camT').classList.toggle('on',camTorch)}catch(e){camTorch=false}};
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&camStream)camClose()});
 
@@ -1546,7 +1622,7 @@ function batchBar(){let b=$('#bbar');if(!BATCH){b.hidden=true;return}b.hidden=fa
 function batchShow(){if(!BATCH)return;batchKeep();let n=BATCH.cars.length;
  $('#bwBody').innerHTML=`<div class="bw-grid">${BATCH.cars.map((c,i)=>{let f=c.insp.fields||{},st=ST[carSt(c)],thumb=(c.insp.pics||[])[0];
   return`<button type="button" class="bw-card${i===batchIdx?' cur':''}" onclick="batchOpenCar(${i})"><div class="bw-img"${thumb?` style="background-image:url('${thumb}')"`:''}>${thumb?'':'لا صور'}<span class="bw-pos">${c.pos||i+1}</span></div>
-  <div class="bw-t"><b>${esc(f.reg||'—')}</b> ${esc([f.make,f.model,f.year].filter(Boolean).join(' '))}</div><div class="bw-s"><span class="st ${st[1]}">${st[0]}</span> · ${(c.insp.pics||[]).length} صور${(c.insp.priv||'').trim()?' · 📝':''}</div></button>`}).join('')}</div>`;
+  <div class="bw-t"><b>${esc(f.reg||'—')}</b> ${esc([f.make,f.model,f.year].filter(Boolean).join(' '))}</div><div class="bw-s"><span class="st ${st[1]}">${st[0]}</span> · ${(c.insp.pics||[]).length} صور${fdStars(c.insp)?' · ⭐ '+fdStars(c.insp):''}${(c.insp.priv||'').trim()?' · 📝':''}</div></button>`}).join('')}</div>`;
  $('#bwTitle').textContent=`📦 ${BATCH.name} — ${n} ${n===1?'سيارة':n===2?'سيارتان':n<=10?'سيارات':'سيارة'}`;$('#bw').classList.add('open');
  setTimeout(()=>{let cur=$('#bwBody .bw-card.cur');if(cur)cur.scrollIntoView({block:'center'})},30)}
 function batchExit(){batchKeep();batchSaveNow().catch(()=>{});BATCH=null;batchIdx=-1;batchPos=0;batchBar();$('#bw').classList.remove('open');syncDrawInbox();batchDrawSaved()}
@@ -1576,6 +1652,19 @@ async function pagesToPDF(){await loadAssets();document.body.classList.add('pdfm
  try{let {jsPDF}=window.jspdf,pdf=new jsPDF({unit:'mm',format:'a4',compress:true}),pages=$$('#pages .page');
   for(let k=0;k<pages.length;k++){let c=await html2canvas(pages[k],{scale:2,backgroundColor:'#ffffff',logging:false});if(k)pdf.addPage();pdf.addImage(c.toDataURL('image/jpeg',.9),'JPEG',0,0,210,297)}
   return pdf.output('blob')}finally{document.body.classList.remove('pdfmode');window.__pdfAssets=false;render()}}
+/* ===== Step 3: share the document as a PDF straight from the phone (WhatsApp, email…) ===== */
+var SHARE=null;
+async function sharePDF(){if(SHARE&&SHARE.busy)return;if(cloudOn())await cloudPull(false);render();SHARE={busy:true};batchProgress('جارٍ تجهيز PDF…');
+ try{try{await pdfLibs()}catch(e){throw 'libs'}let blob=await pagesToPDF(),name=(clean(autoFile())||'مستند')+'.pdf';
+  SHARE={blob,name,file:new File([blob],name,{type:'application/pdf'}),no:val('docNo').trim()};$('#shareName').textContent=name;$('#shareModal').classList.add('open')}
+ catch(e){console.error(e);SHARE=null;alert(e==='libs'?'أداة PDF تحتاج اتصال إنترنت في أول مرة. اتصل بالإنترنت وأعد المحاولة.':'تعذر تجهيز ملف PDF.')}
+ finally{batchProgress('');if(SHARE&&SHARE.busy)SHARE=null}}
+function shareClose(){$('#shareModal').classList.remove('open')}
+function shareAfter(){shareClose();setTimeout(()=>{let no=val('docNo').trim();if(no&&SHARE&&no===SHARE.no&&(cloudOn()||!FS_OK||logState==='ok')&&confirm(`هل أرسلت المستند؟\nاضغط OK لتسجيل الرقم ${docLabel()} في سجل «${GROUPS[G()].name}» والانتقال للرقم التالي.`))logDoc(false)},300)}
+async function shareGo(){if(!SHARE||!SHARE.file)return;let f=SHARE.file;
+ if(navigator.canShare&&navigator.share&&navigator.canShare({files:[f]})){try{await navigator.share({files:[f],title:SHARE.name});shareAfter()}catch(e){if(e&&e.name==='AbortError')return;alert('تعذرت المشاركة — استخدم «⬇ حفظ في الهاتف» ثم أرسل الملف من التنزيلات.')}}
+ else{alert('هذا المتصفح لا يدعم المشاركة المباشرة — سيتم حفظ الملف في التنزيلات.');shareSave()}}
+function shareSave(){if(!SHARE||!SHARE.blob)return;download(SHARE.name,SHARE.blob,'application/pdf');shareAfter()}
 async function writeFile(dir,name,data){let fh=await dir.getFileHandle(name,{create:true}),w=await fh.createWritable();await w.write(data);await w.close()}
 const dataURLtoBlob=u=>{let [h,b]=u.split(','),m=(h.match(/:(.*?);/)||[,'image/jpeg'])[1],s=atob(b),a=new Uint8Array(s.length);for(let i=0;i<s.length;i++)a[i]=s.charCodeAt(i);return new Blob([a],{type:m})};
 function batchProgress(t){let p=$('#bprog');p.hidden=!t;p.textContent=t||''}
@@ -1594,7 +1683,8 @@ async function batchSaveAll(){if(!BATCH||batchBusy)return;
     let name=autoFile()||`${i+1}- سيارة`,cdir=await bdir.getDirectoryHandle(name,{create:true});
     await writeFile(cdir,name+'.pdf',await pagesToPDF());
     car.snap=batchSnap();await writeFile(cdir,name+'.json',JSON.stringify(collectState(true)));
-    for(let k=0;k<picPool.length;k++){let at=picSel.indexOf(k),pn=`صورة ${String(k+1).padStart(2,'0')}${at>=0?` - في التقرير ${at+1}`:''}.jpg`;await writeFile(cdir,pn,dataURLtoBlob(picPool[k]))}
+    let ipm=Array.isArray(car.insp.pm)?car.insp.pm:[],ipics=car.insp.pics||[];
+    for(let k=0;k<picPool.length;k++){let at=picSel.indexOf(k),tg=ipm[k]&&ipm[k].t&&picPool[k]===ipics[k]?clean(fdShotName(ipm[k].t)):'',pn=`صورة ${String(k+1).padStart(2,'0')}${tg?' - '+tg:''}${at>=0?` - في التقرير ${at+1}`:''}.jpg`;await writeFile(cdir,pn,dataURLtoBlob(picPool[k]))}
     let no=val('docNo').trim(),L=val('docLetter').trim().toUpperCase();window.__batchLog=true;logDoc(true);window.__batchLog=false;
     car.logged={g,no,letter:L};car.saved=true;car.status='saved';car.folder=name;ok++;await batchSaveNow()}
    catch(e){console.error(e);window.__batchLog=false;fail.push(carTitle(car))}}
