@@ -505,6 +505,9 @@ body.fd-on #verBar{position:fixed;top:0;left:0;right:0;z-index:50;box-shadow:0 3
 @media(max-width:600px){.cli-form.grid{grid-template-columns:1fr}.cli-form input,.cli-form textarea{font-size:16px}.cli-act{margin-right:0;width:100%}}
 @media print{#cliModal{display:none!important}}
 #cliQ{flex:1 1 180px;width:auto;min-width:0}
+/* step 5B: phone photo reading, device column */
+.fd-ocr{display:inline-block;margin-top:6px;border:0;border-radius:980px;background:#e8effc;color:#0a4cc2;font-size:13px;font-weight:600;padding:6px 12px}
+.fd-ocr[disabled]{opacity:.7}.logt td.dev{color:#637180;font-size:11.5px;white-space:nowrap}
 </style></head><body>
 <header class="bar"><b>مولد تقارير عدنان العلوي <small>ADNAN AL ALAWI · <span id="appVer">v2026-11-11.3</span></small></b><div class="buttons"><span class="bgrp" data-g="conn"><button id="connLight" onclick="connTap()" title="ربط هذا الجهاز"><span class="cdot"></span>⚙️ الإعداد<span class="cact" hidden>تفعيل</span><span class="set-n"></span></button><button id="homeBtn" onclick="homeOpen()">🏠 الرئيسية</button></span><span class="bgrp" data-g="work"><button id="inboxBadge" class="btn-inbox" style="display:none" onclick="inboxGo()"></button><button onclick="remOpen()">⏰ التذكيرات <span class="rem-n"></span></button><button onclick="fdOpen()">📱 فحص ميداني</button></span><span class="bgrp" data-g="books"><button id="overdueBadge" class="badge-over" style="display:none" onclick="openAccounts('over')"></button><button onclick="openAccounts()">الحسابات</button><button onclick="openLog()">السجل</button></span><span class="bgrp" data-g="doc"><button onclick="saveDraft()">حفظ مسودة</button><button onclick="loadDraft()">استرجاع مسودة</button><button onclick="printReport()">تصدير PDF</button><button id="shareBtn" class="share-btn" onclick="sharePDF()">📤 مشاركة PDF</button></span></div></header>
 <div id="verBar" class="verbar" hidden></div>
@@ -621,11 +624,11 @@ Through Bank transfer to: Al Salam Bank / IBAN: BH89ALSA00436034150000</textarea
 <div class="modal" id="bkModal" style="z-index:76" onclick="if(event.target===this)bkClose()"><div class="modal-box" style="width:min(560px,96vw)"><div class="modal-head"><h3>🗂 النسخ الاحتياطية لسجل الأرقام</h3><button class="mini" onclick="bkClose()">إغلاق ✕</button></div><div class="modal-body" id="bkBody"></div></div></div>
 <div class="modal" id="qrModal" style="z-index:75" onclick="if(event.target===this)qrClose()"><div class="modal-box" style="width:min(460px,96vw)"><div class="modal-head"><h3>📱 ربط هاتف بـ QR</h3><button class="mini" onclick="qrClose()">إغلاق ✕</button></div><div class="qr-body" id="qrBody"></div></div></div>
 <div class="qrs" id="qrsUI" hidden><video id="qrsV" playsinline muted autoplay></video><div class="qrs-frame"></div><div class="qrs-top"><span>مسح رمز المزامنة</span><button type="button" onclick="qrScanStop()" aria-label="إغلاق">✕</button></div><div class="qrs-msg" id="qrsMsg"></div></div>
-<div class="modal" id="shareModal" style="z-index:80" onclick="if(event.target===this)shareClose()"><div class="modal-box share-box"><div class="modal-head"><h3>📤 الـ PDF جاهز</h3><button class="mini" onclick="shareClose()">إغلاق ✕</button></div><div class="share-body"><div class="share-name" id="shareName"></div><button type="button" class="share-go" id="shareGo" onclick="shareGo()">📤 مشاركة — واتساب، البريد…</button><button type="button" class="share-dl" id="shareDl" onclick="shareSave()">⬇ حفظ في الهاتف</button><div class="hint" style="margin:0">هذا الملف صورة من الصفحات (مثل ملفات «حفظ الكل»)، فلا يمكن تحديد النص فيه. للنسخة النصية استخدم «تصدير PDF».</div></div></div></div>
-<div id="field" class="fd" hidden><header class="fd-bar"><button class="fd-link" onclick="fdClose()">‹ التقرير الكامل</button><b>فحص ميداني</b><span style="display:flex;align-items:center;gap:6px"><button class="fd-link fd-setb" onclick="connTap()" aria-label="الإعداد"><span class="cdot"></span>⚙️<span class="cact" hidden>تفعيل</span><span class="set-n"></span></button><button class="fd-link fd-remb" onclick="remOpen()" aria-label="التذكيرات">⏰<span class="rem-n"></span></button><span class="fd-count" id="fdCount"></span></span></header><div class="fd-scroll" id="fdBody"></div><footer class="fd-foot"><button class="fd-btn2" id="fdSendBtn" onclick="fdSecondary()">إرسال</button><button class="fd-btn" id="fdSaveBtn" onclick="fdSaveCar()">حفظ السيارة والتالي</button></footer><input type="file" id="fdCam" accept="image/*" capture="environment" hidden><div class="cam" id="camUI" hidden><video id="camV" playsinline muted autoplay></video><div class="cam-flash" id="camF"></div><div class="cam-top"><button type="button" id="camX" aria-label="إغلاق">✕</button><span class="cam-count" id="camN"></span><button type="button" id="camT" hidden aria-label="الإضاءة">🔦</button></div><div class="cam-msg" id="camM"></div><div class="cam-q" id="camQ" hidden><span><b id="camQt"></b> <small id="camQn"></small></span><button type="button" id="camQs">تخطي</button></div><div class="cam-bar"><div class="cam-l"><div class="cam-thumb" id="camP"></div><button type="button" class="cam-star" id="camStar" aria-label="تمييز آخر صورة للتقرير">☆</button></div><button type="button" class="cam-shot" id="camS" aria-label="التقاط"></button><button type="button" class="cam-done" id="camD">تم ✓</button></div></div><input type="file" id="fdLib" accept="image/*" multiple hidden><input type="file" id="fdXls" accept=".xlsx,.xls,.csv" hidden></div><div class="fd-toast" id="fdToast" role="status"></div>
+<div class="modal" id="shareModal" style="z-index:80" onclick="if(event.target===this)shareClose()"><div class="modal-box share-box"><div class="modal-head"><h3>📤 الـ PDF جاهز</h3><button class="mini" onclick="shareClose()">إغلاق ✕</button></div><div class="share-body"><div class="share-name" id="shareName"></div><button type="button" class="share-go" id="shareGo" onclick="shareGo()">📤 مشاركة — واتساب، البريد…</button><button type="button" class="share-dl" id="shareDl" onclick="shareSave()">⬇ حفظ في الهاتف</button><div class="hint" style="margin:0" id="shareHint"></div></div></div></div>
+<div id="field" class="fd" hidden><header class="fd-bar"><button class="fd-link" onclick="fdClose()">‹ التقرير الكامل</button><b>فحص ميداني</b><span style="display:flex;align-items:center;gap:6px"><button class="fd-link fd-setb" onclick="connTap()" aria-label="الإعداد"><span class="cdot"></span>⚙️<span class="cact" hidden>تفعيل</span><span class="set-n"></span></button><button class="fd-link fd-remb" onclick="remOpen()" aria-label="التذكيرات">⏰<span class="rem-n"></span></button><span class="fd-count" id="fdCount"></span></span></header><div class="fd-scroll" id="fdBody"></div><footer class="fd-foot"><button class="fd-btn2" id="fdSendBtn" onclick="fdSecondary()">إرسال</button><button class="fd-btn" id="fdSaveBtn" onclick="fdSaveCar()">حفظ السيارة والتالي</button></footer><input type="file" id="fdCam" accept="image/*" capture="environment" hidden><div class="cam" id="camUI" hidden><video id="camV" playsinline muted autoplay></video><div class="cam-flash" id="camF"></div><div class="cam-top"><button type="button" id="camX" aria-label="إغلاق">✕</button><span class="cam-count" id="camN"></span><button type="button" id="camT" hidden aria-label="الإضاءة">🔦</button></div><div class="cam-msg" id="camM"></div><div class="cam-q" id="camQ" hidden><span><b id="camQt"></b> <small id="camQn"></small></span><button type="button" id="camQs">تخطي</button></div><div class="cam-bar"><div class="cam-l"><div class="cam-thumb" id="camP"></div><button type="button" class="cam-star" id="camStar" aria-label="تمييز آخر صورة للتقرير">☆</button></div><button type="button" class="cam-shot" id="camS" aria-label="التقاط"></button><button type="button" class="cam-done" id="camD">تم ✓</button></div></div><input type="file" id="fdLib" accept="image/*" multiple hidden><input type="file" id="fdOcrIn" accept="image/*" capture="environment" hidden><input type="file" id="fdXls" accept=".xlsx,.xls,.csv" hidden></div><div class="fd-toast" id="fdToast" role="status"></div>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script>
-var APP_VERSION='2026-11-12';  // shown in the top bar; the page compares it with the one online
+var APP_VERSION='2026-11-12.2';  // shown in the top bar; the page compares it with the one online
 /* asset path; while «حفظ الكل» makes PDFs it uses the copies read from the program folder */
 var WEB_ASSETS=null,ONWEB=location.protocol!=='file:';const AS=n=>((window.__pdfAssets||ONWEB)&&window.ASSET_URLS&&ASSET_URLS[n])||(WEB_ASSETS&&WEB_ASSETS[n])||'vehicle-report-generator-assets/'+n;
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
@@ -1047,7 +1050,7 @@ async function editFolder(sub,create){let root=await logDir.getDirectoryHandle(E
 async function writeEditFile(sub,name,data){let d=await editFolder(sub,true),fh=await d.getFileHandle(name,{create:true}),w=await fh.createWritable();await w.write(data);await w.close()}
 function logDoc(manual){let g=G(),no=val('docNo').trim(),L=val('docLetter').trim().toUpperCase();if(!no)return alert('اكتب رقم المستند أولاً.');let l=getLog(),list=l.entries[g]=l.entries[g]||[],i=list.findIndex(e=>e.no==no),reopened=openedKey===g+'|'+no;
 let sub=GROUPS[g].letter,fname=clean(`${L?L+' - ':''}${no}`)+'.json',state=JSON.stringify(collectState(true));
-let entry={no,letter:L,cars:docCars(),doc:docName(),date:dateFmt(val('date')),ref:lastSum.ref||'',name:lastSum.name||'',client:lastSum.client||lastSum.name||'',count:lastSum.count||'',amount:lastSum.amount||0,paid:$('#showPaid').checked,saved:new Date().toLocaleString('en-GB'),file:`${sub}/${fname}`};
+let entry={no,letter:L,cars:docCars(),doc:docName(),date:dateFmt(val('date')),ref:lastSum.ref||'',name:lastSum.name||'',client:lastSum.client||lastSum.name||'',count:lastSum.count||'',amount:lastSum.amount||0,paid:$('#showPaid').checked,saved:new Date().toLocaleString('en-GB'),dev:devName(),file:`${sub}/${fname}`};
 {let prev=i>=0?list[i]:null;if(prev&&prev.paid&&!entry.paid){entry.paid=true;entry.paidDate=prev.paidDate||''}else if(entry.paid)entry.paidDate=(prev&&prev.paidDate)||todayStr()}
 if(i>=0){if(!reopened&&!confirm(`الرقم ${no} مسجل مسبقاً في سجل ${GROUPS[g].name}. تحديث بياناته؟`))return;list[i]=entry}else list.push(entry);
 if(!FS_OK&&!cloudOn())download(fname,state,'application/json');
@@ -1071,7 +1074,7 @@ function openEditFile(ev){let f=ev.target.files[0];ev.target.value='';if(!f)retu
 function openLog(){$('#logType').innerHTML=Object.entries(GROUPS).map(([k,v])=>`<option value="${k}">${v.name}</option>`).join('');$('#logType').value=G();drawLog();$('#logModal').classList.add('open')}
 function closeLog(){$('#logModal').classList.remove('open')}
 function drawLog(){{let q=($('#logQ')||{}).value||'';if(q.trim()){$('#logBody').innerHTML=logSearchHTML(q,'log');return}}let g=$('#logType').value,le=lastEntry(g),list=(getLog().entries[g]||[]).map((e,i)=>[e,i]).reverse();
-$('#logBody').innerHTML=`<div class="hint" style="margin:0 0 8px">الحرف الافتراضي: <b style="color:#d00000">${esc(defLetter(g))}</b> · عدد المسجل: ${list.length} · آخر رقم: <b style="color:#d00000">${le?`<bdi dir="ltr">${esc(fmtNo(le))}</bdi>`:'—'}</b> · الرقم التالي: <b>${nextNo(g)}</b></div>`+(list.length?`<table class="logt"><tr><th>الرقم</th><th>المستند</th><th>التاريخ</th><th>المركبة / المرجع</th><th>الاسم</th><th>المبلغ</th><th>مدفوع</th><th>وقت التسجيل</th><th></th></tr>${list.map(([e,i])=>`<tr><td class="num">${e.dup?'⚠️ ':''}<bdi dir="ltr">${esc(fmtNo(e))}</bdi></td><td>${esc(e.doc||'')}</td><td>${esc(e.date)}</td><td dir="auto">${esc(e.ref)}</td><td dir="auto">${esc(e.name)}</td><td>${money(e.amount)}</td><td><input type="checkbox" style="width:auto" ${e.paid?'checked':''} onchange="togglePaid('${g}',${i},this.checked)"></td><td>${esc(e.saved||'')}</td><td style="white-space:nowrap">${e.file?`<button class="mini btn-blue" onclick="openEdit('${g}',${i})">فتح للتعديل</button> `:''}<button class="mini" onclick="delEntry('${g}',${i})">حذف</button></td></tr>`).join('')}</table>`:'<div class="hint">لا توجد أرقام مسجلة لهذا النوع بعد.</div>')}
+$('#logBody').innerHTML=`<div class="hint" style="margin:0 0 8px">الحرف الافتراضي: <b style="color:#d00000">${esc(defLetter(g))}</b> · عدد المسجل: ${list.length} · آخر رقم: <b style="color:#d00000">${le?`<bdi dir="ltr">${esc(fmtNo(le))}</bdi>`:'—'}</b> · الرقم التالي: <b>${nextNo(g)}</b></div>`+(list.length?`<table class="logt"><tr><th>الرقم</th><th>المستند</th><th>التاريخ</th><th>المركبة / المرجع</th><th>الاسم</th><th>المبلغ</th><th>مدفوع</th><th>وقت التسجيل</th><th>الجهاز</th><th></th></tr>${list.map(([e,i])=>`<tr><td class="num">${e.dup?'⚠️ ':''}<bdi dir="ltr">${esc(fmtNo(e))}</bdi></td><td>${esc(e.doc||'')}</td><td>${esc(e.date)}</td><td dir="auto">${esc(e.ref)}</td><td dir="auto">${esc(e.name)}</td><td>${money(e.amount)}</td><td><input type="checkbox" style="width:auto" ${e.paid?'checked':''} onchange="togglePaid('${g}',${i},this.checked)"></td><td>${esc(e.saved||'')}</td><td class="dev">${esc(e.dev||'')}</td><td style="white-space:nowrap">${e.file?`<button class="mini btn-blue" onclick="openEdit('${g}',${i})">فتح للتعديل</button> `:''}<button class="mini" onclick="delEntry('${g}',${i})">حذف</button></td></tr>`).join('')}</table>`:'<div class="hint">لا توجد أرقام مسجلة لهذا النوع بعد.</div>')}
 function togglePaid(g,i,v){let l=getLog();l.entries[g][i].paid=v;l.entries[g][i].paidDate=v?todayStr():'';putLog(l);updOverdueBadge()}
 function delEntry(g,i){let l=getLog(),e=l.entries[g][i];if(!confirm(`حذف الرقم ${fmtNo(e)} من السجل؟`))return;l.entries[g].splice(i,1);if(!putLog(l))return;drawLog();updLogInfo();
  undoOffer(`حُذف ${fmtNo(e)} من السجل`,()=>{let l=getLog(),t=l.entries[g]=l.entries[g]||[];if(t.some(x=>x.no==e.no))return;t.splice(Math.min(i,t.length),0,e);putLog(l);if($('#logModal').classList.contains('open'))drawLog();updLogInfo()})}
@@ -1083,7 +1086,7 @@ function undoRun(){let f=UNDO.fn;undoHide();if(f)try{f()}catch(e){console.error(
 function setNext(){let g=$('#logType').value,v=prompt(`الرقم التالي لسجل ${GROUPS[g].name}:`,nextNo(g));if(v===null)return;v=parseInt(v);if(isNaN(v)||v<1)return alert('رقم غير صحيح.');let l=getLog();l.counters[g]=v;putLog(l);if(g===G())$('#docNo').value=v;drawLog();render()}
 function setLetter(){let g=$('#logType').value,v=prompt(`الحرف الافتراضي لسجل ${GROUPS[g].name} (الأصلي: ${GROUPS[g].letter}).\nتغيير الحرف لا يغير تسلسل الأرقام.`,defLetter(g));if(v===null)return;v=v.trim().toUpperCase();let l=getLog();if(v&&v!==GROUPS[g].letter)l.letters[g]=v;else delete l.letters[g];putLog(l);if(g===G())$('#docLetter').value=defLetter(g);drawLog();render()}
 function download(name,data,type){let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([data],{type}));a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500)}
-function exportLog(){let l=getLog(),q=x=>'"'+String(x??'').replace(/"/g,'""')+'"',lines=[['Log','No','Document','Date','Vehicle / Ref','Name','Amount BD','Paid','Logged at'].map(q).join(',')];Object.keys(GROUPS).forEach(g=>(l.entries[g]||[]).forEach(e=>lines.push([GROUPS[g].name,fmtNo(e),e.doc||'',e.date,e.ref,e.name,e.amount,e.paid?'Yes':'No',e.saved].map(q).join(','))));download(`Numbers log ${new Date().toISOString().slice(0,10)}.csv`,'﻿'+lines.join('\r\n'),'text/csv;charset=utf-8')}
+function exportLog(){let l=getLog(),q=x=>'"'+String(x??'').replace(/"/g,'""')+'"',lines=[['Log','No','Document','Date','Vehicle / Ref','Name','Amount BD','Paid','Logged at','Device'].map(q).join(',')];Object.keys(GROUPS).forEach(g=>(l.entries[g]||[]).forEach(e=>lines.push([GROUPS[g].name,fmtNo(e),e.doc||'',e.date,e.ref,e.name,e.amount,e.paid?'Yes':'No',e.saved,e.dev||''].map(q).join(','))));download(`Numbers log ${new Date().toISOString().slice(0,10)}.csv`,'﻿'+lines.join('\r\n'),'text/csv;charset=utf-8')}
 
 async function printReport(){if(cloudOn())await cloudPull(false);if(!cloudOn()&&FS_OK&&logState!=='ok'&&!confirm('تنبيه: السجل غير مربوط بمجلد البرنامج، لذلك لن يُسجل رقم هذا المستند.\nاربطه من «⚙️ الإعداد» أولاً، أو OK للمتابعة بدون تسجيل.'))return;render();alert('عند ظهور نافذة الطباعة، اختر Save as PDF ثم ألغِ “Headers and footers / رؤوس وتذييلات الصفحة”. هذا يمنع ظهور الوقت ومسار الكمبيوتر.');window.print();setTimeout(()=>{let no=val('docNo').trim();if(no&&(cloudOn()||!FS_OK||logState==='ok')&&confirm(`هل تم حفظ المستند؟\nاضغط OK لتسجيل الرقم ${docLabel()} في سجل «${GROUPS[G()].name}» والانتقال للرقم التالي.`))logDoc(false)},300)}
 /* ---------- full document state (used by drafts and by edit files) ---------- */
@@ -1232,7 +1235,7 @@ function fdDraw(){if(fdWelcomeOn())return fdWelcome();$('#field').classList.remo
  <div class="fd-h">١. اختر السيارة</div><div class="fd-card">${carCard}${c.row!=null||f.reg?`<div class="fd-sel">🚗 <div>${esc(fdCarName(c))}<small>${f.case?'اتفاقية / معاملة: '+esc(f.case):''}</small></div></div>`:''}</div>
  <div class="fd-h">٢. الصور <span id="fdPicN">${c.pics.length}/${FD_MAXPICS}</span></div><div class="fd-card"><div class="fd-row-tools"><button class="fd-small blue" data-act="cam">📷 التقاط صورة</button><button class="fd-small" data-act="lib">🖼 من الألبوم</button></div><div id="fdShots"></div><div class="fd-pics" id="fdPics"></div><div class="fd-sub" id="fdStarHint" style="margin:8px 2px 0" hidden>⭐ اضغط النجمة على أفضل الصور — تُختار للتقرير تلقائياً على الكمبيوتر.</div></div>
  <div class="fd-h">٣. نوع التقرير</div><div class="fd-seg" data-seg="type">${FD_TYPES.map(([v,l])=>`<button class="${c.type===v?'on':''}" data-act="type" data-v="${v}">${l}</button>`).join('')}</div>
- <div class="fd-h">٤. بيانات المركبة</div><div class="fd-card"><div class="fd-grid">${FD_FIELDS.map(([k,l,o])=>`<div class="${o==='full'?'full':''}"><label class="fd-l">${l}</label><input data-f="${k}" value="${esc(f[k]||'')}"${o==='num'?' inputmode="numeric"':''}${o==='ltr'?' dir="ltr" autocapitalize="characters"':''}${k==='plateType'?' list="plateTypes"':''}></div>`).join('')}</div></div>
+ <div class="fd-h">٤. بيانات المركبة</div><div class="fd-card"><div class="fd-grid">${FD_FIELDS.map(([k,l,o])=>`<div class="${o==='full'?'full':''}"><label class="fd-l">${l}</label><input data-f="${k}" value="${esc(f[k]||'')}"${o==='num'?' inputmode="numeric"':''}${o==='ltr'?' dir="ltr" autocapitalize="characters"':''}${k==='plateType'?' list="plateTypes"':''}>${k==='vin'||k==='km'?`<button type="button" class="fd-ocr" data-act="ocr" data-k="${k}">📷 قراءة من صورة</button>`:''}</div>`).join('')}</div></div>
  <div class="fd-h">٥. المواصفات</div><div class="fd-card">${FD_SPECS.map(([k,l,a])=>`<div class="fd-spec"><label class="fd-l">${l}</label><div class="fd-chips">${a.map(v=>`<button class="fd-chip${f[k]===v?' on':''}" data-act="spec" data-k="${k}" data-v="${esc(v)}">${esc(v)}</button>`).join('')}</div></div>`).join('')}</div>
  <div class="fd-h">٦. حالة المركبة <button class="fd-small" data-act="allE">الكل ممتاز</button></div>
  <div class="fd-legend">م ممتاز · ج جيد · و وسط · ت تحتاج عناية · ض ضعيف — اضغط مرة ثانية لإزالة العلامة.</div>
@@ -1298,6 +1301,7 @@ $('#field').addEventListener('click',e=>{let b=e.target.closest('[data-act]');if
  else if(a==='shotsOff'){try{localStorage.setItem('adnanShotList','0')}catch(e){}fdDrawPics()}
  else if(a==='shotsOn'){try{localStorage.removeItem('adnanShotList')}catch(e){}fdDrawPics()}
  else if(a==='voice')voiceToggle(b)
+ else if(a==='ocr')ocrStart(b.dataset.k)
  else if(a==='edit'){if(fdHas(c)&&!confirm('السيارة الحالية غير محفوظة وسيتم استبدالها. متابعة؟'))return;FD.cur=JSON.parse(JSON.stringify(FD.saved[i]));fdDraw();$('.fd-scroll').scrollTop=0}
  else if(a==='del'){if(confirm(`حذف ${fdCarName(FD.saved[i])}؟`)){let car=FD.saved.splice(i,1)[0];fdPersist();fdDraw();undoOffer(`حُذفت ${fdCarName(car)}`,()=>{if(FD.saved.some(x=>x.id===car.id))return;FD.saved.splice(Math.min(i,FD.saved.length),0,car);fdPersist();fdDraw()})}}
  else if(a==='clearSent'){FD.saved=FD.saved.filter(s=>!s.sent);fdPersist();fdDraw()}
@@ -1688,14 +1692,16 @@ async function loadAssets(){if(ASSET_URLS)return ASSET_URLS;ASSET_URLS={};try{le
 async function pagesToPDF(){await loadAssets();document.body.classList.add('pdfmode');window.__pdfAssets=true;render();await new Promise(r=>setTimeout(r,300));render();await new Promise(r=>setTimeout(r,150));
  $$('#pages img').forEach(im=>{if(/^vehicle-report-generator-assets\//.test(im.getAttribute('src')||''))im.style.visibility='hidden'});
  await Promise.all($$('#pages img').map(im=>im.decode?im.decode().catch(()=>{}):0));
- try{let {jsPDF}=window.jspdf,pdf=new jsPDF({unit:'mm',format:'a4',compress:true}),pages=$$('#pages .page');
-  for(let k=0;k<pages.length;k++){let c=await html2canvas(pages[k],{scale:2,backgroundColor:'#ffffff',logging:false});if(k)pdf.addPage();pdf.addImage(c.toDataURL('image/jpeg',.9),'JPEG',0,0,210,297)}
+ try{let {jsPDF}=window.jspdf,pdf=new jsPDF({unit:'mm',format:'a4',compress:true}),pages=$$('#pages .page'),fb=await pdfFont(),tl=0;
+  if(fb){try{pdf.addFileToVFS('DejaVuSans.ttf',fb);pdf.addFont('DejaVuSans.ttf','dejavu','normal')}catch(e){fb=null}}
+  for(let k=0;k<pages.length;k++){let c=await html2canvas(pages[k],{scale:2,backgroundColor:'#ffffff',logging:false});if(k)pdf.addPage();pdf.addImage(c.toDataURL('image/jpeg',.9),'JPEG',0,0,210,297);if(fb)try{tl+=pdfTextLayer(pdf,pages[k])}catch(e){console.error(e)}}
+  window.__pdfText=tl;
   return pdf.output('blob')}finally{document.body.classList.remove('pdfmode');window.__pdfAssets=false;render()}}
 /* ===== Step 3: share the document as a PDF straight from the phone (WhatsApp, email…) ===== */
 var SHARE=null;
 async function sharePDF(){if(SHARE&&SHARE.busy)return;if(cloudOn())await cloudPull(false);render();SHARE={busy:true};batchProgress('جارٍ تجهيز PDF…');
  try{try{await pdfLibs()}catch(e){throw 'libs'}let blob=await pagesToPDF(),name=(clean(autoFile())||'مستند')+'.pdf';
-  SHARE={blob,name,file:new File([blob],name,{type:'application/pdf'}),no:val('docNo').trim()};$('#shareName').textContent=name;$('#shareModal').classList.add('open')}
+  SHARE={blob,name,file:new File([blob],name,{type:'application/pdf'}),no:val('docNo').trim()};$('#shareName').textContent=name;$('#shareHint').textContent=window.__pdfText?'الملف صورة من الصفحات مع نص مخفي يمكن تحديده ونسخه (تجريبي). للنسخة الأصلية استخدم «تصدير PDF».':'هذا الملف صورة من الصفحات، فلا يمكن نسخ النص منه هذه المرة (تحتاج إنترنت أول مرة). للنسخة النصية استخدم «تصدير PDF».';$('#shareModal').classList.add('open')}
  catch(e){console.error(e);SHARE=null;alert(e==='libs'?'أداة PDF تحتاج اتصال إنترنت في أول مرة. اتصل بالإنترنت وأعد المحاولة.':'تعذر تجهيز ملف PDF.')}
  finally{batchProgress('');if(SHARE&&SHARE.busy)SHARE=null}}
 function shareClose(){$('#shareModal').classList.remove('open')}
@@ -1906,6 +1912,7 @@ function setDraw(){setBadge();let m=$('#setModal');if(!m||!m.classList.contains(
  let h=it.map((x,i)=>`<div class="set-item ${x.ok===true?'ok':x.ok===false?'no':'wait'}"><span class="set-ic">${x.ok===true?'✓':x.ok===false?(i+1):'…'}</span><div class="set-tx"><b>${x.t}</b><small>${x.d}</small></div><span class="set-btns">${x.ok!==true?setBtn(x.fix,'btn-blue'):''}${setBtn(x.fix2)}</span></div>`).join('');
  if(!ph&&syncOn())h+=`<div class="set-act"><span class="set-ic">📱</span><div class="set-tx"><b>ربط هاتف</b><small>اعرض رمز QR ثم امسحه من الهاتف — لا حاجة لنسخ أي رابط.</small></div><span class="set-btns"><button type="button" class="mini btn-blue" onclick="qrShow()">📱 ربط هاتف بـ QR</button></span></div>`;
  if(!ph&&syncOn()&&CL.state!=='key'&&!SET.welcome)h+=bkRowHTML()+`<div class="set-act"><span class="set-ic">🔑</span><div class="set-tx"><b>مفتاح المكتب</b><small>إذا وصل رابط المزامنة أو صورة رمز QR لشخص آخر، غيّر المفتاح. الرابط القديم يتوقف فوراً، والأجهزة الأخرى تُربط من جديد (الكمبيوتر باختيار المجلد، الهاتف بمسح QR).</small></div><span class="set-btns"><button type="button" class="mini" id="keyBtn" onclick="keyChange()">تغيير المفتاح</button></span></div>`;
+ if(!SET.welcome)h+=devRowHTML();
  h+=`<div class="set-light"><span class="cdot ${lv[0]}"></span>${esc(lv[1])}</div>`;
  h+=`<div class="set-info">📶 العمل بدون إنترنت: ${ONWEB?(navigator.serviceWorker&&navigator.serviceWorker.controller?'جاهز على هذا الجهاز':'يتفعّل بعد فتح الرابط مرة ثانية'):'الملف على الهارد يعمل دائماً بدون إنترنت'} · النسخة <span dir="ltr">v${APP_VERSION}</span>${ONWEB&&!ph?'<br>💡 اقتراح: في Chrome يمكنك تثبيت البرنامج كتطبيق (زر التثبيت في شريط العنوان) ليفتح من سطح المكتب.':''}</div>`;
  $('#setBody').innerHTML=h;
@@ -2209,4 +2216,71 @@ function cliUse(i){let c=CLI.list[i],t=T();if(!c)return;
  else return alert('«استخدام» يعمل في الفاتورة والتسعيرة وInvoice التسهيلات. اختر نوع المستند أولاً.');
  cliClose();render()}
 try{$('#allFields').checked=allfOn()}catch(e){}foldInit();try{tplDraw();tiListDraw();render()}catch(e){console.error(e)}
+
+/* =====================================================================
+   STEP 5B — copyable text in image PDFs · device name on log entries · read VIN / odometer from a photo (trial)
+   ===================================================================== */
+/* --- PDFs from «حفظ الكل» and «مشاركة PDF»: the page picture plus an invisible text layer, so text can be selected and copied --- */
+var PDFFONT={url:'https://cdn.jsdelivr.net/npm/dejavu-fonts-ttf@2.37.3/ttf/DejaVuSans.ttf',b64:null};
+async function pdfFont(){if(PDFFONT.b64)return PDFFONT.b64;try{let r=await fetch(PDFFONT.url);if(!r.ok)throw 0;let u=new Uint8Array(await r.arrayBuffer()),s='';
+ for(let i=0;i<u.length;i+=32768)s+=String.fromCharCode.apply(null,u.subarray(i,i+32768));PDFFONT.b64=btoa(s);return PDFFONT.b64}catch(e){return null}}
+/* every visible line of text on a page, with its box (px, relative to the page) */
+function pdfLines(page){let pr=page.getBoundingClientRect(),out=[],tw=document.createTreeWalker(page,NodeFilter.SHOW_TEXT),nd,rg=document.createRange();
+ while((nd=tw.nextNode())){let s=nd.nodeValue,el=nd.parentElement;if(!s||!s.trim()||!el)continue;
+  if(el.closest('style,script'))continue;if(el.checkVisibility&&!el.checkVisibility({checkOpacity:true,checkVisibilityCSS:true}))continue;
+  let fs=parseFloat(getComputedStyle(el).fontSize)||12,re=/\S+/g,m,cur=null;
+  while((m=re.exec(s))){rg.setStart(nd,m.index);rg.setEnd(nd,m.index+m[0].length);let r=rg.getBoundingClientRect();if(!r.width||!r.height)continue;
+   if(cur&&Math.abs(r.top-cur.top)<Math.max(3,r.height*.5)){cur.end=m.index+m[0].length;cur.l=Math.min(cur.l,r.left);cur.r=Math.max(cur.r,r.right);cur.b=Math.max(cur.b,r.bottom)}
+   else{if(cur)out.push(cur);cur={start:m.index,end:m.index+m[0].length,l:r.left,r:r.right,top:r.top,b:r.bottom,fs:Math.min(fs,r.height),s}}}
+  if(cur)out.push(cur)}
+ return out.map(c=>({t:c.s.slice(c.start,c.end).replace(/\s+/g,' '),x:c.l-pr.left,y:c.top-pr.top,w:c.r-c.l,h:c.b-c.top,fs:c.fs,pw:pr.width}))}
+function pdfTextLayer(pdf,page){let L=pdfLines(page);if(!L.length)return 0;let k=210/L[0].pw,n=0;pdf.setFont('dejavu','normal');
+ L.forEach(l=>{let pt=l.fs*k*72/25.4;pdf.setFontSize(pt);let w=0;try{w=pdf.getTextWidth(l.t)}catch(e){}let hs=w>0?Math.max(.2,Math.min(4,l.w*k/w)):1;
+  try{pdf.text(l.t,l.x*k,(l.y+l.h*.78)*k,{renderingMode:'invisible',horizontalScale:hs});n++}catch(e){}});return n}
+
+/* --- device name: shown next to every number logged from this device («السجل», CSV) --- */
+function devDefault(){try{return matchMedia('(pointer:coarse)').matches?'هاتف':'كمبيوتر'}catch(e){return'كمبيوتر'}}
+function devName(){try{let v=localStorage.getItem('adnanDevName');if(v)return v}catch(e){}return devDefault()}
+function devNamed(){try{return !!localStorage.getItem('adnanDevName')}catch(e){return false}}
+function devSet(){let v=prompt('اسم هذا الجهاز — يظهر بجانب كل رقم يُسجَّل منه في «السجل» (مثلاً: لابتوب المكتب، لابتوب البيت، هاتف العميل):',devName());if(v===null)return;
+ v=v.replace(/\s+/g,' ').trim().slice(0,30);try{if(v)localStorage.setItem('adnanDevName',v);else localStorage.removeItem('adnanDevName')}catch(e){}try{setDraw()}catch(e){}}
+function devRowHTML(){return`<div class="set-act"><span class="set-ic">🏷</span><div class="set-tx"><b>اسم هذا الجهاز: «${esc(devName())}»</b><small>${devNamed()?'':'اسم تلقائي. '}يظهر بجانب كل رقم يُسجَّل من هذا الجهاز في «السجل»، لتعرف أي جهاز سجّله.</small></div><span class="set-btns"><button type="button" class="mini" id="devBtn" onclick="devSet()">تغيير الاسم</button></span></div>`}
+
+/* --- phone: read the chassis number / odometer from a photo (trial; downloads the reader once, ~7 MB) --- */
+var OCR={w:null,busy:false,want:null,
+ js:'https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js',
+ opt:{workerPath:'https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/worker.min.js',corePath:'https://cdn.jsdelivr.net/npm/tesseract.js-core@5.1.1',langPath:'https://cdn.jsdelivr.net/npm/@tesseract.js-data/eng@1.0.0/4.0.0_best_int'}};
+async function ocrWorker(){if(OCR.w)return OCR.w;if(!window.Tesseract)await loadScript(OCR.js);OCR.w=await Tesseract.createWorker('eng',1,OCR.opt);return OCR.w}
+/* grey, contrast and size the photo up so small plates read better */
+function ocrPrep(src){return new Promise((res,rej)=>{let im=new Image;im.onload=()=>{let k=Math.min(3,Math.max(1,1800/Math.max(im.width,im.height))),c=document.createElement('canvas');c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);
+  let g=c.getContext('2d');g.filter='grayscale(1) contrast(1.6)';g.drawImage(im,0,0,c.width,c.height);res(c)};im.onerror=()=>rej(new Error('img'));im.src=src})}
+const VIN_W={A:1,B:2,C:3,D:4,E:5,F:6,G:7,H:8,J:1,K:2,L:3,M:4,N:5,P:7,R:9,S:2,T:3,U:4,V:5,W:6,X:7,Y:8,Z:9},VIN_P=[8,7,6,5,4,3,2,10,0,9,8,7,6,5,4,3,2];
+function vinCheck(v){let s=0;for(let i=0;i<17;i++){let ch=v[i],n=/\d/.test(ch)?+ch:VIN_W[ch];if(n===undefined)return false;s+=n*VIN_P[i]}let r=s%11;return v[8]===(r===10?'X':String(r))}
+/* the best chassis number in what was read: a 17-character VIN (check digit preferred), else the longest code */
+function vinPick(txt){let lines=String(txt||'').toUpperCase().split(/\n+/),c17=[],other=[];
+ lines.forEach(l=>{let s=l.replace(/[^A-Z0-9]/g,'').replace(/O/g,'0').replace(/[IL]/g,'1').replace(/Q/g,'0');
+  for(let i=0;i+17<=s.length;i++)c17.push(s.slice(i,i+17));let t=l.replace(/[^A-Z0-9-]/g,' ').split(/\s+/).filter(x=>x.replace(/-/g,'').length>=8&&/\d/.test(x)&&/[A-Z]/.test(x));other.push(...t)});
+ c17=c17.filter(v=>/^[A-HJ-NPR-Z0-9]{17}$/.test(v));let ok=c17.find(vinCheck);if(ok)return ok;
+ let exact=lines.map(l=>l.replace(/[^A-Z0-9]/g,'').replace(/O/g,'0').replace(/Q/g,'0')).find(s=>s.length===17&&/^[A-HJ-NPR-Z0-9]{17}$/.test(s));if(exact)return exact;
+ if(c17.length)return c17[0];return other.sort((a,b)=>b.length-a.length)[0]||''}
+/* the odometer: the longest run of digits (3 to 7), thousands separators allowed */
+function kmPick(txt){let runs=String(txt||'').split(/\s+/).map(t=>{t=t.replace(/[^\d.,']/g,'');return /^\d{1,3}([.,']\d{3})+$/.test(t)?t.replace(/\D/g,''):(t.match(/\d+/g)||[]).sort((a,b)=>b.length-a.length)[0]||''}).filter(x=>x.length>=3&&x.length<=7);
+ return runs.sort((a,b)=>b.length-a.length||(+b)-(+a))[0]||''}
+function ocrSetBtn(k,t){let b=$(`#field [data-act="ocr"][data-k="${k}"]`);if(b){if(!b.dataset.t0)b.dataset.t0=b.textContent;b.textContent=t||b.dataset.t0;b.disabled=!!t}}
+async function ocrStart(k){if(OCR.busy)return;let c=FD.cur,tag=k==='vin'?'vin':'odo',i=fdPM(c).findIndex(m=>m.t===tag);
+ if(i>=0&&confirm(`استخدام صورة «${fdShotName(tag)}» الموجودة؟\nاضغط «إلغاء» لالتقاط صورة جديدة.`))return ocrRun(k,c.pics[i]);
+ OCR.want=k;$('#fdOcrIn').value='';$('#fdOcrIn').click()}
+async function ocrFile(f){let k=OCR.want;OCR.want=null;if(!f||!k)return;let c=FD.cur,tag=k==='vin'?'vin':'odo';
+ await fdAddPics([f],tag);let i=fdPM(c).findIndex(m=>m.t===tag);if(i<0)return;ocrRun(k,c.pics[i])}
+async function ocrRun(k,src){if(OCR.busy)return;OCR.busy=true;let name=k==='vin'?'رقم القاعدة':'قراءة العداد';
+ try{ocrSetBtn(k,OCR.w?'⏳ جارٍ القراءة…':'⏳ تحميل القارئ (أول مرة)…');let w=await ocrWorker();ocrSetBtn(k,'⏳ جارٍ القراءة…');
+  await w.setParameters({tessedit_char_whitelist:k==='vin'?'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-':'0123456789., ',tessedit_pageseg_mode:k==='vin'?'6':'11'});
+  let r=await w.recognize(await ocrPrep(src)),txt=r&&r.data?r.data.text:'',got=k==='vin'?vinPick(txt):kmPick(txt);window.__ocrLast={k,txt,got};
+  if(!got){fdToast(`لم أستطع قراءة ${name} — اكتبه يدوياً`);return}
+  if(!confirm(`قرأتُ ${name}:\n${got}\n\nاضغط OK لوضعه في الخانة، ثم تأكد منه قبل الحفظ (القراءة تجريبية وقد تخطئ).`))return;
+  let inp=$(`#field input[data-f="${k}"]`);if(inp){inp.value=got;inp.dispatchEvent(new Event('input',{bubbles:true}));inp.scrollIntoView({block:'center',behavior:'smooth'})}else{c.fields[k]=got;fdPersist()}
+  fdToast(`✓ ${name}: ${got} — راجعه قبل الحفظ`)}
+ catch(e){console.error(e);fdToast(navigator.onLine===false?'القراءة تحتاج إنترنت في المرة الأولى':'تعذرت القراءة — اكتب الرقم يدوياً')}
+ finally{OCR.busy=false;ocrSetBtn(k,'')}}
+$('#fdOcrIn').addEventListener('change',e=>ocrFile(e.target.files[0]));
 </script></body></html>
